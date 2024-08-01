@@ -1,12 +1,12 @@
 const { Router } = require('express');
 
-const adminRoutes = require('../../../modules/admin/infra/routes/admin.routes');
+const usersRoutes = require('../../../modules/users/infra/routes/users.routes');
 
-const sessionsRoutes = require('../../../modules/admin/infra/routes/sessions.routes');
+const sessionsRoutes = require('../../../modules/users/infra/routes/sessions.routes');
 
-const forgotAdminRoutes = require('../../../modules/admin/infra/routes/forgotAdmin.routes');
+const forgotUsersnRoutes = require('../../../modules/users/infra/routes/forgotUsers.routes');
 
-const resetPasswordAdminRoutes = require('../../../modules/admin/infra/routes/resetPasswordAdmin.routes');
+const resetPasswordUsersRoutes = require('../../../modules/users/infra/routes/resetPasswordUsers.routes');
 
 const secretaryRoutes = require('../../../modules/secretary/infra/routes/secretary.routes');
 
@@ -18,19 +18,23 @@ const resetPasswordSecretaryRoutes = require('../../../modules/secretary/infra/r
 
 const assistedsRoutes = require('../../../modules/assisteds/infra/routes/assisteds.routes');
 
+const conferencesRoutes = require('../../../modules/conferences/infra/routes/conferences.routes');
+
+const dependentsRoutes = require('../../../modules/dependents/infra/routes/dependents.routes');
+
 const transactionsRoutes = require('../../../modules/transactions/infra/routes/transactions.routes');
 
-const ensureAuthenticated = require('../../../shared/middlewares/ensure.autenticated');
+//const ensureAuthenticated = require('../../../shared/middlewares/ensure.autenticated');
 
 const routes = Router();
 
-routes.use('/admin', adminRoutes);
+routes.use('/users', usersRoutes);
 
 routes.use('/login', sessionsRoutes);
 
-routes.use('/forgot_admin', forgotAdminRoutes);
+routes.use('/forgot_users', forgotUsersnRoutes);
 
-routes.use('/reset_password_admin', resetPasswordAdminRoutes);
+routes.use('/reset_password_users', resetPasswordUsersRoutes);
 
 routes.use('/secretary', secretaryRoutes);
 
@@ -42,8 +46,12 @@ routes.use('/reset_password_secretary', resetPasswordSecretaryRoutes);
 
 routes.use('/assisteds', assistedsRoutes);
 
+routes.use('/conferences', conferencesRoutes);
+
+routes.use('/dependents', dependentsRoutes);
+
 routes.use('/transactions', transactionsRoutes);
 
-routes.use(ensureAuthenticated);
+//routes.use(ensureAuthenticated);
 
 module.exports = routes;

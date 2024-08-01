@@ -22,6 +22,9 @@
     "dev": "nodemon src/shared/infra/app.js",
     "create:table": "knex migrate:make",
     "run:table": "knex migrate:latest",
-    "rollback:table": "knex migrate:rollback"
+     "run:seed": "knex seed:run",
+     "create:seed": "knex seed:make",
+    "rollback:table": "knex migrate:rollback",
+    "rollback:seed": "knex seed:rollback"
   }
 }
