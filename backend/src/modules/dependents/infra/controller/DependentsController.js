@@ -2,11 +2,14 @@ const DependentsRepository = require('../../repositories/DependentsRepository');
 
 const CreateNewDenpendentsService = require('../../services/CreateNewDependentsService');
 
+<<<<<<< HEAD
 const GetAllDependentsService = require('../../services/GetAllDependentsService');
 const GetOneDependentsService = require('../../services/GetOneDependentsService');
 const UpdateDependentsService = require('../../services/UpdateDependentsService');
 const DeleteDependentsService = require('../../services/DeleteDependentsService');
 
+=======
+>>>>>>> 8d240e3cf6601f69d73e28d2dad6039f2f0cfde9
 const dependentsRepository = new DependentsRepository();
 
 class DependentsController {
@@ -26,6 +29,7 @@ class DependentsController {
     return response.json(dependent[0]);
   }
   async getAllDependents(request, response) {
+<<<<<<< HEAD
     const getAll = new GetAllDependentsService(dependentsRepository);
 
     const dependents = await getAll.execute();
@@ -68,6 +72,18 @@ class DependentsController {
         deleted: true,
       },
     });
+=======
+    return response.json({ getAll: true });
+  }
+  async getOneDependents(request, response) {
+    return response.json({ getOne: true });
+  }
+  async updateDependents(request, response) {
+    return response.json({ update: true });
+  }
+  async deleteDependents(request, response) {
+    return response.json({ delete: true });
+>>>>>>> 8d240e3cf6601f69d73e28d2dad6039f2f0cfde9
   }
 }
 module.exports = DependentsController;
