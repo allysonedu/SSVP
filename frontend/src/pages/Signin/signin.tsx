@@ -1,17 +1,20 @@
 import React from "react"
-import { Container, Card_ligin, Content,Form, Input, Button } from "./styles"
+import { Container, Card_ligin, Content,Form } from "./styles"
+
+import {Input, Button} from '../../shared/components'
 
 export const SignIn: React.FC = () => {
   return (
     <Container>
       <Content>
+        <img src="login.svg" alt="login" />
       <Card_ligin>
         <Form>
-     <h1>login</h1>
-     <Input type="text" />
-     <Input type="text" />
+     <h1>Seu login</h1>
+     <Input />
+     <Input />
 
-     <Button>Entrar</Button>
+     <Button>opa</Button>
      <a href="/sign-up">esqueci minha senha</a>
         </Form>
      
