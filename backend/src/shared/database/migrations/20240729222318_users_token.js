@@ -9,8 +9,8 @@ exports.up = function (knex) {
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.integer('secretary_id').unsigned();
     table.foreign('secretary_id').references('id').inTable('secretary');
-    table.integer('admin_id').unsigned();
-    table.foreign('admin_id').references('id').inTable('admin');
+    table.integer('users_id').unsigned();
+    table.foreign('users_id').references('id').inTable('users');
   });
 };
 

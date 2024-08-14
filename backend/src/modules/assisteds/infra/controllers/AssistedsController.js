@@ -20,7 +20,13 @@ class AssistedsController {
       whatsapp,
       profession,
       district,
+      cpf,
+      Case_report,
+      family_income,
+      explain,
+      Spouse,
       maritalStatus = false,
+      home = false,
     } = request.body;
 
     const createAssisted = new CreateNewAssistedsService(assistedsRepository);
@@ -31,7 +37,13 @@ class AssistedsController {
       whatsapp,
       profession,
       district,
+      cpf,
+      Case_report,
+      family_income,
+      explain,
+      Spouse,
       maritalStatus,
+      home,
     });
 
     return response.json(assisted[0]);
@@ -50,10 +62,6 @@ class AssistedsController {
     const assistedUpdated = await updateAssisted.execute(payload);
 
     return response.json(assistedUpdated);
-  }
-
-  async getAllAssisteds(request, response) {
-    return response.json({ getAll: true });
   }
 
   async getOneAssisteds(request, response) {
@@ -94,3 +102,16 @@ class AssistedsController {
 }
 
 module.exports = AssistedsController;
+
+//       name = nome
+//       age = idade
+//       whatsapp = numero
+//       profession = profisão
+//       district = bairro
+//       cpf =  cpf
+//       Case_report = reportar caso
+//       family_income = renda familiar
+//       explain explicar
+//       Spouse = cônjuge
+//       maritalStatus = estatos civil
+//       home = casa
