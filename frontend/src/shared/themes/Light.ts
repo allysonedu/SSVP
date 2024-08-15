@@ -1,9 +1,9 @@
 /* eslint-disable import/no-anonymous-default-export */
 export default {
-  primary: 'rgba(3, 89, 86,1 )',
-  secondary: 'rgba(39,245,238,1)',
-  three: 'rgb(69, 114, 215)',
-  input: 'rgba(39, 245, 238, 0.3)',
+  primary: '#3966BF',
+  secondary: '#BDCFF2',
+  three: '#417CF2',
+  input: '#FFFFFF',
   title: "rgba(0, 0, 0, 0.8)",
 
   text: 'rgba(240, 255, 255, 0.87) ',
