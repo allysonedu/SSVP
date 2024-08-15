@@ -53,7 +53,7 @@ export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-                Lista de Cadastros
+                Lista de Cadastros 
             </Typography>
 
             <Grid container spacing={2} sx={{ marginBottom: 2 }}>
