@@ -22,6 +22,7 @@ interface FormValues {
     rendaFamiliar: string;
     grauInstrucao: string;
     situacao: string;
+    
 }
 
 export const AssistidsAddEdit: React.FC = () => {
