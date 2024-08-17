@@ -6,7 +6,7 @@ class DependentsRepository {
       trx('dependents').insert(payload).returning('*')
     );
   }
-<<<<<<< HEAD
+
 
   async getAllDependents() {
     return connection('dependents');
@@ -26,7 +26,6 @@ class DependentsRepository {
   async deleteDependents(idDependents) {
     return connection('dependents').del().where({ id: idDependents });
   }
-=======
->>>>>>> 8d240e3cf6601f69d73e28d2dad6039f2f0cfde9
+
 }
 module.exports = DependentsRepository;

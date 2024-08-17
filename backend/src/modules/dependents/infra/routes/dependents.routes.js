@@ -24,7 +24,7 @@ dependentsRoutes.post(
 
 dependentsRoutes.get('/', dependentsController.getAllDependents);
 
-<<<<<<< HEAD
+
 dependentsRoutes.get(
   '/:id',
   celebrate({
@@ -54,12 +54,12 @@ dependentsRoutes.delete(
   }),
   dependentsController.deleteDependents
 );
-=======
+
 dependentsRoutes.get('/:id', dependentsController.getOneDependents);
 
 dependentsRoutes.put('/:id', dependentsController.updateDependents);
 
 dependentsRoutes.delete('/:id', dependentsController.deleteDependents);
->>>>>>> 8d240e3cf6601f69d73e28d2dad6039f2f0cfde9
+
 
 module.exports = dependentsRoutes;

@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import {
   Avatar,
   Button,
   CssBaseline,
-  FormControlLabel,
   Link,
   Grid,
   Box,
   Typography,
   Container,
-  Checkbox,
   createTheme,
   ThemeProvider,
   LinearProgress,
@@ -21,44 +21,43 @@ import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InputText } from '../../shared/components/hook-form/input-text';
-import { users } from '../../api/api';
+import { forgotPassword } from '../../api/api';
 
-const SignUpFormValidationSchema = zod.object({
-  name: zod.string().min(3, 'Nome deve ter no mínimo 3 caracteres'),
+const forgotPasswordValidationSchema = zod.object({
   email: zod.string().email('Digite um email válido'),
-  password: zod.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
 });
-
-type SignUpFormType = zod.infer<typeof SignUpFormValidationSchema>;
 
 const defaultTheme = createTheme();
 
-export const SignUp: React.FC = () => {
-  const [loading, setLoading] = useState(false);
+type ForgotPasswordFormType = zod.infer<typeof forgotPasswordValidationSchema>;
 
-  const methods = useForm<SignUpFormType>({
-    resolver: zodResolver(SignUpFormValidationSchema),
+export const ForgotPassword: React.FC = () => {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const methods = useForm<ForgotPasswordFormType>({
+    resolver: zodResolver(forgotPasswordValidationSchema),
     defaultValues: {
-      name: '',
       email: '',
-      password: '',
     },
   });
 
   const { handleSubmit, control } = methods;
 
-  const handleSubmitUsersRegister = useCallback(
-    async (data: SignUpFormType) => {
+  const handleSubmitForgotPassword = useCallback(
+    async (data: ForgotPasswordFormType) => {
       try {
         setLoading(true);
 
-        await users(data);
+        await forgotPassword(data.email);
+
+        navigate('/');
       } catch (err: any) {
       } finally {
         setLoading(false);
       }
     },
-    []
+    [navigate]
   );
 
   return (
@@ -81,22 +80,10 @@ export const SignUp: React.FC = () => {
           </Typography>
           <Box
             component="form"
-            onSubmit={handleSubmit(handleSubmitUsersRegister)}
+            onSubmit={handleSubmit(handleSubmitForgotPassword)}
             noValidate
             sx={{ mt: 1 }}
           >
-            <InputText
-              margin="normal"
-              required
-              fullWidth
-              name="name"
-              label="Name"
-              control={control}
-              type="name"
-              id="name"
-              autoComplete="current-name"
-            />
-
             <InputText
               margin="normal"
               required
@@ -109,22 +96,6 @@ export const SignUp: React.FC = () => {
               autoComplete="current-email"
             />
 
-            <InputText
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Senha"
-              control={control}
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Lembre-me"
-            />
             {loading && <LinearProgress />}
 
             <Button
@@ -133,12 +104,12 @@ export const SignUp: React.FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Logar-se
+              Enviar reset
             </Button>
             <Grid container>
               <Grid item>
                 <Link href="/" variant="body2">
-                  {'Você já tem uma conta? Login '}
+                  {'Voltar para login '}
                 </Link>
               </Grid>
             </Grid>

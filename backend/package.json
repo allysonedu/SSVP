@@ -6,6 +6,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "celebrate": "^15.0.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
@@ -22,8 +23,8 @@
     "dev": "nodemon src/shared/infra/app.js",
     "create:table": "knex migrate:make",
     "run:table": "knex migrate:latest",
-     "run:seed": "knex seed:run",
-     "create:seed": "knex seed:make",
+    "run:seed": "knex seed:run",
+    "create:seed": "knex seed:make",
     "rollback:table": "knex migrate:rollback",
     "rollback:seed": "knex seed:rollback"
   }

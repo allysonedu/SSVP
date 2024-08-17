@@ -1,20 +1,21 @@
-import React from 'react'
+import React from 'react';
 
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router-dom';
 
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider } from 'styled-components';
 
-import { OpenRoutes } from './routes/OpenRoutes'
+// import { AppProvider } from './shared/hooks';
 
-import './global.css'
+import { OpenRoutes } from './routes/OpenRoutes';
 
-import Light from './shared/themes/Light'
+import './global.css';
+
+import Light from './shared/themes/Light';
 
 export const App: React.FC = () => (
   <ThemeProvider theme={Light}>
-  <BrowserRouter>
-  <OpenRoutes />
-
-  </BrowserRouter>
+    <BrowserRouter>
+      <OpenRoutes />
+    </BrowserRouter>
   </ThemeProvider>
-)
+);
