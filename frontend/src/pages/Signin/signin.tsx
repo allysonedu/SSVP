@@ -58,6 +58,7 @@ export const SignIn: React.FC = () => {
 
         console.log(result?.user);
       } catch (err: any) {
+        console.log(err)
       } finally {
         setLoading(false);
       }
