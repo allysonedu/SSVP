@@ -1,21 +1,25 @@
-// import React from 'react';
+import React from 'react';
 
-// import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
-// import { OpenRoutes } from './OpenRoutes';
+import { OpenRoutes } from './OpenRoutes';
 
-// import { useAuth } from '../shared/hooks/auth';
+import { AssistidsAddEdit } from '../pages';
 
-// import { environment } from '../shared/environment';
+import { useAuth } from '../shared/hooks/auth';
 
-// export const AppRoutes: React.FC = () => {
-//   const { user, token } = useAuth();
+import { environment } from '../shared/environment';
 
-//   if (token) {
-//     const decoded = jwtDecode<JwtPayload>(token);
+export const AppRoutes: React.FC = () => {
+  const { user, token } = useAuth();
 
-//     localStorage.removeItem(environment.APP_NAME);
-//   }
+  if (token) {
+    const decoded = jwtDecode<JwtPayload>(token);
+    if (user && decoded.exp && decoded.exp >= new Date().getTime() / 1000) {
+      return <AssistidsAddEdit />;
+    }
+    localStorage.removeItem(environment.APP_NAME);
+  }
 
-//   return <OpenRoutes />;
-// };
+  return <OpenRoutes />;
+};

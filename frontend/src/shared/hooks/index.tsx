@@ -1,13 +1,13 @@
-// import React from 'react';
+import React from 'react';
 
-// import { AuthProvider } from './auth';
+import { AuthProvider } from './auth';
 
-// interface Props {
-//   children: React.ReactNode;
-// }
+interface Props {
+  children: React.ReactNode;
+}
 
-// const AppProvider: React.FC<Props> = ({ children }) => (
-//   <AuthProvider>{children}</AuthProvider>
-// );
+const AppProvider: React.FC<Props> = ({ children }) => (
+  <AuthProvider>{children}</AuthProvider>
+);
 
-// export { AppProvider };
+export { AppProvider };

@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { ThemeProvider } from 'styled-components';
 
-// import { AppProvider } from './shared/hooks';
+//import { AppProvider } from './shared/hooks';
 
 import { OpenRoutes } from './routes/OpenRoutes';
 

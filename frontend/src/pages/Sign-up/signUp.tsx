@@ -79,12 +79,7 @@ export const SignUp: React.FC = () => {
           <Typography component="h1" variant="h5">
             Faça seu Cadastro
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(handleSubmitUsersRegister)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <form onSubmit={handleSubmit(handleSubmitUsersRegister)} noValidate>
             <InputText
               margin="normal"
               required
@@ -142,7 +137,7 @@ export const SignUp: React.FC = () => {
                 </Link>
               </Grid>
             </Grid>
-          </Box>
+          </form>
         </Box>
       </Container>
     </ThemeProvider>

@@ -76,7 +76,7 @@ export const ForgotPassword: React.FC = () => {
             <FaUser />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Faça seu Cadastro
+            Esqueceu sua senha?
           </Typography>
           <Box
             component="form"

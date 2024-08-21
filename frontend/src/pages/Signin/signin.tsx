@@ -15,29 +15,29 @@ import {
   ThemeProvider,
   LinearProgress,
 } from '@mui/material';
-import { useAuth } from '../../shared/hooks/auth';
 
 import { FaUser } from 'react-icons/fa6';
 import { useForm } from 'react-hook-form';
 import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InputText } from '../../shared/components/hook-form/input-text';
+import { useAuth } from '../../shared/hooks/auth';
 
-const loginFormValidationSchema = zod.object({
+const SignInFormValidationSchema = zod.object({
   email: zod.string().email('Digite um email válido'),
   password: zod.string().min(6, 'Senha deve ter no mínimo 6 caracteres'),
 });
 
-type LoginFormType = zod.infer<typeof loginFormValidationSchema>;
+type SignInFormType = zod.infer<typeof SignInFormValidationSchema>;
 
 const defaultTheme = createTheme();
 
 export const SignIn: React.FC = () => {
-  const { signIn } = useAuth();
   const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
 
-  const methods = useForm<LoginFormType>({
-    resolver: zodResolver(loginFormValidationSchema),
+  const methods = useForm<SignInFormType>({
+    resolver: zodResolver(SignInFormValidationSchema),
     defaultValues: {
       email: '',
       password: '',
@@ -47,9 +47,10 @@ export const SignIn: React.FC = () => {
   const { handleSubmit, control } = methods;
 
   const handleSubmitLogin = useCallback(
-    async (data: LoginFormType) => {
+    async (data: SignInFormType) => {
       try {
         setLoading(true);
+
         const result = await signIn({
           email: data.email,
           password: data.password,
@@ -57,8 +58,6 @@ export const SignIn: React.FC = () => {
 
         console.log(result?.user);
       } catch (err: any) {
-        console.error(err);
-        // Handle error as needed
       } finally {
         setLoading(false);
       }
@@ -82,14 +81,9 @@ export const SignIn: React.FC = () => {
             <FaUser />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Faça seu Login
+            Login
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(handleSubmitLogin)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <form onSubmit={handleSubmit(handleSubmitLogin)} noValidate>
             <InputText
               margin="normal"
               required
@@ -126,16 +120,16 @@ export const SignIn: React.FC = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Login
+              Entrar
             </Button>
             <Grid container>
               <Grid item>
                 <Link href="/sign-up" variant="body2">
-                  {'Você não tem uma conta? Cadastro '}
+                  {'Você não tem uma conta? Cadastrar '}
                 </Link>
               </Grid>
             </Grid>
-          </Box>
+          </form>
         </Box>
       </Container>
     </ThemeProvider>

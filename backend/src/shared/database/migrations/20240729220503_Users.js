@@ -8,8 +8,8 @@ exports.up = function (knex) {
     table.text('name').notNullable();
     table.text('email').notNullable();
     table.text('password').notNullable();
-    table.text('whatsapp').notNullable();
-    table.text('username').notNullable();
+    table.text('whatsapp').nullable();
+    table.text('username').nullable();
   });
 };
 

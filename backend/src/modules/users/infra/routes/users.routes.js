@@ -18,9 +18,9 @@ usersRoutes.post(
     [Segments.BODY]: {
       name: Joi.string().required('Name is required'),
       email: Joi.string().email().required('Email is required'),
-      whatsapp: Joi.string().required('Whatsapp is required'),
+      whatsapp: Joi.string(),
       password: Joi.string().min(6).required('Password is required'),
-      username: Joi.string().required('username is required'),
+      username: Joi.string(),
     },
   }),
   verifyIfEmailAlreadyExists,
