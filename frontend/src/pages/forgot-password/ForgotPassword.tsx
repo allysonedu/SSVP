@@ -1,5 +1,4 @@
-import React, { useCallback, useState } from 'react';
-
+import { useState, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -34,6 +33,7 @@ type ForgotPasswordFormType = zod.infer<typeof forgotPasswordValidationSchema>;
 export const ForgotPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const timeToBack = useRef<NodeJS.Timeout>();
 
   const methods = useForm<ForgotPasswordFormType>({
     resolver: zodResolver(forgotPasswordValidationSchema),
@@ -51,7 +51,12 @@ export const ForgotPassword: React.FC = () => {
 
         await forgotPassword(data.email);
 
-        navigate('/');
+        if (timeToBack.current) {
+          clearTimeout(timeToBack.current);
+        }
+        timeToBack.current = setTimeout(() => {
+          navigate('/');
+        }, 2000);
       } catch (err: any) {
       } finally {
         setLoading(false);
@@ -78,12 +83,8 @@ export const ForgotPassword: React.FC = () => {
           <Typography component="h1" variant="h5">
             Esqueceu sua senha?
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit(handleSubmitForgotPassword)}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+
+          <form onSubmit={handleSubmit(handleSubmitForgotPassword)}>
             <InputText
               margin="normal"
               required
@@ -113,7 +114,7 @@ export const ForgotPassword: React.FC = () => {
                 </Link>
               </Grid>
             </Grid>
-          </Box>
+          </form>
         </Box>
       </Container>
     </ThemeProvider>

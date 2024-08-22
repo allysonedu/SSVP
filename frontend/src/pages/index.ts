@@ -1,6 +1,7 @@
-export * from './Signin/signin'
+export * from './Signin/signin';
 
-export * from './Sign-up/signUp'
-export * from './forgot-password/ForgotPassword'
-export * from './Assistids/addEdit'
-export * from './Assistids/list'
+export * from './Sign-up/signUp';
+export * from './forgot-password/ForgotPassword';
+export * from './Assistids/addEdit';
+export * from './Assistids/list';
+export * from './reset-password/ResetPassword';

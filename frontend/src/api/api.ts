@@ -1,5 +1,7 @@
 import { api } from '../shared/services/api';
 
+import { IResetPassword } from '../shared/dtos';
+
 const forgotPassword = async (email: string) => {
   try {
     const result = await api.post('/forgot_users', { email });
@@ -22,6 +24,18 @@ const login = async (email: string, password: string) => {
   }
 };
 
+const resetPassword = async ({ token, password }: IResetPassword) => {
+  try {
+    const result = await api.patch(`/reset_password_users/${token}`, {
+      password,
+    });
+
+    return result.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 interface IUsersRegisterProps {
   name: string;
   email: string;
@@ -38,4 +52,4 @@ const users = async (data: IUsersRegisterProps) => {
   }
 };
 
-export { login, users, forgotPassword };
+export { login, users, forgotPassword, resetPassword };
