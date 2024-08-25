@@ -1,7 +1,7 @@
+/* eslint-disable camelcase */
 import React, { createContext, useCallback, useState, useContext } from 'react';
 
 import { environment } from '../environment';
-
 import { login } from '../../api/api';
 
 import { ILogin, IUser } from '../dtos';
@@ -14,6 +14,7 @@ interface SignInCredencials {
 interface IUserResponseProps {
   user: IUser;
 }
+
 interface AuthContextData {
   user: IUser;
   token: string;
@@ -21,9 +22,11 @@ interface AuthContextData {
   signOut(): void;
   updateUser(user: IUser): void;
 }
+
 interface AuthProps {
   children: React.ReactNode;
 }
+
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC<AuthProps> = ({ children }) => {
@@ -40,6 +43,7 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
 
     return {} as ILogin;
   });
+
   const signIn = useCallback(async ({ email, password }: SignInCredencials) => {
     const { data } = await login(email, password);
 
@@ -87,6 +91,7 @@ const AuthProvider: React.FC<AuthProps> = ({ children }) => {
     </AuthContext.Provider>
   );
 };
+
 function useAuth(): AuthContextData {
   const context = useContext(AuthContext);
 

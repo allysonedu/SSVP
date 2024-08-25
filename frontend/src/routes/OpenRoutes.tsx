@@ -9,6 +9,7 @@ import {
   AssistidsAddEdit,
   List,
   ResetPassword,
+  Home,
 } from '../pages';
 
 export const OpenRoutes: React.FC = () => {
@@ -18,6 +19,7 @@ export const OpenRoutes: React.FC = () => {
       <Route path="/sign-up" element={<SignUp />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/home" element={<Home />} />
       <Route path="/Assistids/Add" element={<AssistidsAddEdit />} />
       <Route path="/Assistids" element={<List />} />
       <Route path="*" element={<Navigate to="/" />} />

@@ -1,5 +1,5 @@
 export * from './Signin/signin';
-
+export * from './home/Home';
 export * from './Sign-up/signUp';
 export * from './forgot-password/ForgotPassword';
 export * from './Assistids/addEdit';

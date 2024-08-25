@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Avatar,
@@ -35,6 +36,7 @@ const defaultTheme = createTheme();
 export const SignIn: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
+  const navigate = useNavigate();
 
   const methods = useForm<SignInFormType>({
     resolver: zodResolver(SignInFormValidationSchema),
@@ -57,8 +59,8 @@ export const SignIn: React.FC = () => {
         });
 
         console.log(result?.user);
+        navigate('/home');
       } catch (err: any) {
-        console.log(err)
       } finally {
         setLoading(false);
       }

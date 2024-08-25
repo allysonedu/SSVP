@@ -24,7 +24,7 @@ const dependentsRoutes = require('../../../modules/dependents/infra/routes/depen
 
 const transactionsRoutes = require('../../../modules/transactions/infra/routes/transactions.routes');
 
-//const ensureAuthenticated = require('../../../shared/middlewares/ensure.autenticated');
+// const ensureAuthenticated = require('../../../shared/middlewares/ensure.autenticated');
 
 const routes = Router();
 
@@ -44,6 +44,8 @@ routes.use('/forgot_secretary', forgotSecretaryRoutes);
 
 routes.use('/reset_password_secretary', resetPasswordSecretaryRoutes);
 
+// routes.use(ensureAuthenticated);
+
 routes.use('/assisteds', assistedsRoutes);
 
 routes.use('/conferences', conferencesRoutes);
@@ -51,7 +53,5 @@ routes.use('/conferences', conferencesRoutes);
 routes.use('/dependents', dependentsRoutes);
 
 routes.use('/transactions', transactionsRoutes);
-
-//routes.use(ensureAuthenticated);
 
 module.exports = routes;
