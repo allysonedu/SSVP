@@ -7,12 +7,7 @@ export const menu = [
         label: 'Página Inicial',
         icon: 'home',
         path: '/home',
-      },
-      {
-        label: 'Assisteds',
-        icon: 'user',
-        path: '/Assisteds',
-      },
+      }
     ],
   },
   {
@@ -20,9 +15,9 @@ export const menu = [
     icon: 'receipt_long',
     items: [
       {
-        label: 'Assisteds',
+        label: 'Assistidos',
         icon: 'user',
-        path: '/Assisteds',
+        path: '/assistids-page',
       },
     ],
   },

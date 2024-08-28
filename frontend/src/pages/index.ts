@@ -3,5 +3,5 @@ export * from './home/Home';
 export * from './Sign-up/signUp';
 export * from './forgot-password/ForgotPassword';
 export * from './Assistids/addEdit';
-export * from './Assistids/list';
+export * from './Assistids/assistidsPage'
 export * from './reset-password/ResetPassword';

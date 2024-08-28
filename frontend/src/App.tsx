@@ -6,7 +6,7 @@ import { ThemeProvider } from 'styled-components';
 
 import { AppProvider } from './shared/hooks';
 
-import { OpenRoutes } from './routes/OpenRoutes';
+import { AppRoutes } from './routes/index';
 
 import './global.css';
 
@@ -16,7 +16,7 @@ export const App: React.FC = () => (
   <ThemeProvider theme={Light}>
     <AppProvider>
       <BrowserRouter>
-        <OpenRoutes />
+        <AppRoutes />
       </BrowserRouter>
     </AppProvider>
   </ThemeProvider>

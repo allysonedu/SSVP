@@ -1,6 +1,6 @@
 import { ListAssistids } from "./assistidsView";
 
-export const List = () => {
+export const AssistidsPage: React.FC = () => {
   const cadastros = [
     {
       nome: "Mariza de Angelis",
@@ -14,7 +14,7 @@ export const List = () => {
   ];
 
   return (
-    <div>
+    <div style={{marginTop:"100px"}}>
       <ListAssistids cadastros={cadastros} />
     </div>
   );

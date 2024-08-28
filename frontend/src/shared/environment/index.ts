@@ -3,6 +3,8 @@ export const environment = {
 
   APP_NAME: '@Ally',
 
+  DEV:true,
+
   LINE_LIMIT: 10,
   /**
    * Placehover dos campos de pesquisa
