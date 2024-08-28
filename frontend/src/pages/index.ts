@@ -3,5 +3,7 @@ export * from './home/Home';
 export * from './Sign-up/signUp';
 export * from './forgot-password/ForgotPassword';
 export * from './Assistids/addEdit';
-export * from './Assistids/assistidsPage'
+export * from './Assistids/assistidsPage';
 export * from './reset-password/ResetPassword';
+export * from './conferences/addConferencesEdit';
+export * from './conferences/conferencesPage';

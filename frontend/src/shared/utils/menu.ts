@@ -7,7 +7,7 @@ export const menu = [
         label: 'Página Inicial',
         icon: 'home',
         path: '/home',
-      }
+      },
     ],
   },
   {
