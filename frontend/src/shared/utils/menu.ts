@@ -1,6 +1,6 @@
 export const menu = [
   {
-    title: 'Acesso Rápido',
+    title: 'home',
     icon: 'bolt',
     items: [
       {
@@ -10,12 +10,34 @@ export const menu = [
       },
     ],
   },
+
   {
-    title: 'Cadastros',
+    title: 'Conferencias',
+    icon: 'bolt',
+    items: [
+      {
+        label: 'Cadastrar',
+        icon: 'c',
+        path: '/conferences',
+      },
+      {
+        label: 'Encontrar',
+        icon: 'c',
+        path: '/conferencesView',
+      },
+    ],
+  },
+  {
+    title: 'Assistidos',
     icon: 'receipt_long',
     items: [
       {
-        label: 'Assistidos',
+        label: 'Cadastrar',
+        icon: 'user',
+        path: '/assistids',
+      },
+      {
+        label: 'Encontrar',
         icon: 'user',
         path: '/assistids-page',
       },

@@ -11,7 +11,7 @@ export const Container = styled.div`
 
   img {
     position: relative;
-    left: 150%;
+    left: 100%;
     top: 100%;
     width: 400px;
   }

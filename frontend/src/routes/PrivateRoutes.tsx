@@ -7,6 +7,7 @@ import {
   AssistidsPage,
   ConferencesAddEdit,
   ConferencePage,
+  AssistidsAddEdit,
 } from '../pages';
 
 import { MenuSideBar } from '../shared/components';
@@ -24,10 +25,11 @@ export const PrivateRoutes: React.FC = () => {
       <Routes>
         <Route path="/home" element={<Home />} />
         <Route path="/assistids-page" element={<AssistidsPage />} />
+        <Route path="/assistids" element={<AssistidsAddEdit />} />
         <Route path="/conferences" element={<ConferencesAddEdit />} />
         <Route path="/conferencesView" element={<ConferencePage />} />
 
-        <Route path="*" element={<Navigate to="/home" />} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </MenuSideBar>
   );
