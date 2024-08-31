@@ -1,7 +1,7 @@
 export const menu = [
   {
     title: 'home',
-    icon: 'bolt',
+    icon: 'home',
     items: [
       {
         label: 'Página Inicial',

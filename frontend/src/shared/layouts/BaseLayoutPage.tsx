@@ -18,7 +18,7 @@ export const BaseLayoutPage: React.FC<IBaseLayoutPageProps> = ({
       <Box display="flex">
         {toolbar && <Box>{toolbar}</Box>}
 
-        <Box marginLeft={smDown ? 2 : 0}>{children}</Box>
+        <Box marginLeft={smDown ? 2 : 0} sx={{width:'100%',margin:"10% auto"}}>{children}</Box>
       </Box>
     </MenuSideBar>
   );

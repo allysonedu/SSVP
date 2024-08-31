@@ -25,6 +25,7 @@ import {
 import { useDrawer } from '../../hooks/drawer';
 import { useLocation } from 'react-router-dom';
 
+import logo from '../../../assets/ssvp.png'
 import { useAuth } from '../../hooks/auth';
 import { Menus } from './menus';
 import { menu } from '../../utils/menu';
@@ -68,6 +69,7 @@ const AppBar = styled(MuiAppBar, {
   shouldForwardProp: prop => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
+  background: theme.custom.tab?.main,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -75,7 +77,7 @@ const AppBar = styled(MuiAppBar, {
   ...(open && {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-
+    background: theme.custom.tab?.main,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -175,7 +177,9 @@ export const MenuSideBar: React.FC<IMenuSideBarProps> = ({ children }) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-          ></DrawerHeader>
+          >
+            <img src={logo} alt="Sociedade São Vicente de Paulo" width={140} />
+          </DrawerHeader>
           <Divider />
           <List
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
@@ -234,7 +238,10 @@ export const MenuSideBar: React.FC<IMenuSideBarProps> = ({ children }) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}
-          ></DrawerHeader>
+          >
+
+            <img src={logo} alt="Sociedade São Vicente de Paulo" width={140} />
+          </DrawerHeader>
           <Divider />
           <List
             sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
