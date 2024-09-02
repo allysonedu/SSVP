@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-
+import { createTheme } from '@mui/material/styles';
 import {
   Avatar,
   Button,
@@ -11,7 +11,6 @@ import {
   Typography,
   Container,
   Checkbox,
-  createTheme,
   ThemeProvider,
   LinearProgress,
 } from '@mui/material';

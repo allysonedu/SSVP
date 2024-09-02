@@ -25,7 +25,7 @@ import {
 import { useDrawer } from '../../hooks/drawer';
 import { useLocation } from 'react-router-dom';
 
-import logo from '../../../assets/ssvp.png'
+import logo from '../../../assets/ssvp.png';
 import { useAuth } from '../../hooks/auth';
 import { Menus } from './menus';
 import { menu } from '../../utils/menu';
@@ -239,7 +239,6 @@ export const MenuSideBar: React.FC<IMenuSideBarProps> = ({ children }) => {
               alignItems: 'center',
             }}
           >
-
             <img src={logo} alt="Sociedade São Vicente de Paulo" width={140} />
           </DrawerHeader>
           <Divider />

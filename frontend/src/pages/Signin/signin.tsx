@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createTheme } from '@mui/material/styles';
 
 import {
   Avatar,
@@ -12,7 +13,6 @@ import {
   Typography,
   Container,
   Checkbox,
-  createTheme,
   ThemeProvider,
   LinearProgress,
 } from '@mui/material';
