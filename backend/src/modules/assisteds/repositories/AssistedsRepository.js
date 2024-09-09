@@ -2,9 +2,12 @@ const connection = require('../../../shared/database/connection');
 
 class AssistedsRepository {
   async createAssisteds(payload) {
-    return connection.transaction(async trx =>
-      trx('assisteds').insert(payload).returning('*')
+   
+     const [createdAssisteds] = await connection.transaction(async trx =>
+       trx('assisteds').insert(payload).returning('*')
     );
+
+    return createdAssisteds
   }
 
   async updateAssisteds(payload) {

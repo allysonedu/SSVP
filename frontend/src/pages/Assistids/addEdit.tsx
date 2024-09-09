@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import { useForm, Controller, useFieldArray, SubmitHandler } from 'react-hook-form';
 import {
   TextField,
   Grid,
@@ -12,68 +12,43 @@ import {
   Select,
   FormHelperText,
 } from '@mui/material';
+import { IAssisteds } from '../../shared/dtos/IAssisteds';
 
-interface Dependente {
-  nome: string;
-  idade: string;
-  relacao: string;
-}
 
-interface FormValues {
-  nome: string;
-  endereco: string;
-  numero: string;
-  bairro: string;
-  cpf: string;
-  estadoCivil: string;
-  idade: string;
-  profissao: string;
-  dependentes: Dependente[];
-  casa: string;
-  rendaFamiliar: string;
-  grauInstrucao: string;
-  situacao: string;
-}
+import {createAssisteds} from "../,,/../../api/assisteds";
+import { useParams } from 'react-router-dom';
 
 export const AssistidsAddEdit: React.FC = () => {
+
+  const { id } = useParams();
   const {
     control,
     handleSubmit,
     formState: { errors },
     register,
-  } = useForm<FormValues>({
+  } = useForm<IAssisteds>({
     defaultValues: {
-      nome: '',
-      endereco: '',
-      numero: '',
-      bairro: '',
-      cpf: '',
-      estadoCivil: '',
-      idade: '',
-      profissao: '',
-      dependentes: [{ nome: '', idade: '', relacao: '' }],
-      casa: '',
-      rendaFamiliar: '',
-      grauInstrucao: '',
-      situacao: '',
-    },
+      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id)}] // valores iniciais para dependents
+    }
   });
+
+
+
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'dependentes',
+    name: 'dependents',  // Corrigido o nome do campo dependents
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IAssisteds> = (data) => {
+    createAssisteds(data)
   };
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ mt: 3, padding: 3 }}
-      style={{ marginTop: '100px' }}
+      sx={{ mt: 5, padding: 3 }}
     >
       <Typography variant="h6" gutterBottom>
         Cadastro de Sindicância
@@ -81,7 +56,7 @@ export const AssistidsAddEdit: React.FC = () => {
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Controller
-            name="nome"
+            name="name"
             control={control}
             render={({ field }) => (
               <TextField
@@ -89,64 +64,14 @@ export const AssistidsAddEdit: React.FC = () => {
                 variant="standard"
                 label="Nome"
                 fullWidth
-                error={!!errors.nome}
-                helperText={errors.nome ? 'Campo obrigatório' : ''}
+                error={!!errors.name}
+                helperText={errors.name ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="endereco"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Endereço"
-                fullWidth
-                error={!!errors.endereco}
-                helperText={errors.endereco ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="numero"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Número"
-                fullWidth
-                error={!!errors.numero}
-                helperText={errors.numero ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="bairro"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Bairro"
-                fullWidth
-                error={!!errors.bairro}
-                helperText={errors.bairro ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
+
         <Grid item xs={12} sm={6}>
           <Controller
             name="cpf"
@@ -164,15 +89,70 @@ export const AssistidsAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
+
         <Grid item xs={12} sm={6}>
           <Controller
-            name="estadoCivil"
+            name="age"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Idade"
+                fullWidth
+                error={!!errors.age}
+                helperText={errors.age ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="profession"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Profissão"
+                fullWidth
+                error={!!errors.profession}
+                helperText={errors.profession ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="district"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Bairro"
+                fullWidth
+                error={!!errors.district}
+                helperText={errors.district ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="maritalStatus"
             control={control}
             render={({ field }) => (
               <FormControl
                 fullWidth
                 variant="standard"
-                error={!!errors.estadoCivil}
+                error={!!errors.maritalStatus}
               >
                 <InputLabel>Estado Civil</InputLabel>
                 <Select {...field} variant="standard" label="Estado Civil">
@@ -181,7 +161,7 @@ export const AssistidsAddEdit: React.FC = () => {
                   <MenuItem value="separado">Separado(a)</MenuItem>
                 </Select>
                 <FormHelperText>
-                  {errors.estadoCivil ? 'Campo obrigatório' : ''}
+                  {errors.maritalStatus ? 'Campo obrigatório' : ''}
                 </FormHelperText>
               </FormControl>
             )}
@@ -191,34 +171,38 @@ export const AssistidsAddEdit: React.FC = () => {
 
         <Grid item xs={12} sm={6}>
           <Controller
-            name="idade"
+            name="home"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Idade"
-                fullWidth
-                error={!!errors.idade}
-                helperText={errors.idade ? 'Campo obrigatório' : ''}
-              />
+              <FormControl fullWidth error={!!errors.home}>
+                <InputLabel>Casa</InputLabel>
+                <Select {...field} variant="standard" label="Casa">
+                  <MenuItem value="propria">Própria</MenuItem>
+                  <MenuItem value="alugada">Alugada</MenuItem>
+                  <MenuItem value="gratuita">Gratuita</MenuItem>
+                  <MenuItem value="parentes">Parentes/Outros</MenuItem>
+                </Select>
+                <FormHelperText>
+                  {errors.home ? 'Campo obrigatório' : ''}
+                </FormHelperText>
+              </FormControl>
             )}
             rules={{ required: true }}
           />
         </Grid>
 
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={6}>
           <Controller
-            name="profissao"
+            name="family_income"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 variant="standard"
-                label="Profissão"
+                label="Renda Familiar"
                 fullWidth
-                error={!!errors.profissao}
-                helperText={errors.profissao ? 'Campo obrigatório' : ''}
+                error={!!errors.family_income}
+                helperText={errors.family_income ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
@@ -230,7 +214,7 @@ export const AssistidsAddEdit: React.FC = () => {
             <Grid container spacing={2} key={item.id}>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name={`dependentes.${index}.nome`}
+                  name={`dependents.${index}.name`}
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -238,9 +222,9 @@ export const AssistidsAddEdit: React.FC = () => {
                       variant="standard"
                       label={`Dependente ${index + 1} - Nome`}
                       fullWidth
-                      error={!!errors.dependentes?.[index]?.nome}
+                      error={!!errors.dependents?.[index]?.name}
                       helperText={
-                        errors.dependentes?.[index]?.nome
+                        errors.dependents?.[index]?.name
                           ? 'Campo obrigatório'
                           : ''
                       }
@@ -251,7 +235,7 @@ export const AssistidsAddEdit: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name={`dependentes.${index}.idade`}
+                  name={`dependents.${index}.age`}
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -259,9 +243,9 @@ export const AssistidsAddEdit: React.FC = () => {
                       variant="standard"
                       label="Idade"
                       fullWidth
-                      error={!!errors.dependentes?.[index]?.idade}
+                      error={!!errors.dependents?.[index]?.age}
                       helperText={
-                        errors.dependentes?.[index]?.idade
+                        errors.dependents?.[index]?.age
                           ? 'Campo obrigatório'
                           : ''
                       }
@@ -272,17 +256,17 @@ export const AssistidsAddEdit: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name={`dependentes.${index}.relacao`}
+                  name={`dependents.${index}.relationship`}
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       variant="standard"
-                      label="Relação"
+                      label="Parentesco"
                       fullWidth
-                      error={!!errors.dependentes?.[index]?.relacao}
+                      error={!!errors.dependents?.[index]?.relationship}
                       helperText={
-                        errors.dependentes?.[index]?.relacao
+                        errors.dependents?.[index]?.relationship
                           ? 'Campo obrigatório'
                           : ''
                       }
@@ -297,67 +281,29 @@ export const AssistidsAddEdit: React.FC = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => append({ nome: '', idade: '', relacao: '' })}
+              onClick={() =>
+                append({ name: '', age: 0, relationship: '', assisted_id: Number(id) })
+              }
             >
               Adicionar Dependente
             </Button>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="casa"
-            control={control}
-            render={({ field }) => (
-              <FormControl fullWidth error={!!errors.casa}>
-                <InputLabel>Casa</InputLabel>
-                <Select {...field} variant="standard" label="Casa">
-                  <MenuItem value="propria">Própria</MenuItem>
-                  <MenuItem value="alugada">Alugada</MenuItem>
-                  <MenuItem value="gratuita">Gratuita</MenuItem>
-                  <MenuItem value="parentes">Parentes/Outros</MenuItem>
-                </Select>
-                <FormHelperText>
-                  {errors.casa ? 'Campo obrigatório' : ''}
-                </FormHelperText>
-              </FormControl>
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="rendaFamiliar"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Renda Familiar"
-                fullWidth
-                error={!!errors.rendaFamiliar}
-                helperText={errors.rendaFamiliar ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-
         <Grid item xs={12}>
           <Controller
-            name="situacao"
+            name="explain"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 variant="standard"
-                label="Situação Sócio-Econômica"
+                label="Explique sua Situação"
                 fullWidth
                 multiline
                 rows={4}
-                error={!!errors.situacao}
-                helperText={errors.situacao ? 'Campo obrigatório' : ''}
+                error={!!errors.explain}
+                helperText={errors.explain ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
