@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useForm, Controller, useFieldArray, SubmitHandler } from 'react-hook-form';
 import {
   TextField,
@@ -15,7 +15,7 @@ import {
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 
 
-import {createAssisteds} from "../,,/../../api/assisteds";
+import { createAssisteds, getOneAssisteds } from "../,,/../../api/assisteds";
 import { useParams } from 'react-router-dom';
 
 export const AssistidsAddEdit: React.FC = () => {
@@ -26,13 +26,28 @@ export const AssistidsAddEdit: React.FC = () => {
     handleSubmit,
     formState: { errors },
     register,
+    reset
   } = useForm<IAssisteds>({
     defaultValues: {
-      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id)}] // valores iniciais para dependents
+      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id) }] // valores iniciais para dependents
     }
   });
 
 
+  const fetchData = useCallback(async () => {
+    const dados = await getOneAssisteds(Number(id));
+
+    if (id && dados) {
+      reset(dados);
+    }
+  }, [reset, id]);  // somente reset e id nas dependências
+
+
+  useEffect(() => {
+    if (id) {
+      fetchData()
+    }
+  }, [fetchData]);
 
 
   const { fields, append, remove } = useFieldArray({
@@ -149,13 +164,13 @@ export const AssistidsAddEdit: React.FC = () => {
             name="maritalStatus"
             control={control}
             render={({ field }) => (
-              <FormControl
-                fullWidth
-                variant="standard"
-                error={!!errors.maritalStatus}
-              >
+              <FormControl fullWidth variant="standard" error={!!errors.maritalStatus}>
                 <InputLabel>Estado Civil</InputLabel>
-                <Select {...field} variant="standard" label="Estado Civil">
+                <Select
+                  {...field}
+                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  label="Estado Civil"
+                >
                   <MenuItem value="solteiro">Solteiro(a)</MenuItem>
                   <MenuItem value="casado">Casado(a)</MenuItem>
                   <MenuItem value="separado">Separado(a)</MenuItem>
@@ -176,7 +191,7 @@ export const AssistidsAddEdit: React.FC = () => {
             render={({ field }) => (
               <FormControl fullWidth error={!!errors.home}>
                 <InputLabel>Casa</InputLabel>
-                <Select {...field} variant="standard" label="Casa">
+                <Select {...field}  value={field.value || ""}  variant="standard" label="Casa">
                   <MenuItem value="propria">Própria</MenuItem>
                   <MenuItem value="alugada">Alugada</MenuItem>
                   <MenuItem value="gratuita">Gratuita</MenuItem>
@@ -314,6 +329,9 @@ export const AssistidsAddEdit: React.FC = () => {
       <Box mt={3}>
         <Button type="submit" variant="contained" color="primary">
           Enviar
+        </Button>
+        <Button type="button" variant="contained" color="warning">
+          Cancelar
         </Button>
       </Box>
     </Box>

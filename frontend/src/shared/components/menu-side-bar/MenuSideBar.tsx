@@ -145,7 +145,7 @@ export const MenuSideBar: React.FC<IMenuSideBarProps> = ({ children }) => {
   return (
     <Box sx={{ display: 'flex' }}>
       <AppBar position="fixed" open={smDown ? false : open}>
-        <Toolbar>
+        <Toolbar  sx={{background: "#3966BF"}}>
           <IconButton
             color="inherit"
             aria-label="open drawer"

@@ -1,21 +1,23 @@
+import { useEffect, useState } from "react";
 import { ListAssistids } from "./assistidsView";
+import {getAllAssisteds} from "../,,/../../api/assisteds";
 
 export const AssistidsPage: React.FC = () => {
-  const cadastros = [
-    {
-      nome: "Mariza de Angelis",
-      cpf: "123.456.789-00",
-      dependentes: [
-        { nome: "Lorenzo Henrique G. Ferro", idade: "1", relacao: "Filho" },
-        { nome: "Lucas Henrique G. Ferro", idade: "9", relacao: "Filho" },
-      ],
-    },
-    // ... outros cadastros
-  ];
+  
+  const [assisteds, setAssisteds] = useState([])
+
+  useEffect(() => {
+    const GetAssisteds = async () => {
+      setAssisteds(await getAllAssisteds())
+    };
+   
+   GetAssisteds()
+  }, [])
+  
 
   return (
     <div style={{marginTop:"100px"}}>
-      <ListAssistids cadastros={cadastros} />
+      <ListAssistids cadastros={assisteds} />
     </div>
   );
 };
