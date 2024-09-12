@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, Controller, useFieldArray, SubmitHandler } from 'react-hook-form';
 import {
   TextField,
@@ -7,57 +7,140 @@ import {
   Button,
   Typography,
   MenuItem,
+  CircularProgress,
   FormControl,
   InputLabel,
   Select,
   FormHelperText,
 } from '@mui/material';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
+import { createAssisteds, getOneAssisteds, deleteAssisteds } from '../../api/assisteds';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useToast } from '../../shared/hooks/Toast';
+
+// Componente reutilizável para inputs controlados com validação
+interface ControlledTextFieldProps {
+  name: string;
+  label: string;
+  control: any;
+  errors: any;
+  rules?: object;
+  type?: string;
+}
+
+const ControlledTextField: React.FC<ControlledTextFieldProps> = ({
+  name,
+  label,
+  control,
+  errors,
+  rules = {},
+  type = 'text'
+}) => (
+  <Controller
+    name={name}
+    control={control}
+    rules={rules}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        type={type}
+        label={label}
+        variant="outlined"
+        fullWidth
+        error={!!errors[name]}
+        helperText={errors[name]?.message || ''}
+      />
+    )}
+  />
+);
 
 
-import { createAssisteds, getOneAssisteds } from "../,,/../../api/assisteds";
-import { useParams } from 'react-router-dom';
 
 export const AssistidsAddEdit: React.FC = () => {
-
   const { id } = useParams();
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    register,
-    reset
-  } = useForm<IAssisteds>({
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast()
+  const navigate = useNavigate()
+  // useForm para gerenciar o formulário
+  const { control, handleSubmit, formState: { errors }, reset } = useForm<IAssisteds>({
     defaultValues: {
-      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id) }] // valores iniciais para dependents
+      name: '',
+      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id) }]
     }
   });
-
-
-  const fetchData = useCallback(async () => {
-    const dados = await getOneAssisteds(Number(id));
-
-    if (id && dados) {
-      reset(dados);
-    }
-  }, [reset, id]);  // somente reset e id nas dependências
-
-
-  useEffect(() => {
-    if (id) {
-      fetchData()
-    }
-  }, [fetchData]);
-
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'dependents',  // Corrigido o nome do campo dependents
+    name: 'dependents'
   });
 
-  const onSubmit: SubmitHandler<IAssisteds> = (data) => {
-    createAssisteds(data)
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await getOneAssisteds(Number(id));
+        if (response?.data) {
+          reset(response.data);
+        }
+      } catch (err) {
+        setError('Erro ao carregar os dados.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchData();
+    } else {
+      setLoading(false); // Se não há id, é um novo registro, não precisa carregar dados
+    }
+  }, [id, reset]);
+
+  const handleDelete = (id: number) => {
+    try {
+      deleteAssisteds(id)
+      addToast({
+        type: 'success',
+        title: `Assistido deletado com sucesso!!`,
+      })
+    } catch (error: any) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao Deletar o Assitido',
+        description: error?.message,
+      })
+    }
+
+
+  }
+  const onSubmit: SubmitHandler<IAssisteds> = async (data) => {
+    try {
+      await createAssisteds(data);
+      alert('Assistido salvo com sucesso!');
+    } catch (err) {
+      console.error('Erro ao salvar o assistido', err);
+    }
   };
+
+  // Se o loading estiver ativo, mostra um indicador de progresso
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" mt={5}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  // Se houver um erro, exibe a mensagem de erro
+  if (error) {
+    return (
+      <Box display="flex" justifyContent="center" mt={5}>
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -66,7 +149,7 @@ export const AssistidsAddEdit: React.FC = () => {
       sx={{ mt: 5, padding: 3 }}
     >
       <Typography variant="h6" gutterBottom>
-        Cadastro de Sindicância
+        Cadastro de Assistido
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -191,7 +274,7 @@ export const AssistidsAddEdit: React.FC = () => {
             render={({ field }) => (
               <FormControl fullWidth error={!!errors.home}>
                 <InputLabel>Casa</InputLabel>
-                <Select {...field}  value={field.value || ""}  variant="standard" label="Casa">
+                <Select {...field} value={field.value || ""} variant="standard" label="Casa">
                   <MenuItem value="propria">Própria</MenuItem>
                   <MenuItem value="alugada">Alugada</MenuItem>
                   <MenuItem value="gratuita">Gratuita</MenuItem>
@@ -327,13 +410,17 @@ export const AssistidsAddEdit: React.FC = () => {
       </Grid>
 
       <Box mt={3}>
-        <Button type="submit" variant="contained" color="primary">
+        <Button type="submit" variant="contained" color="primary" >
           Enviar
         </Button>
-        <Button type="button" variant="contained" color="warning">
+        <Button type="button" onClick={() => { navigate("/assistids-page") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
           Cancelar
         </Button>
+        <Button type="button" variant="contained" color="error" onClick={() => {handleDelete(Number(id))}} sx={{ marginLeft: "10px" }}>
+          Excluir
+        </Button>
       </Box>
+
     </Box>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Grid, Box, List, ListItem, ListItemText, Typography, InputAdornment, Paper } from '@mui/material';
+import { TextField, Grid, Box, List, ListItem, ListItemText, Typography, InputAdornment, Paper, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 import { useNavigate } from 'react-router-dom';
@@ -64,6 +64,11 @@ export const ListAssistids: React.FC<{ cadastros: IAssisteds[] }> = ({ cadastros
             </Typography>
 
             <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                <Grid item xs={12} sm={12} >
+                    <Button type="button" onClick={()=>{ navigate("/assisteds")}} variant="contained" color="primary">
+                        Novo Assistido
+                    </Button>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         label="Pesquisar por Nome"

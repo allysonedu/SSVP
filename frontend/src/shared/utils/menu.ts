@@ -34,7 +34,7 @@ export const menu = [
       {
         label: 'Cadastrar',
         icon: 'user',
-        path: '/assistids',
+        path: '/assisteds',
       },
       {
         label: 'Encontrar',

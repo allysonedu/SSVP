@@ -6,7 +6,7 @@ class DeleteAssistedsService {
   }
 
   async execute(idAssisteds) {
-    const assisted = await this.assistedsRepository.getOneAssisteds(
+    const assisted = await this.assistedsRepository.deleteAssisteds(
       idAssisteds
     );
 

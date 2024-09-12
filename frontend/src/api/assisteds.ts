@@ -46,9 +46,8 @@ const getAllAssisteds = async () => {
 
 const getOneAssisteds = async (id: Number) => {
   try {
-    const result = await api.get(`/assisteds/${id}`);
-    
-    return result.data;
+
+    return await api.get(`/assisteds/${id}`);
   } catch (error: any) {
     throw new Error(error.message);
   }
