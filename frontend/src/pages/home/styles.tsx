@@ -5,6 +5,7 @@ export const Container = styled.div`
   height: 100%;
 
   h1 {
+    margin: 20px;
     position: relative;
     top: 50%;
   }
@@ -13,6 +14,6 @@ export const Container = styled.div`
     position: relative;
     left: 100%;
     top: 100%;
-    width: 400px;
+    width: 300px;
   }
 `;

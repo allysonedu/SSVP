@@ -2,12 +2,7 @@ import React from 'react';
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import {
-  SignIn,
-  SignUp,
-  ForgotPassword,
-  ResetPassword
-} from '../pages';
+import { SignIn, SignUp, ForgotPassword, ResetPassword } from '../pages';
 
 export const OpenRoutes: React.FC = () => {
   return (

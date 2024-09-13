@@ -223,8 +223,9 @@ export const MenuSideBar: React.FC<IMenuSideBarProps> = ({ children }) => {
                     }}
                   >
                     <Icon>logout</Icon>
-                  </ListItemIcon>
+                  </ListItemIcon>{' '}
                   <ListItemText primary="Sair" sx={{ opacity: open ? 1 : 0 }} />
+                  Link
                 </ListItemButton>
               </ListItem>
             </Box>

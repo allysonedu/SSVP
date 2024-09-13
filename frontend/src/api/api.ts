@@ -52,4 +52,29 @@ const users = async (data: IUsersRegisterProps) => {
   }
 };
 
-export { login, users, forgotPassword, resetPassword };
+interface IAssistedsCreateProps {
+  name: string;
+  age: string;
+  whatsapp: string;
+  profession: string;
+  district: string;
+  cpf: string;
+  Case_report: string;
+  family_income: string;
+  dependents: [{ nome: string; idade: string; relacao: string }];
+  explain: string;
+  Spouse: string;
+  home: string;
+  maritalStatus: string;
+}
+
+const createAssistids = async (data: IAssistedsCreateProps) => {
+  try {
+    const result = await api.post('/assistids', data);
+    return result.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+export { login, users, forgotPassword, resetPassword, createAssistids };
