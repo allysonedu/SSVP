@@ -1,14 +1,14 @@
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { TextField, Grid, Box, Button, Typography } from '@mui/material';
-import { IConferences } from '../../shared/dtos/IConferences';
-import { createConferences, getOneConferences, deleteConferences, updateConferences } from '../../api/conferences';
+import {  IMovements} from '../../shared/dtos/IMovements';
+import { createMovements, getOneMovements, deleteMovements, updateMovements } from '../../api/movements';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 
 
-export const ConferencesAddEdit: React.FC = () => {
+export const MovementsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +20,7 @@ export const ConferencesAddEdit: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset
-  } = useForm<IConferences>({
+  } = useForm<IMovements>({
     defaultValues: {
       name: '',
       username: '',
@@ -37,7 +37,7 @@ export const ConferencesAddEdit: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await getOneConferences(Number(id));
+        const response = await getOneMovements(Number(id));
         if (response?.data) {
           reset(response.data);
         }
@@ -57,7 +57,7 @@ export const ConferencesAddEdit: React.FC = () => {
 
   const handleDelete = (id: number) => {
     try {
-      deleteConferences(id)
+      deleteMovements(id)
       addToast({
         type: 'success',
         title: `Conferência deletada com sucesso!!`,
@@ -74,13 +74,13 @@ export const ConferencesAddEdit: React.FC = () => {
 
   }
 
-  const onSubmit: SubmitHandler<IConferences> = async (data: IConferences) => {
+  const onSubmit: SubmitHandler<IMovements> = async (data: IMovements) => {
     try {
       if (!id) {
-        await createConferences(data);
+        await createMovements(data);
         alert('Conferência salva com sucesso!');
       } else {
-        await updateConferences(data)
+        await updateMovements(data)
         alert('Conferência atualizada com sucesso!');
       }
       navigate('/conferencesView')

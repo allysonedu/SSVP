@@ -8,10 +8,13 @@ import {
   ConferencesAddEdit,
   ConferencePage,
   AssistidsAddEdit,
+
 } from '../pages';
 
 import { MenuSideBar } from '../shared/components';
 import { menu } from '../shared/utils/menu';
+import { MovementsAddEdit } from '../pages/movements/addMovementsEdit';
+import { MovementsPage } from '../pages/movements/movementsPage';
 
 export const PrivateRoutes: React.FC = () => {
   const { setDrawerOptions } = useDrawer();
@@ -28,7 +31,11 @@ export const PrivateRoutes: React.FC = () => {
         <Route path="/assisteds" element={<AssistidsAddEdit />} />
         <Route path="/assisteds/:id" element={<AssistidsAddEdit />} />
         <Route path="/conferences" element={<ConferencesAddEdit />} />
+        <Route path="/conferences/:id" element={<ConferencesAddEdit />} />
         <Route path="/conferencesView" element={<ConferencePage />} />
+        <Route path="/movements" element={<MovementsAddEdit />} />
+        <Route path="/movements/:id" element={<MovementsAddEdit />} />
+        <Route path="/movementsView" element={<MovementsPage />} />
 
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

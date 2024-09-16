@@ -16,11 +16,6 @@ export const menu = [
     icon: 'church',
     items: [
       {
-        label: 'Cadastrar',
-        icon: 'c',
-        path: '/conferences',
-      },
-      {
         label: 'Encontrar',
         icon: 'c',
         path: '/conferencesView',
@@ -31,11 +26,22 @@ export const menu = [
     title: 'Assistidos',
     icon: 'receipt_long',
     items: [
-      
+
       {
         label: 'Encontrar',
         icon: 'user',
         path: '/assisteds-page',
+      },
+    ],
+  },
+  {
+    title: 'Movimentações',
+    icon: 'compareArrows',
+    items: [
+      {
+        label: 'Encontrar',
+        icon: 'user',
+        path: '/movementsView',
       },
     ],
   },

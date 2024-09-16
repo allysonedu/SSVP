@@ -18,43 +18,6 @@ import { createAssisteds, getOneAssisteds, deleteAssisteds, updateAssisteds } fr
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 
-// Componente reutilizável para inputs controlados com validação
-interface ControlledTextFieldProps {
-  name: string;
-  label: string;
-  control: any;
-  errors: any;
-  rules?: object;
-  type?: string;
-}
-
-const ControlledTextField: React.FC<ControlledTextFieldProps> = ({
-  name,
-  label,
-  control,
-  errors,
-  rules = {},
-  type = 'text'
-}) => (
-  <Controller
-    name={name}
-    control={control}
-    rules={rules}
-    render={({ field }) => (
-      <TextField
-        {...field}
-        type={type}
-        label={label}
-        variant="outlined"
-        fullWidth
-        error={!!errors[name]}
-        helperText={errors[name]?.message || ''}
-      />
-    )}
-  />
-);
-
-
 
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();

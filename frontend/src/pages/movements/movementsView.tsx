@@ -24,7 +24,7 @@ interface Cadastro {
   // username: string;
 }
 
-export const ListConferences: React.FC<{ cadastros: Cadastro[] }> = ({
+export const ListMovements: React.FC<{ cadastros: Cadastro[] }> = ({
   cadastros,
 }) => {
   const [filteredCadastros, setFilteredCadastros] =

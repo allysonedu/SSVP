@@ -1,16 +1,21 @@
+import { useEffect, useState } from 'react';
 import { ListConferences } from './conferencesView';
-export const ConferencePage: React.FC = () => {
-  const cadastros = [
-    {
-      name: 'Mariza de Angelis',
-      email: 'allyson@gmail',
-    },
-    // ... outros cadastros
-  ];
+import { getAllConferences } from '../../api/conferences';
 
+export const ConferencePage: React.FC = () => {
+  const [conferences, setConferences] = useState([])
+
+  useEffect(() => {
+    const GetConferences = async () => {
+      setConferences(await getAllConferences())
+    };
+   
+   GetConferences()
+  }, [])
+  
   return (
     <div style={{ marginTop: '100px' }}>
-      <ListConferences cadastros={cadastros} />
+      <ListConferences cadastros={conferences} />
     </div>
   );
 };
