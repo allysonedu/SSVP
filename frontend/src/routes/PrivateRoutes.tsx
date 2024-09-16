@@ -24,7 +24,7 @@ export const PrivateRoutes: React.FC = () => {
     <MenuSideBar>
       <Routes>
         <Route path="/home" element={<Home />} />
-        <Route path="/assistids-page" element={<AssistidsPage />} />
+        <Route path="/assisteds-page" element={<AssistidsPage />} />
         <Route path="/assisteds" element={<AssistidsAddEdit />} />
         <Route path="/assisteds/:id" element={<AssistidsAddEdit />} />
         <Route path="/conferences" element={<ConferencesAddEdit />} />

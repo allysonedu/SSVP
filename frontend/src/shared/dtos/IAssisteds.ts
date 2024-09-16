@@ -17,6 +17,7 @@ export interface IAssisteds {
 
 
 interface IDependents {
+    id: Number,
     assisted_id: Number,
     age: Number,
     name: string,

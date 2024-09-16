@@ -13,7 +13,7 @@ export const menu = [
 
   {
     title: 'Conferencias',
-    icon: 'bolt',
+    icon: 'church',
     items: [
       {
         label: 'Cadastrar',
@@ -31,15 +31,11 @@ export const menu = [
     title: 'Assistidos',
     icon: 'receipt_long',
     items: [
-      {
-        label: 'Cadastrar',
-        icon: 'user',
-        path: '/assisteds',
-      },
+      
       {
         label: 'Encontrar',
         icon: 'user',
-        path: '/assistids-page',
+        path: '/assisteds-page',
       },
     ],
   },

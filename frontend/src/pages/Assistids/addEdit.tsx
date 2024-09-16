@@ -14,7 +14,7 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
-import { createAssisteds, getOneAssisteds, deleteAssisteds } from '../../api/assisteds';
+import { createAssisteds, getOneAssisteds, deleteAssisteds, updateAssisteds } from '../../api/assisteds';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 
@@ -66,7 +66,6 @@ export const AssistidsAddEdit: React.FC = () => {
   const { control, handleSubmit, formState: { errors }, reset } = useForm<IAssisteds>({
     defaultValues: {
       name: '',
-      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id) }]
     }
   });
 
@@ -105,6 +104,7 @@ export const AssistidsAddEdit: React.FC = () => {
         type: 'success',
         title: `Assistido deletado com sucesso!!`,
       })
+      navigate('/assisteds-page')
     } catch (error: any) {
       addToast({
         type: 'error',
@@ -117,8 +117,14 @@ export const AssistidsAddEdit: React.FC = () => {
   }
   const onSubmit: SubmitHandler<IAssisteds> = async (data) => {
     try {
-      await createAssisteds(data);
-      alert('Assistido salvo com sucesso!');
+      if (!id) {
+        await createAssisteds(data);
+        alert('Assistido salvo com sucesso!');
+      }else{
+        await updateAssisteds(data)
+        alert('Assistido atualizado com sucesso!');
+      } 
+      navigate('/assisteds-page')
     } catch (err) {
       console.error('Erro ao salvar o assistido', err);
     }
@@ -310,6 +316,27 @@ export const AssistidsAddEdit: React.FC = () => {
         <Grid item xs={12} sm={12}>
           {fields.map((item, index) => (
             <Grid container spacing={2} key={item.id}>
+              <Grid item xs={12} sm={4} sx={{display: "none"}}> 
+                <Controller
+                  name={`dependents.${index}.id`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      variant="standard"
+                      fullWidth
+                      error={!!errors.dependents?.[index]?.id}
+                      helperText={
+                        errors.dependents?.[index]?.id
+                          ? 'Campo obrigatório'
+                          : ''
+                      }
+                     
+                    />
+                  )}
+                //rules={{ required: true }}
+                />
+              </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
                   name={`dependents.${index}.name`}
@@ -328,7 +355,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -349,7 +376,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -370,7 +397,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
             </Grid>
@@ -380,7 +407,7 @@ export const AssistidsAddEdit: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={() =>
-                append({ name: '', age: 0, relationship: '', assisted_id: Number(id) })
+                append({ id:0, name: '', age: 0, relationship: '', assisted_id: Number(id) })
               }
             >
               Adicionar Dependente
@@ -413,10 +440,10 @@ export const AssistidsAddEdit: React.FC = () => {
         <Button type="submit" variant="contained" color="primary" >
           Enviar
         </Button>
-        <Button type="button" onClick={() => { navigate("/assistids-page") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+        <Button type="button" onClick={() => { navigate("/assisteds-page") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
           Cancelar
         </Button>
-        <Button type="button" variant="contained" color="error" onClick={() => {handleDelete(Number(id))}} sx={{ marginLeft: "10px" }}>
+        <Button type="button" variant="contained" color="error" onClick={() => { handleDelete(Number(id)) }} sx={{ marginLeft: "10px" }}>
           Excluir
         </Button>
       </Box>

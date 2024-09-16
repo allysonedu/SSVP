@@ -17,10 +17,22 @@ class DependentsRepository {
   }
 
   async updateDependents(payload) {
-    return connection('dependents')
-      .update(payload)
-      .where({ id: payload.id })
-      .returning('*');
+
+    return knex.transaction(async (trx) => {
+      payload.forEach(async element => {
+
+        if (element.id == 0) {
+          trx('dependents').insert(element)
+        } else {
+          await trx('dependents')
+            .update(element)
+        }
+
+      });
+
+    })
+
+
   }
 
   async deleteDependents(idDependents) {

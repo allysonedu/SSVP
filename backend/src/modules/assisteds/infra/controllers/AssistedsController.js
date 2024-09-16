@@ -11,6 +11,7 @@ const GetOneAssistedsService = require('../../services/GetOneAssistedsService');
 const GetAllAssistedsService = require('../../services/GetAllAssistedsService');
 
 const UpdateAssistedService = require('../../services/UpdateAssistedsService');
+const UpdateDependentsService = require('../../../dependents/services/UpdateDependentsService');
 
 const assistedsRepository = new AssistedsRepository();
 const dependentsRepository = new DependentsRepository();
@@ -19,7 +20,7 @@ class AssistedsController {
 
   /**
    * Cria um assistido no banco de dados
-  */  
+  */
   async createAssisteds(request, response) {
     const {
       name,
@@ -39,7 +40,7 @@ class AssistedsController {
 
     //Como vou salvar dados em duas tabelas diferentes(assisteds e dependents) é preciso iniciar 2 serviços e 2 repositórios diferentes
     const createAssisted = new CreateNewAssistedsService(assistedsRepository);
-    const createDependents = new CreateNewDenpendentsService(dependentsRepository);
+
 
     //O trecho abaixo salva o assistido enviado para o backend e retorna para a const assisted, a linha salva no banco de dados já com seu respectivo ID
     const assisted = await createAssisted.execute({
@@ -57,11 +58,15 @@ class AssistedsController {
       home,
     });
 
-    //Como os dependentes precisam de um Id de assistido para serem salvos, passei o id do assistido recém salvo para a lista de dependentes
-    const setDependents = dependents.map((x) => { return { ...x, assisted_id: assisted.id } })
-    
-    //E aqui os dependentes são salvos
-    const depen = await createDependents.execute(setDependents)
+    if (dependents.length > 0) {
+      const createDependents = new CreateNewDenpendentsService(dependentsRepository);
+      //Como os dependentes precisam de um Id de assistido para serem salvos, passei o id do assistido recém salvo para a lista de dependentes
+      const setDependents = dependents.map((x) => { return { ...x, assisted_id: assisted.id } })
+
+      //E aqui os dependentes são salvos
+      const depen = await createDependents.execute(setDependents)
+    }
+
     return response.json(assisted[0]);
   }
 
@@ -73,9 +78,24 @@ class AssistedsController {
       ...request.body,
     };
 
+    const dependents = payload.dependents
+
+    delete payload.dependents
+  
     const updateAssisted = new UpdateAssistedService(assistedsRepository);
 
     const assistedUpdated = await updateAssisted.execute(payload);
+
+
+    if (dependents?.length > 0) {
+      const updateDependents = new UpdateDependentsService(dependentsRepository);
+      //Como os dependentes precisam de um Id de assistido para serem salvos, passei o id do assistido recém salvo para a lista de dependentes
+      const setDependents = dependents.map((x) => { return { ...x, assisted_id: updateAssisted.id } })
+
+      //E aqui os dependentes são salvos
+      const depen = await updateDependents.execute(setDependents)
+    }
+
 
     return response.json(assistedUpdated);
   }
