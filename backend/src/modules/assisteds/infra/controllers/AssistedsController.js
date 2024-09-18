@@ -60,11 +60,12 @@ class AssistedsController {
 
     if (dependents.length > 0) {
       const createDependents = new CreateNewDenpendentsService(dependentsRepository);
+
       //Como os dependentes precisam de um Id de assistido para serem salvos, passei o id do assistido recém salvo para a lista de dependentes
       const setDependents = dependents.map((x) => { return { ...x, assisted_id: assisted.id } })
 
       //E aqui os dependentes são salvos
-      const depen = await createDependents.execute(setDependents)
+      await createDependents.execute(setDependents)
     }
 
     return response.json(assisted[0]);
@@ -75,11 +76,12 @@ class AssistedsController {
 
     const payload = {
       id,
-      ...request.body,
+      ...request.body,      
     };
 
     const dependents = payload.dependents
 
+    //trecho para retirar a propriedade de dependentes do objeto de assistidos
     delete payload.dependents
   
     const updateAssisted = new UpdateAssistedService(assistedsRepository);
@@ -89,11 +91,12 @@ class AssistedsController {
 
     if (dependents?.length > 0) {
       const updateDependents = new UpdateDependentsService(dependentsRepository);
+
       //Como os dependentes precisam de um Id de assistido para serem salvos, passei o id do assistido recém salvo para a lista de dependentes
       const setDependents = dependents.map((x) => { return { ...x, assisted_id: updateAssisted.id } })
 
       //E aqui os dependentes são salvos
-      const depen = await updateDependents.execute(setDependents)
+      await updateDependents.execute(setDependents)
     }
 
 

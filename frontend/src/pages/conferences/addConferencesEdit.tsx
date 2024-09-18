@@ -28,6 +28,7 @@ export const ConferencesAddEdit: React.FC = () => {
       email: '',
       city: '',
       cep: '',
+      tel:''
     },
   });
 
@@ -153,16 +154,16 @@ export const ConferencesAddEdit: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3}>
           <Controller
-            name="state"
+            name="tel"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 variant="standard"
-                label="estado"
+                label="Telefone"
                 fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
+                error={!!errors.tel}
+                helperText={errors.tel ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}

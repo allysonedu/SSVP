@@ -10,6 +10,7 @@ class GetOneAssistedsService {
       idAssisteds
     );
     if (!assisted) throw new AppError('Assisted not found');
+  
 
     return assisted;
   }

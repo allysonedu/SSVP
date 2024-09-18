@@ -53,10 +53,6 @@ export const ListConferences: React.FC<{ cadastros: Cadastro[] }> = ({
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h6" gutterBottom>
-        Cadastros das conferências
-      </Typography>
-
       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
         <Grid item xs={12} sm={12} >
           <Button type="button" onClick={() => { navigate("/conferences") }} variant="contained" color="primary">

@@ -18,7 +18,7 @@ class DependentsRepository {
 
   async updateDependents(payload) {
 
-    return knex.transaction(async (trx) => {
+    return connection.transaction(async (trx) => {
       payload.forEach(async element => {
 
         if (element.id == 0) {

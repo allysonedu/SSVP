@@ -26,7 +26,10 @@ class AssistedsRepository {
   }
 
   async getOneAssisteds(idAssisteds) {
-    return connection('assisteds').where({ id: idAssisteds }).first();
+    return connection('assisteds')
+    .leftJoin('dependents', 'dependents.assisted_id', '=', 'assisteds.id')
+    .select('assisteds.*', 'dependents.name', 'dependents.age', 'dependents.relationship')
+    .where('assisteds.id', '=', `${idAssisteds}`).first();
   }
 }
 

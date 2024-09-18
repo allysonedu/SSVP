@@ -6,6 +6,7 @@ export interface IConferences {
     state: string
     city: string
     cep: string
+    tel: string
 }
 
 

@@ -16,7 +16,7 @@ export const menu = [
     icon: 'church',
     items: [
       {
-        label: 'Encontrar',
+        label: 'Listar Conferencias',
         icon: 'c',
         path: '/conferencesView',
       },
@@ -28,7 +28,7 @@ export const menu = [
     items: [
 
       {
-        label: 'Encontrar',
+        label: 'Listar Assistidos',
         icon: 'user',
         path: '/assisteds-page',
       },

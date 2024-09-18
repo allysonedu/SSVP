@@ -1,11 +1,13 @@
-import { useForm, Controller, SubmitHandler } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler, useFieldArray } from 'react-hook-form';
 
-import { TextField, Grid, Box, Button, Typography } from '@mui/material';
-import {  IMovements} from '../../shared/dtos/IMovements';
+import { TextField, Grid, Box, Button, Typography, Select, FormControl, InputLabel, MenuItem, FormHelperText } from '@mui/material';
+import { IMovements } from '../../shared/dtos/IMovements';
 import { createMovements, getOneMovements, deleteMovements, updateMovements } from '../../api/movements';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
+import { getAllAssisteds } from "../,,/../../api/assisteds";
+import { IAssisteds } from '../../shared/dtos/IAssisteds';
 
 
 export const MovementsAddEdit: React.FC = () => {
@@ -14,6 +16,23 @@ export const MovementsAddEdit: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { addToast } = useToast()
   const navigate = useNavigate()
+
+
+  interface FormData {
+    withdrawnBy: string;
+    deliveredBy: string;
+    products: string;
+    date: string;
+    time: string;
+  }
+
+  const [formData, setFormData] = useState<FormData>({
+    withdrawnBy: "",
+    deliveredBy: "",
+    products: "",
+    date: "",
+    time: "",
+  });
 
   const {
     control,
@@ -31,6 +50,16 @@ export const MovementsAddEdit: React.FC = () => {
     },
   });
 
+
+  const [assisteds, setAssisteds] = useState([])
+
+  useEffect(() => {
+    const GetAssisteds = async () => {
+      setAssisteds(await getAllAssisteds())
+    };
+
+    GetAssisteds()
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,6 +84,9 @@ export const MovementsAddEdit: React.FC = () => {
     }
   }, [id, reset]);
 
+
+
+
   const handleDelete = (id: number) => {
     try {
       deleteMovements(id)
@@ -73,6 +105,13 @@ export const MovementsAddEdit: React.FC = () => {
 
 
   }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const onSubmit: SubmitHandler<IMovements> = async (data: IMovements) => {
     try {
@@ -97,130 +136,95 @@ export const MovementsAddEdit: React.FC = () => {
       style={{ marginTop: '10vh' }}
     >
       <Typography variant="h6" gutterBottom>
-        Cadastro Conferencia
+        Cadastro Movimentações
       </Typography>
+
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={4}>
           <Controller
-            name="name"
+            name="assisteds_list"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Nome"
-                fullWidth
-                error={!!errors.name}
-                helperText={errors.name ? 'Campo obrigatório' : ''}
-              />
+              <FormControl fullWidth variant="outlined" error={!!errors.assisteds_list}>
+                <InputLabel>Assistidos</InputLabel>
+                <Select
+                  {...field}
+                  
+                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  label="Assistidos"
+                >
+                  {
+                    assisteds.map((item : IAssisteds, index)  => {
+                      return (
+                        <>
+                          <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
+                        </>
+                      )
+                    })
+                  }
+                </Select>
+                <FormHelperText>
+                  {errors.assisteds_list ? 'Campo obrigatório' : ''}
+                </FormHelperText>
+              </FormControl>
             )}
             rules={{ required: true }}
           />
+         
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="estado"
-                fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="username"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Tipo do Usúario"
-                fullWidth
-                error={!!errors.username}
-                helperText={errors.username ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="estado"
-                fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="email"
-                fullWidth
-                error={!!errors.email}
-                helperText={errors.email ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Cidade"
-                fullWidth
-                error={!!errors.city}
-                helperText={errors.city ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
+
+        <Grid item xs={4}>
+          <TextField
+            fullWidth
+            label="Quem entregou a doação"
+            name="deliveredBy"
+            value={formData.deliveredBy}
+            onChange={handleChange}
+            required
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="cep"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="cep"
-                fullWidth
-                error={!!errors.cep}
-                helperText={errors.cep ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
+        <Grid item xs={4}>
+          <TextField
+            fullWidth
+            label="Quem entregou a doação"
+            name="deliveredBy"
+            value={formData.deliveredBy}
+            onChange={handleChange}
+            required
           />
         </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            fullWidth
+            label="Produtos levados"
+            name="products"
+            value={formData.products}
+            onChange={handleChange}
+            required
+            multiline
+            rows={4}
+          />
+        </Grid>
+
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            label="Data"
+            name="date"
+            type="datetime-local"
+            value={formData.date}
+            onChange={handleChange}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            required
+          />
+        </Grid>
+
       </Grid>
+
 
       <Box mt={3}>
         <Button type="submit" variant="contained" color="primary">

@@ -1,3 +1,6 @@
+import { IAssisteds } from "./IAssisteds"
+
+
 export interface IMovements {
     id:number
     name: string
@@ -6,5 +9,6 @@ export interface IMovements {
     state: string
     city: string
     cep: string
+    assisteds_list: Array<IAssisteds>
 }
 
