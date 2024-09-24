@@ -11,13 +11,8 @@ export const Home: React.FC = () => {
         display="flex"
         justifyContent="center"
         alignItems="center"
-
         >
-          <h1>
-          Bem-Vindo 
-        </h1>
         <img  style={{ maxWidth: '100%', maxHeight: '100%', width:"1000px"}}  src={logo} alt="ssvp.svg.png" />
-        
       </Box>
     </BaseLayoutPage>
   );
