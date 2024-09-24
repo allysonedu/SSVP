@@ -10,7 +10,6 @@ export const menu = [
       },
     ],
   },
-
   {
     title: 'Conferencias',
     icon: 'church',
@@ -19,6 +18,11 @@ export const menu = [
         label: 'Listar Conferencias',
         icon: 'c',
         path: '/conferencesView',
+      },
+      {
+        label: 'Listar Cargos',
+        icon: 'c',
+        path: '/positionsView',
       },
     ],
   },
