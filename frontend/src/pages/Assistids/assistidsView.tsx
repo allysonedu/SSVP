@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Grid, Box, List, ListItem, ListItemText, Typography, InputAdornment, Paper } from '@mui/material';
+import { TextField, Grid, Box, List, ListItem, ListItemText, Typography, InputAdornment, Paper, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { IAssisteds } from '../../shared/dtos/IAssisteds';
+import { useNavigate } from 'react-router-dom';
 
 interface Dependente {
     nome: string;
@@ -14,19 +16,23 @@ interface Cadastro {
     dependentes: Dependente[];
 }
 
-export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }) => {
-    const [filteredCadastros, setFilteredCadastros] = useState<Cadastro[]>(cadastros);
+export const ListAssistids: React.FC<{ cadastros: IAssisteds[] }> = ({ cadastros }) => {
+    const [filteredCadastros, setFilteredCadastros] = useState<IAssisteds[]>(cadastros);
     const [searchNome, setSearchNome] = useState('');
     const [searchCpf, setSearchCpf] = useState('');
     const [searchDependente, setSearchDependente] = useState('');
+    const navigate = useNavigate();
 
+    const handleListItemClick = (id:number) => {
+      navigate(`/assisteds/${id}`);
+    };
     useEffect(() => {
         const filterCadastros = () => {
             let filtered = cadastros;
 
             if (searchNome) {
                 filtered = filtered.filter(cadastro =>
-                    cadastro.nome.toLowerCase().includes(searchNome.toLowerCase())
+                    cadastro.name.toLowerCase().includes(searchNome.toLowerCase())
                 );
             }
 
@@ -38,8 +44,8 @@ export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }
 
             if (searchDependente) {
                 filtered = filtered.filter(cadastro =>
-                    cadastro.dependentes.some(dependente =>
-                        dependente.nome.toLowerCase().includes(searchDependente.toLowerCase())
+                    cadastro.dependents.some(dependente =>
+                        dependente.name.toLowerCase().includes(searchDependente.toLowerCase())
                     )
                 );
             }
@@ -50,6 +56,7 @@ export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }
         filterCadastros();
     }, [searchNome, searchCpf, searchDependente, cadastros]);
 
+    
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
@@ -57,6 +64,11 @@ export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }
             </Typography>
 
             <Grid container spacing={2} sx={{ marginBottom: 2 }}>
+                <Grid item xs={12} sm={12} >
+                    <Button type="button" onClick={()=>{ navigate("/assisteds")}} variant="contained" color="primary">
+                        Novo Assistido
+                    </Button>
+                </Grid>
                 <Grid item xs={12} sm={4}>
                     <TextField
                         label="Pesquisar por Nome"
@@ -151,11 +163,11 @@ export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }
                                 backgroundColor: 'primary.lighter',
                             }}
                         >
-                            <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+                            <ListItem sx={{ flexDirection: 'column', alignItems: 'flex-start' }} onClick={() => handleListItemClick(cadastro.id)}>
                                 <ListItemText
                                     primary={
                                         <Typography variant="h6" color="primary.main">
-                                            Nome: {cadastro.nome}
+                                            Nome: {cadastro.name}
                                         </Typography>
                                     }
                                     secondary={
@@ -164,13 +176,13 @@ export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }
                                         </Typography>
                                     }
                                 />
-                                {cadastro.dependentes.length > 0 && (
+                                {cadastro.dependents?.length > 0 && (
                                     <Box sx={{ paddingLeft: 2, width: '100%' }}>
                                         <Typography variant="subtitle2" color="primary.main">
                                             Dependentes:
                                         </Typography>
                                         <List disablePadding sx={{ paddingLeft: 2 }}>
-                                            {cadastro.dependentes.map((dependente, depIndex) => (
+                                            {cadastro.dependents.map((dependente, depIndex) => (
                                                 <ListItem
                                                     key={depIndex}
                                                     sx={{
@@ -186,7 +198,7 @@ export const ListAssistids: React.FC<{ cadastros: Cadastro[] }> = ({ cadastros }
                                                     <ListItemText
                                                         primary={
                                                             <Typography variant="body1" color="primary.dark">
-                                                                - {dependente.nome} ({dependente.relacao})
+                                                                - {dependente.name} ({dependente.relationship})
                                                             </Typography>
                                                         }
                                                     />

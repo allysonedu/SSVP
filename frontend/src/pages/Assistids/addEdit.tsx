@@ -1,5 +1,5 @@
-import React from 'react';
-import { useForm, Controller, useFieldArray } from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { useForm, Controller, useFieldArray, SubmitHandler } from 'react-hook-form';
 import {
   TextField,
   Grid,
@@ -7,81 +7,154 @@ import {
   Button,
   Typography,
   MenuItem,
+  CircularProgress,
   FormControl,
   InputLabel,
   Select,
   FormHelperText,
 } from '@mui/material';
+import { IAssisteds } from '../../shared/dtos/IAssisteds';
+import { createAssisteds, getOneAssisteds, deleteAssisteds } from '../../api/assisteds';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useToast } from '../../shared/hooks/Toast';
 
-interface Dependente {
-  nome: string;
-  idade: string;
-  relacao: string;
+// Componente reutilizável para inputs controlados com validação
+interface ControlledTextFieldProps {
+  name: string;
+  label: string;
+  control: any;
+  errors: any;
+  rules?: object;
+  type?: string;
 }
 
-interface FormValues {
-  nome: string;
-  endereco: string;
-  numero: string;
-  bairro: string;
-  cpf: string;
-  estadoCivil: string;
-  idade: string;
-  profissao: string;
-  dependentes: Dependente[];
-  casa: string;
-  rendaFamiliar: string;
-  grauInstrucao: string;
-  situacao: string;
-}
+const ControlledTextField: React.FC<ControlledTextFieldProps> = ({
+  name,
+  label,
+  control,
+  errors,
+  rules = {},
+  type = 'text'
+}) => (
+  <Controller
+    name={name}
+    control={control}
+    rules={rules}
+    render={({ field }) => (
+      <TextField
+        {...field}
+        type={type}
+        label={label}
+        variant="outlined"
+        fullWidth
+        error={!!errors[name]}
+        helperText={errors[name]?.message || ''}
+      />
+    )}
+  />
+);
+
+
 
 export const AssistidsAddEdit: React.FC = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-    register,
-  } = useForm<FormValues>({
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast()
+  const navigate = useNavigate()
+  // useForm para gerenciar o formulário
+  const { control, handleSubmit, formState: { errors }, reset } = useForm<IAssisteds>({
     defaultValues: {
-      nome: '',
-      endereco: '',
-      numero: '',
-      bairro: '',
-      cpf: '',
-      estadoCivil: '',
-      idade: '',
-      profissao: '',
-      dependentes: [{ nome: '', idade: '', relacao: '' }],
-      casa: '',
-      rendaFamiliar: '',
-      grauInstrucao: '',
-      situacao: '',
-    },
+      name: '',
+      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id) }]
+    }
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'dependentes',
+    name: 'dependents'
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await getOneAssisteds(Number(id));
+        if (response?.data) {
+          reset(response.data);
+        }
+      } catch (err) {
+        setError('Erro ao carregar os dados.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchData();
+    } else {
+      setLoading(false); // Se não há id, é um novo registro, não precisa carregar dados
+    }
+  }, [id, reset]);
+
+  const handleDelete = (id: number) => {
+    try {
+      deleteAssisteds(id)
+      addToast({
+        type: 'success',
+        title: `Assistido deletado com sucesso!!`,
+      })
+    } catch (error: any) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao Deletar o Assitido',
+        description: error?.message,
+      })
+    }
+
+
+  }
+  const onSubmit: SubmitHandler<IAssisteds> = async (data) => {
+    try {
+      await createAssisteds(data);
+      alert('Assistido salvo com sucesso!');
+    } catch (err) {
+      console.error('Erro ao salvar o assistido', err);
+    }
   };
+
+  // Se o loading estiver ativo, mostra um indicador de progresso
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" mt={5}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  // Se houver um erro, exibe a mensagem de erro
+  if (error) {
+    return (
+      <Box display="flex" justifyContent="center" mt={5}>
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit(onSubmit)}
-      sx={{ mt: 3, padding: 3 }}
-      style={{ marginTop: '100px' }}
+      sx={{ mt: 5, padding: 3 }}
     >
       <Typography variant="h6" gutterBottom>
-        Cadastro de Sindicância
+        Cadastro de Assistido
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Controller
-            name="nome"
+            name="name"
             control={control}
             render={({ field }) => (
               <TextField
@@ -89,64 +162,14 @@ export const AssistidsAddEdit: React.FC = () => {
                 variant="standard"
                 label="Nome"
                 fullWidth
-                error={!!errors.nome}
-                helperText={errors.nome ? 'Campo obrigatório' : ''}
+                error={!!errors.name}
+                helperText={errors.name ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="endereco"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Endereço"
-                fullWidth
-                error={!!errors.endereco}
-                helperText={errors.endereco ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="numero"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Número"
-                fullWidth
-                error={!!errors.numero}
-                helperText={errors.numero ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="bairro"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Bairro"
-                fullWidth
-                error={!!errors.bairro}
-                helperText={errors.bairro ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
+
         <Grid item xs={12} sm={6}>
           <Controller
             name="cpf"
@@ -164,24 +187,79 @@ export const AssistidsAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
+
         <Grid item xs={12} sm={6}>
           <Controller
-            name="estadoCivil"
+            name="age"
             control={control}
             render={({ field }) => (
-              <FormControl
-                fullWidth
+              <TextField
+                {...field}
                 variant="standard"
-                error={!!errors.estadoCivil}
-              >
+                label="Idade"
+                fullWidth
+                error={!!errors.age}
+                helperText={errors.age ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="profession"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Profissão"
+                fullWidth
+                error={!!errors.profession}
+                helperText={errors.profession ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="district"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Bairro"
+                fullWidth
+                error={!!errors.district}
+                helperText={errors.district ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="maritalStatus"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth variant="standard" error={!!errors.maritalStatus}>
                 <InputLabel>Estado Civil</InputLabel>
-                <Select {...field} variant="standard" label="Estado Civil">
+                <Select
+                  {...field}
+                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  label="Estado Civil"
+                >
                   <MenuItem value="solteiro">Solteiro(a)</MenuItem>
                   <MenuItem value="casado">Casado(a)</MenuItem>
                   <MenuItem value="separado">Separado(a)</MenuItem>
                 </Select>
                 <FormHelperText>
-                  {errors.estadoCivil ? 'Campo obrigatório' : ''}
+                  {errors.maritalStatus ? 'Campo obrigatório' : ''}
                 </FormHelperText>
               </FormControl>
             )}
@@ -191,34 +269,38 @@ export const AssistidsAddEdit: React.FC = () => {
 
         <Grid item xs={12} sm={6}>
           <Controller
-            name="idade"
+            name="home"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Idade"
-                fullWidth
-                error={!!errors.idade}
-                helperText={errors.idade ? 'Campo obrigatório' : ''}
-              />
+              <FormControl fullWidth error={!!errors.home}>
+                <InputLabel>Casa</InputLabel>
+                <Select {...field} value={field.value || ""} variant="standard" label="Casa">
+                  <MenuItem value="propria">Própria</MenuItem>
+                  <MenuItem value="alugada">Alugada</MenuItem>
+                  <MenuItem value="gratuita">Gratuita</MenuItem>
+                  <MenuItem value="parentes">Parentes/Outros</MenuItem>
+                </Select>
+                <FormHelperText>
+                  {errors.home ? 'Campo obrigatório' : ''}
+                </FormHelperText>
+              </FormControl>
             )}
             rules={{ required: true }}
           />
         </Grid>
 
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={6}>
           <Controller
-            name="profissao"
+            name="family_income"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 variant="standard"
-                label="Profissão"
+                label="Renda Familiar"
                 fullWidth
-                error={!!errors.profissao}
-                helperText={errors.profissao ? 'Campo obrigatório' : ''}
+                error={!!errors.family_income}
+                helperText={errors.family_income ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
@@ -230,7 +312,7 @@ export const AssistidsAddEdit: React.FC = () => {
             <Grid container spacing={2} key={item.id}>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name={`dependentes.${index}.nome`}
+                  name={`dependents.${index}.name`}
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -238,9 +320,9 @@ export const AssistidsAddEdit: React.FC = () => {
                       variant="standard"
                       label={`Dependente ${index + 1} - Nome`}
                       fullWidth
-                      error={!!errors.dependentes?.[index]?.nome}
+                      error={!!errors.dependents?.[index]?.name}
                       helperText={
-                        errors.dependentes?.[index]?.nome
+                        errors.dependents?.[index]?.name
                           ? 'Campo obrigatório'
                           : ''
                       }
@@ -251,7 +333,7 @@ export const AssistidsAddEdit: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name={`dependentes.${index}.idade`}
+                  name={`dependents.${index}.age`}
                   control={control}
                   render={({ field }) => (
                     <TextField
@@ -259,9 +341,9 @@ export const AssistidsAddEdit: React.FC = () => {
                       variant="standard"
                       label="Idade"
                       fullWidth
-                      error={!!errors.dependentes?.[index]?.idade}
+                      error={!!errors.dependents?.[index]?.age}
                       helperText={
-                        errors.dependentes?.[index]?.idade
+                        errors.dependents?.[index]?.age
                           ? 'Campo obrigatório'
                           : ''
                       }
@@ -272,17 +354,17 @@ export const AssistidsAddEdit: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name={`dependentes.${index}.relacao`}
+                  name={`dependents.${index}.relationship`}
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
                       variant="standard"
-                      label="Relação"
+                      label="Parentesco"
                       fullWidth
-                      error={!!errors.dependentes?.[index]?.relacao}
+                      error={!!errors.dependents?.[index]?.relationship}
                       helperText={
-                        errors.dependentes?.[index]?.relacao
+                        errors.dependents?.[index]?.relationship
                           ? 'Campo obrigatório'
                           : ''
                       }
@@ -297,67 +379,29 @@ export const AssistidsAddEdit: React.FC = () => {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => append({ nome: '', idade: '', relacao: '' })}
+              onClick={() =>
+                append({ name: '', age: 0, relationship: '', assisted_id: Number(id) })
+              }
             >
               Adicionar Dependente
             </Button>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="casa"
-            control={control}
-            render={({ field }) => (
-              <FormControl fullWidth error={!!errors.casa}>
-                <InputLabel>Casa</InputLabel>
-                <Select {...field} variant="standard" label="Casa">
-                  <MenuItem value="propria">Própria</MenuItem>
-                  <MenuItem value="alugada">Alugada</MenuItem>
-                  <MenuItem value="gratuita">Gratuita</MenuItem>
-                  <MenuItem value="parentes">Parentes/Outros</MenuItem>
-                </Select>
-                <FormHelperText>
-                  {errors.casa ? 'Campo obrigatório' : ''}
-                </FormHelperText>
-              </FormControl>
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="rendaFamiliar"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Renda Familiar"
-                fullWidth
-                error={!!errors.rendaFamiliar}
-                helperText={errors.rendaFamiliar ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-
         <Grid item xs={12}>
           <Controller
-            name="situacao"
+            name="explain"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 variant="standard"
-                label="Situação Sócio-Econômica"
+                label="Explique sua Situação"
                 fullWidth
                 multiline
                 rows={4}
-                error={!!errors.situacao}
-                helperText={errors.situacao ? 'Campo obrigatório' : ''}
+                error={!!errors.explain}
+                helperText={errors.explain ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
@@ -366,10 +410,17 @@ export const AssistidsAddEdit: React.FC = () => {
       </Grid>
 
       <Box mt={3}>
-        <Button type="submit" variant="contained" color="primary">
+        <Button type="submit" variant="contained" color="primary" >
           Enviar
         </Button>
+        <Button type="button" onClick={() => { navigate("/assistids-page") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+          Cancelar
+        </Button>
+        <Button type="button" variant="contained" color="error" onClick={() => {handleDelete(Number(id))}} sx={{ marginLeft: "10px" }}>
+          Excluir
+        </Button>
       </Box>
+
     </Box>
   );
 };

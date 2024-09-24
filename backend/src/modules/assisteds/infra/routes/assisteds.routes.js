@@ -14,16 +14,18 @@ assistedsRoutes.post(
     [Segments.BODY]: {
       name: Joi.string().required('Name is required'),
       age: Joi.number().required('Age is required'),
-      whatsapp: Joi.string().required('Whatsapp is required'),
+      whatsapp: Joi.string(),
       profession: Joi.string().required('profession is required'),
       district: Joi.string().required('district is required'),
       cpf: Joi.string().required('district is required'),
-      Case_report: Joi.string().required('district is required'),
-      family_income: Joi.string().required('district is required'),
-      explain: Joi.string().required('district is required'),
-      Spouse: Joi.string().required('district is required'),
-      home: Joi.boolean(),
-      maritalStatus: Joi.boolean(),
+      Case_report: Joi.string(),
+      family_income: Joi.string(),
+      explain: Joi.string(),
+      Spouse: Joi.string(),
+      home: Joi.string(),
+      maritalStatus: Joi.string(),
+      dependents: Joi.array().empty()
+      
     },
   }),
   assistedsController.createAssisteds

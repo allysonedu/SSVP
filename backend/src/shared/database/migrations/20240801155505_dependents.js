@@ -6,9 +6,11 @@ exports.up = function (knex) {
   return knex.schema.createTable('dependents', table => {
     table.increments('id').primary();
     table.text('name').notNullable();
-    table.date('created_at').notNullable().defaultTo(knex.fn.now());
     table.text('relationship').notNullable();
-    table.text('occupation').notNullable();
+    table.integer('age').nullable();
+    table.integer('assisted_id').unsigned().notNullable(); // Coluna para a chave estrangeira
+    table.foreign('assisted_id').references('id').inTable('assisteds').onDelete('CASCADE');
+
   });
 };
 

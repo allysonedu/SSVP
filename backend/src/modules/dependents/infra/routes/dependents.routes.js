@@ -12,11 +12,11 @@ dependentsRoutes.post(
   '/',
   celebrate({
     [Segments.BODY]: {
+      assisted_id: Joi.number().required('Assisteds ID is required'),
       name: Joi.string().required('Name is required'),
-      username: Joi.string().required('username is required'),
-      created_at: Joi.string().required('created_at is required'),
+      age: Joi.number().required('age is required'),
       relationship: Joi.string().required('relationship is required'),
-      occupation: Joi.string().required('occupation is required'),
+      
     },
   }),
   dependentsController.createDependents
