@@ -11,6 +11,8 @@ exports.up = function (knex) {
     table.text('state').notNullable();
     table.text('username').notNullable();
     table.text('email').notNullable();
+    table.integer('users_id').unsigned();
+    table.foreign('users_id').references('id').inTable('users');
   });
 };
 

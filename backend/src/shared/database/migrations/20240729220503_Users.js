@@ -10,6 +10,8 @@ exports.up = function (knex) {
     table.text('password').notNullable();
     table.text('whatsapp').nullable();
     table.text('username').nullable();
+    // table.integer('conferences_id').unsigned();
+    // table.foreign('conferences_id').references('id').inTable('conferences');
   });
 };
 
