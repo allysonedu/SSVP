@@ -24,6 +24,9 @@ const dependentsRoutes = require('../../../modules/dependents/infra/routes/depen
 
 const transactionsRoutes = require('../../../modules/transactions/infra/routes/transactions.routes');
 
+const positionsRoutes = require('../../../modules/positions/infra/routes/positions.routes');
+
+
 // const ensureAuthenticated = require('../../../shared/middlewares/ensure.autenticated');
 
 const routes = Router();
@@ -53,5 +56,7 @@ routes.use('/conferences', conferencesRoutes);
 routes.use('/dependents', dependentsRoutes);
 
 routes.use('/transactions', transactionsRoutes);
+
+routes.use('/positions', positionsRoutes);
 
 module.exports = routes;

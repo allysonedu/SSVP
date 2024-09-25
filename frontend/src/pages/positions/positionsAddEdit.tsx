@@ -1,13 +1,13 @@
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { TextField, Grid, Box, Button, Typography, FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
-import { IConferences } from '../../shared/dtos/IConferences';
-import { createConferences, getOneConferences, deleteConferences, updateConferences } from '../../api/conferences';
+
+import { createPositions, getOnePositions, deletePositions, updatePositions } from '../../api/positions';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { IPosition } from '../../shared/dtos/IPosition';
-import { createPositions, updatePositions } from '../../api/positions';
+
 
 
 export const PositionAddEdit: React.FC = () => {
@@ -25,7 +25,7 @@ export const PositionAddEdit: React.FC = () => {
   } = useForm<IPosition>({
     defaultValues: {
       positionName: '',
-      endDateMandate: null,
+
     },
   });
 
@@ -35,7 +35,7 @@ export const PositionAddEdit: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await getOneConferences(Number(id));
+        const response = await getOnePositions(Number(id));
         if (response?.data) {
           reset(response.data);
         }
@@ -55,16 +55,16 @@ export const PositionAddEdit: React.FC = () => {
 
   const handleDelete = (id: number) => {
     try {
-      deleteConferences(id)
+      deletePositions(id)
       addToast({
         type: 'success',
-        title: `Conferência deletada com sucesso!!`,
+        title: `Carto deletado com sucesso!!`,
       })
-      navigate('/conferencesView')
+      navigate('/positionsView')
     } catch (error: any) {
       addToast({
         type: 'error',
-        title: 'Erro ao Deletar a Conferencia',
+        title: 'Erro ao Deletar o cargo',
         description: error?.message,
       })
     }
@@ -124,9 +124,8 @@ export const PositionAddEdit: React.FC = () => {
                 <InputLabel>Com Mandato</InputLabel>
                 <Select
                   {...field}
-                  value={field.value || "false"}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
                   label="Com Mandato"
-                  
                 >
                   <MenuItem value="false" >Não</MenuItem>
                   <MenuItem value="true">Sim</MenuItem>
@@ -140,26 +139,6 @@ export const PositionAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <Controller
-            name="endDateMandate"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Data do Mandato"
-                fullWidth
-                error={!!errors.endDateMandate}
-                helperText={errors.endDateMandate ? 'Campo obrigatório' : ''}
-                type='date'
-                InputLabelProps={{ shrink: true }}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-       
 
       </Grid>
 

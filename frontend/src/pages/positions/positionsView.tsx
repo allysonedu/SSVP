@@ -13,22 +13,14 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import { IPosition } from '../../shared/dtos/IPosition';
 
-interface Cadastro {
-  id: number;
-  name: string;
-  email: string;
-  // city: string;
-  // cep: string;
-  // state: string;
-  // username: string;
-}
 
-export const ListPositions: React.FC<{ cadastros: Cadastro[] }> = ({
+export const ListPositions: React.FC<{ cadastros: IPosition[] }> = ({
   cadastros,
 }) => {
   const [filteredCadastros, setFilteredCadastros] =
-    useState<Cadastro[]>(cadastros);
+    useState<IPosition[]>(cadastros);
   const [searchNome, setSearchNome] = useState('');
 
   const navigate = useNavigate();
@@ -43,7 +35,7 @@ export const ListPositions: React.FC<{ cadastros: Cadastro[] }> = ({
 
       if (searchNome) {
         filtered = filtered.filter(cadastro =>
-          cadastro.name.toLowerCase().includes(searchNome.toLowerCase())
+          cadastro.positionName.toLowerCase().includes(searchNome.toLowerCase())
         );
       }
       setFilteredCadastros(filtered);
@@ -108,12 +100,13 @@ export const ListPositions: React.FC<{ cadastros: Cadastro[] }> = ({
                 <ListItemText
                   primary={
                     <Typography variant="h6" color="primary.main">
-                      Conferêcia: {cadastro.name}
+                      Cargo: {cadastro.positionName}
                     </Typography>
                   }
                   secondary={
                     <Typography variant="subtitle1" color="primary.dark">
-                      Email: {cadastro.email}
+                      
+                      Possui Mandato: {cadastro.hasMandate ? "Sim" : "Não"}
                     </Typography>
                   }
                 />
