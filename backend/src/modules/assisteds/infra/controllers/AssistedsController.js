@@ -9,6 +9,7 @@ const DeleteAssistedsService = require('../../services/DeleteAssistedsService');
 const GetOneAssistedsService = require('../../services/GetOneAssistedsService');
 
 const GetAllAssistedsService = require('../../services/GetAllAssistedsService');
+const GetAllDependentsService = require('../../../dependents/services/GetAllDependentsService');
 
 const UpdateAssistedService = require('../../services/UpdateAssistedsService');
 const UpdateDependentsService = require('../../../dependents/services/UpdateDependentsService');
@@ -27,7 +28,14 @@ class AssistedsController {
       age,
       whatsapp,
       profession,
-      district,
+      address,
+      address_number,
+      neighborhood,
+      zip_code,
+      address_complement,
+      city,
+      state,
+      country,
       cpf,
       Case_report,
       family_income,
@@ -35,7 +43,8 @@ class AssistedsController {
       Spouse,
       maritalStatus = false,
       home = false,
-      dependents
+      dependents,
+      conference_id
     } = request.body; // Os valores que vieram do formulario são atribuidos para as variáveis acima
 
     //Como vou salvar dados em duas tabelas diferentes(assisteds e dependents) é preciso iniciar 2 serviços e 2 repositórios diferentes
@@ -48,7 +57,14 @@ class AssistedsController {
       age,
       whatsapp: "",
       profession,
-      district,
+      address,
+      address_number,
+      neighborhood,
+      zip_code,
+      address_complement,
+      city,
+      state,
+      country,
       cpf,
       Case_report,
       family_income,
@@ -56,6 +72,7 @@ class AssistedsController {
       Spouse,
       maritalStatus,
       home,
+      conference_id
     });
 
     if (dependents.length > 0) {
@@ -93,7 +110,7 @@ class AssistedsController {
       const updateDependents = new UpdateDependentsService(dependentsRepository);
 
       //Como os dependentes precisam de um Id de assistido para serem salvos, passei o id do assistido recém salvo para a lista de dependentes
-      const setDependents = dependents.map((x) => { return { ...x, assisted_id: updateAssisted.id } })
+      const setDependents = dependents.map((x) => { return { ...x, assisted_id: assistedUpdated[0].id } })
 
       //E aqui os dependentes são salvos
       await updateDependents.execute(setDependents)
@@ -132,21 +149,13 @@ class AssistedsController {
     const getOne = new GetOneAssistedsService(assistedsRepository);
 
     const assisted = await getOne.execute(id);
+
+    const getAllDependentsAssisted = new GetAllDependentsService(dependentsRepository)
+
+    const dependents = await getAllDependentsAssisted.execute(id)
+    assisted.dependents = dependents
     return response.json(assisted);
   }
 }
 
 module.exports = AssistedsController;
-
-//       name = nome
-//       age = idade
-//       whatsapp = numero
-//       profession = profisão
-//       district = bairro
-//       cpf =  cpf
-//       Case_report = reportar caso
-//       family_income = renda familiar
-//       explain explicar
-//       Spouse = cônjuge
-//       maritalStatus = estatos civil
-//       home = casa

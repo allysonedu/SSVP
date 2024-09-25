@@ -33,7 +33,8 @@ conferencesRoutes.post(
       email: Joi.string().email(),
       state: Joi.string(),
       city: Joi.string(),
-      cep: Joi.string().min(8)
+      cep: Joi.string().min(8),
+      tel: Joi.string(),
     },
   }),
   verifyIfEmailAlreadyExists,

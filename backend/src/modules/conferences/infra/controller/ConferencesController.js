@@ -18,7 +18,7 @@ const conferencesRepository = new ConferencesRepository();
 
 class ConferencesController {
   async createConferences(request, response) {
-    const { name, cep, city, state, username, email } = request.body;
+    const { name, cep, city, state, username,tel, email } = request.body;
 
     const createConference = new CreateNewConferencesService(
       conferencesRepository
@@ -30,6 +30,7 @@ class ConferencesController {
       city,
       state,
       username,
+      tel,
       email,
     });
 

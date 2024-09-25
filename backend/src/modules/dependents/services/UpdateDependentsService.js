@@ -7,7 +7,7 @@ class UpdateDependentsService {
   async execute(payload) {
     const dependent = await this.dependentsRepository.getAllDependents();
     
-    return this.dependentsRepository.updateDependents(payload);
+    return await this.dependentsRepository.updateDependents(payload);
   }
 }
 

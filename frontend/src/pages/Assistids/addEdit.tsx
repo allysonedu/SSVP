@@ -15,14 +15,19 @@ import {
 } from '@mui/material';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 import { createAssisteds, getOneAssisteds, deleteAssisteds, updateAssisteds } from '../../api/assisteds';
+import { getAllConferences } from '../../api/conferences'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
+import { IConferences } from '../../shared/dtos/IConferences';
 
 
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [conferences, setConferences] = useState([])
+  
   const { addToast } = useToast()
   const navigate = useNavigate()
   // useForm para gerenciar o formulário
@@ -38,11 +43,20 @@ export const AssistidsAddEdit: React.FC = () => {
   });
 
   useEffect(() => {
+
+
+    const loadConferences = async () => {
+
+      setConferences(await getAllConferences())
+    }
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+    
       try {
         const response = await getOneAssisteds(Number(id));
+
+   
         if (response?.data) {
           reset(response.data);
         }
@@ -53,6 +67,8 @@ export const AssistidsAddEdit: React.FC = () => {
       }
     };
 
+    loadConferences()
+    
     if (id) {
       fetchData();
     } else {
@@ -60,6 +76,9 @@ export const AssistidsAddEdit: React.FC = () => {
     }
   }, [id, reset]);
 
+
+ 
+   
   const handleDelete = (id: number) => {
     try {
       deleteAssisteds(id)
@@ -83,10 +102,10 @@ export const AssistidsAddEdit: React.FC = () => {
       if (!id) {
         await createAssisteds(data);
         alert('Assistido salvo com sucesso!');
-      }else{
+      } else {
         await updateAssisteds(data)
         alert('Assistido atualizado com sucesso!');
-      } 
+      }
       navigate('/assisteds-page')
     } catch (err) {
       console.error('Erro ao salvar o assistido', err);
@@ -195,7 +214,41 @@ export const AssistidsAddEdit: React.FC = () => {
 
         <Grid item xs={12} sm={6}>
           <Controller
-            name="district"
+            name="address"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Endereço"
+                fullWidth
+                error={!!errors.address}
+                helperText={errors.address ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+        <Grid item xs={1} sm={1}>
+          <Controller
+            name="address_number"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Numero"
+                fullWidth
+                error={!!errors.address_number}
+                helperText={errors.address_number ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Controller
+            name="neighborhood"
             control={control}
             render={({ field }) => (
               <TextField
@@ -203,13 +256,132 @@ export const AssistidsAddEdit: React.FC = () => {
                 variant="standard"
                 label="Bairro"
                 fullWidth
-                error={!!errors.district}
-                helperText={errors.district ? 'Campo obrigatório' : ''}
+                error={!!errors.neighborhood}
+                helperText={errors.neighborhood ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
           />
         </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="zip_code"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="CEP"
+                fullWidth
+                error={!!errors.zip_code}
+                helperText={errors.zip_code ? 'Campo obrigatório' : ''}
+              />
+            )}
+         
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="address_complement"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Complemento"
+                fullWidth
+                error={!!errors.address_complement}
+                helperText={errors.address_complement ? 'Campo obrigatório' : ''}
+              />
+            )}
+            
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="city"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Cidade"
+                fullWidth
+                error={!!errors.city}
+                helperText={errors.city ? 'Campo obrigatório' : ''}
+              />
+            )}
+           
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="state"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="UF"
+                fullWidth
+                error={!!errors.state}
+                helperText={errors.state ? 'Campo obrigatório' : ''}
+              />
+            )}
+
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="country"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="País"
+                fullWidth
+                error={!!errors.country}
+                helperText={errors.country ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={4}>
+          <Controller
+            name="conference_id"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth variant="outlined" error={!!errors.conference_id}>
+                <InputLabel>Conferências</InputLabel>
+                <Select
+                  {...field}
+
+                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  label="Conferências"
+                >
+                  {
+                    conferences.map((item: IConferences, index) => {
+                      return (
+                        
+                          <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
+                        
+                      )
+                    })
+                  }
+                </Select>
+                <FormHelperText>
+                  {errors.conference_id ? 'Campo obrigatório' : ''}
+                </FormHelperText>
+              </FormControl>
+            )}
+            rules={{ required: true }}
+          />
+
+        </Grid>
+
 
         <Grid item xs={12} sm={6}>
           <Controller
@@ -279,7 +451,7 @@ export const AssistidsAddEdit: React.FC = () => {
         <Grid item xs={12} sm={12}>
           {fields.map((item, index) => (
             <Grid container spacing={2} key={item.id}>
-              <Grid item xs={12} sm={4} sx={{display: "none"}}> 
+              <Grid item xs={12} sm={4} sx={{ display: "none" }}>
                 <Controller
                   name={`dependents.${index}.id`}
                   control={control}
@@ -294,7 +466,7 @@ export const AssistidsAddEdit: React.FC = () => {
                           ? 'Campo obrigatório'
                           : ''
                       }
-                     
+
                     />
                   )}
                 //rules={{ required: true }}
@@ -370,7 +542,7 @@ export const AssistidsAddEdit: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={() =>
-                append({ id:0, name: '', age: 0, relationship: '', assisted_id: Number(id) })
+                append({name: '', age: 0, relationship: '', assisted_id: Number(id) })
               }
             >
               Adicionar Dependente
