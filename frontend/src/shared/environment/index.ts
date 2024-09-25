@@ -14,4 +14,6 @@ export const environment = {
    * Mensagem da lista caso nao tenha registro
    */
   EMPTY_LIST: 'Nenhum registro encontrado',
+
+  DEV: 'S'
 };
