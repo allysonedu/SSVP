@@ -12,6 +12,10 @@ import {
 
 import { MenuSideBar } from '../shared/components';
 import { menu } from '../shared/utils/menu';
+import { MovementsAddEdit } from '../pages/movements/addMovementsEdit';
+import { MovementsPage } from '../pages/movements/movementsPage';
+import { PositionsPage } from '../pages/positions/positionsPage';
+import { PositionAddEdit } from '../pages/positions/positionsAddEdit';
 
 export const PrivateRoutes: React.FC = () => {
   const { setDrawerOptions } = useDrawer();
@@ -24,12 +28,24 @@ export const PrivateRoutes: React.FC = () => {
     <MenuSideBar>
       <Routes>
         <Route path="/home" element={<Home />} />
-        <Route path="/assistids-page" element={<AssistidsPage />} />
+        <Route path="/assisteds-page" element={<AssistidsPage />} />
         <Route path="/assisteds" element={<AssistidsAddEdit />} />
         <Route path="/assisteds/:id" element={<AssistidsAddEdit />} />
         <Route path="/conferences" element={<ConferencesAddEdit />} />
+        <Route path="/conferences/:id" element={<ConferencesAddEdit />} />
         <Route path="/conferencesView" element={<ConferencePage />} />
+<<<<<<< HEAD
         <Route path="*" element={<Navigate to="/" />} />
+=======
+        <Route path="/positions" element={<PositionAddEdit />} />
+        <Route path="/positions/:id" element={<PositionAddEdit />} />
+        <Route path="/positionsView" element={<PositionsPage />} />
+        <Route path="/movements" element={<MovementsAddEdit />} />
+        <Route path="/movements/:id" element={<MovementsAddEdit />} />
+        <Route path="/movementsView" element={<MovementsPage />} />
+
+        <Route path="*" element={<Navigate to="/home" />} />
+>>>>>>> 39b3cb859a41ab450c9717619483bfa4231cbea0
       </Routes>
     </MenuSideBar>
   );

@@ -10,20 +10,19 @@ export const menu = [
       },
     ],
   },
-
   {
     title: 'Conferencias',
-    icon: 'bolt',
+    icon: 'church',
     items: [
       {
-        label: 'Cadastrar',
-        icon: 'c',
-        path: '/conferences',
-      },
-      {
-        label: 'Encontrar',
+        label: 'Listar Conferencias',
         icon: 'c',
         path: '/conferencesView',
+      },
+      {
+        label: 'Listar Cargos',
+        icon: 'c',
+        path: '/positionsView',
       },
     ],
   },
@@ -31,15 +30,22 @@ export const menu = [
     title: 'Assistidos',
     icon: 'receipt_long',
     items: [
+
       {
-        label: 'Cadastrar',
+        label: 'Listar Assistidos',
         icon: 'user',
-        path: '/assisteds',
+        path: '/assisteds-page',
       },
+    ],
+  },
+  {
+    title: 'Movimentações',
+    icon: 'compareArrows',
+    items: [
       {
         label: 'Encontrar',
         icon: 'user',
-        path: '/assistids-page',
+        path: '/movementsView',
       },
     ],
   },

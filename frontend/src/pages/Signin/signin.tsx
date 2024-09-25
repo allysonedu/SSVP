@@ -47,9 +47,7 @@ export const SignIn: React.FC = () => {
     },
   });
 
-  const { addToast } = useToast()
-
-  
+  const { addToast } = useToast();
 
   const { handleSubmit, control } = methods;
 
@@ -63,13 +61,13 @@ export const SignIn: React.FC = () => {
           password: data.password,
         });
 
-        console.log(result?.user);
         navigate('/home');
+        console.log(result?.user);
       } catch (err: any) {
         addToast({
           type: 'error',
           title: `Erro Ao logar`,
-        })
+        });
       } finally {
         setLoading(false);
       }

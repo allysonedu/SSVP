@@ -5,13 +5,9 @@ class UpdateDependentsService {
     this.dependentsRepository = dependentsRepository;
   }
   async execute(payload) {
-    const dependent = await this.dependentsRepository.getOneDependents(
-      payload.id
-    );
-
-    if (!dependent) throw new AppError('Dependent not found');
-
-    return this.dependentsRepository.updateDependents(payload);
+    const dependent = await this.dependentsRepository.getAllDependents();
+    
+    return await this.dependentsRepository.updateDependents(payload);
   }
 }
 

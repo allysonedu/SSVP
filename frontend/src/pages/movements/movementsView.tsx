@@ -24,7 +24,7 @@ interface Cadastro {
   // username: string;
 }
 
-export const ListConferences: React.FC<{ cadastros: Cadastro[] }> = ({
+export const ListMovements: React.FC<{ cadastros: Cadastro[] }> = ({
   cadastros,
 }) => {
   const [filteredCadastros, setFilteredCadastros] =
@@ -34,7 +34,7 @@ export const ListConferences: React.FC<{ cadastros: Cadastro[] }> = ({
   const navigate = useNavigate();
 
   const handleListItemClick = (id: number) => {
-    navigate(`/conferences/${id}`);
+    navigate(`/movements/${id}`);
   };
 
   useEffect(() => {
@@ -55,13 +55,13 @@ export const ListConferences: React.FC<{ cadastros: Cadastro[] }> = ({
     <Box sx={{ padding: 2 }}>
       <Grid container spacing={2} sx={{ marginBottom: 2 }}>
         <Grid item xs={12} sm={12} >
-          <Button type="button" onClick={() => { navigate("/conferences") }} variant="contained" color="primary">
-            Nova Conferência
+          <Button type="button" onClick={() => { navigate("/movements") }} variant="contained" color="primary">
+            Nova Movimentação
           </Button>
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
-            label="Pesquisar por Conferência"
+            label="Pesquisar por Movimentações"
             fullWidth
             value={searchNome}
             onChange={e => setSearchNome(e.target.value)}

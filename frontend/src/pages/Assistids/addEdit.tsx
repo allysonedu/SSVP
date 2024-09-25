@@ -14,59 +14,26 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
-import { createAssisteds, getOneAssisteds, deleteAssisteds } from '../../api/assisteds';
+import { createAssisteds, getOneAssisteds, deleteAssisteds, updateAssisteds } from '../../api/assisteds';
+import { getAllConferences } from '../../api/conferences'
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
-
-// Componente reutilizável para inputs controlados com validação
-interface ControlledTextFieldProps {
-  name: string;
-  label: string;
-  control: any;
-  errors: any;
-  rules?: object;
-  type?: string;
-}
-
-const ControlledTextField: React.FC<ControlledTextFieldProps> = ({
-  name,
-  label,
-  control,
-  errors,
-  rules = {},
-  type = 'text'
-}) => (
-  <Controller
-    name={name}
-    control={control}
-    rules={rules}
-    render={({ field }) => (
-      <TextField
-        {...field}
-        type={type}
-        label={label}
-        variant="outlined"
-        fullWidth
-        error={!!errors[name]}
-        helperText={errors[name]?.message || ''}
-      />
-    )}
-  />
-);
-
+import { IConferences } from '../../shared/dtos/IConferences';
 
 
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [conferences, setConferences] = useState([])
+  
   const { addToast } = useToast()
   const navigate = useNavigate()
   // useForm para gerenciar o formulário
   const { control, handleSubmit, formState: { errors }, reset } = useForm<IAssisteds>({
     defaultValues: {
       name: '',
-      dependents: [{ name: '', age: 0, relationship: '', assisted_id: Number(id) }]
     }
   });
 
@@ -76,11 +43,20 @@ export const AssistidsAddEdit: React.FC = () => {
   });
 
   useEffect(() => {
+
+
+    const loadConferences = async () => {
+
+      setConferences(await getAllConferences())
+    }
     const fetchData = async () => {
       setLoading(true);
       setError(null);
+    
       try {
         const response = await getOneAssisteds(Number(id));
+
+   
         if (response?.data) {
           reset(response.data);
         }
@@ -91,6 +67,8 @@ export const AssistidsAddEdit: React.FC = () => {
       }
     };
 
+    loadConferences()
+    
     if (id) {
       fetchData();
     } else {
@@ -98,6 +76,9 @@ export const AssistidsAddEdit: React.FC = () => {
     }
   }, [id, reset]);
 
+
+ 
+   
   const handleDelete = (id: number) => {
     try {
       deleteAssisteds(id)
@@ -105,6 +86,7 @@ export const AssistidsAddEdit: React.FC = () => {
         type: 'success',
         title: `Assistido deletado com sucesso!!`,
       })
+      navigate('/assisteds-page')
     } catch (error: any) {
       addToast({
         type: 'error',
@@ -117,8 +99,14 @@ export const AssistidsAddEdit: React.FC = () => {
   }
   const onSubmit: SubmitHandler<IAssisteds> = async (data) => {
     try {
-      await createAssisteds(data);
-      alert('Assistido salvo com sucesso!');
+      if (!id) {
+        await createAssisteds(data);
+        alert('Assistido salvo com sucesso!');
+      } else {
+        await updateAssisteds(data)
+        alert('Assistido atualizado com sucesso!');
+      }
+      navigate('/assisteds-page')
     } catch (err) {
       console.error('Erro ao salvar o assistido', err);
     }
@@ -226,7 +214,41 @@ export const AssistidsAddEdit: React.FC = () => {
 
         <Grid item xs={12} sm={6}>
           <Controller
-            name="district"
+            name="address"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Endereço"
+                fullWidth
+                error={!!errors.address}
+                helperText={errors.address ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+        <Grid item xs={1} sm={1}>
+          <Controller
+            name="address_number"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Numero"
+                fullWidth
+                error={!!errors.address_number}
+                helperText={errors.address_number ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+        <Grid item xs={12} sm={2}>
+          <Controller
+            name="neighborhood"
             control={control}
             render={({ field }) => (
               <TextField
@@ -234,13 +256,132 @@ export const AssistidsAddEdit: React.FC = () => {
                 variant="standard"
                 label="Bairro"
                 fullWidth
-                error={!!errors.district}
-                helperText={errors.district ? 'Campo obrigatório' : ''}
+                error={!!errors.neighborhood}
+                helperText={errors.neighborhood ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
           />
         </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="zip_code"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="CEP"
+                fullWidth
+                error={!!errors.zip_code}
+                helperText={errors.zip_code ? 'Campo obrigatório' : ''}
+              />
+            )}
+         
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="address_complement"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Complemento"
+                fullWidth
+                error={!!errors.address_complement}
+                helperText={errors.address_complement ? 'Campo obrigatório' : ''}
+              />
+            )}
+            
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="city"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="Cidade"
+                fullWidth
+                error={!!errors.city}
+                helperText={errors.city ? 'Campo obrigatório' : ''}
+              />
+            )}
+           
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="state"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="UF"
+                fullWidth
+                error={!!errors.state}
+                helperText={errors.state ? 'Campo obrigatório' : ''}
+              />
+            )}
+
+          />
+        </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="country"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                variant="standard"
+                label="País"
+                fullWidth
+                error={!!errors.country}
+                helperText={errors.country ? 'Campo obrigatório' : ''}
+              />
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
+
+        <Grid item xs={4}>
+          <Controller
+            name="conference_id"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth variant="outlined" error={!!errors.conference_id}>
+                <InputLabel>Conferências</InputLabel>
+                <Select
+                  {...field}
+
+                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  label="Conferências"
+                >
+                  {
+                    conferences.map((item: IConferences, index) => {
+                      return (
+                        
+                          <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
+                        
+                      )
+                    })
+                  }
+                </Select>
+                <FormHelperText>
+                  {errors.conference_id ? 'Campo obrigatório' : ''}
+                </FormHelperText>
+              </FormControl>
+            )}
+            rules={{ required: true }}
+          />
+
+        </Grid>
+
 
         <Grid item xs={12} sm={6}>
           <Controller
@@ -310,6 +451,27 @@ export const AssistidsAddEdit: React.FC = () => {
         <Grid item xs={12} sm={12}>
           {fields.map((item, index) => (
             <Grid container spacing={2} key={item.id}>
+              <Grid item xs={12} sm={4} sx={{ display: "none" }}>
+                <Controller
+                  name={`dependents.${index}.id`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      variant="standard"
+                      fullWidth
+                      error={!!errors.dependents?.[index]?.id}
+                      helperText={
+                        errors.dependents?.[index]?.id
+                          ? 'Campo obrigatório'
+                          : ''
+                      }
+
+                    />
+                  )}
+                //rules={{ required: true }}
+                />
+              </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
                   name={`dependents.${index}.name`}
@@ -328,7 +490,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -349,7 +511,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -370,7 +532,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
             </Grid>
@@ -380,7 +542,7 @@ export const AssistidsAddEdit: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={() =>
-                append({ name: '', age: 0, relationship: '', assisted_id: Number(id) })
+                append({name: '', age: 0, relationship: '', assisted_id: Number(id) })
               }
             >
               Adicionar Dependente
@@ -413,10 +575,10 @@ export const AssistidsAddEdit: React.FC = () => {
         <Button type="submit" variant="contained" color="primary" >
           Enviar
         </Button>
-        <Button type="button" onClick={() => { navigate("/assistids-page") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+        <Button type="button" onClick={() => { navigate("/assisteds-page") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
           Cancelar
         </Button>
-        <Button type="button" variant="contained" color="error" onClick={() => {handleDelete(Number(id))}} sx={{ marginLeft: "10px" }}>
+        <Button type="button" variant="contained" color="error" onClick={() => { handleDelete(Number(id)) }} sx={{ marginLeft: "10px" }}>
           Excluir
         </Button>
       </Box>

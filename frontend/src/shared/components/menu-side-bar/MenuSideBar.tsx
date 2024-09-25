@@ -116,7 +116,7 @@ export const MenuSideBar: React.FC<IMenuSideBarProps> = ({ children }) => {
   const [title, setTitle] = useState(() => {
     let titleName: any;
     menu.forEach(item =>
-      item.items.map(it => {
+      item?.items.map(it => {
         if (it.path === pathname) titleName = it;
       })
     );

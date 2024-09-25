@@ -29,11 +29,12 @@ conferencesRoutes.post(
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required('Name is required'),
-      username: Joi.string().required('username is required'),
-      email: Joi.string().email().required('Email is required'),
-      state: Joi.string().required('state is required'),
-      city: Joi.string().required('city is required'),
-      cep: Joi.string().min(8).required('cep is required'),
+      username: Joi.string(),
+      email: Joi.string().email(),
+      state: Joi.string(),
+      city: Joi.string(),
+      cep: Joi.string().min(8),
+      tel: Joi.string(),
     },
   }),
   verifyIfEmailAlreadyExists,

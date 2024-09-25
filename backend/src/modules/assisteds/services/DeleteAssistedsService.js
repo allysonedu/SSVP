@@ -6,12 +6,6 @@ class DeleteAssistedsService {
   }
 
   async execute(idAssisteds) {
-    const assisted = await this.assistedsRepository.deleteAssisteds(
-      idAssisteds
-    );
-
-    if (!assisted) throw new AppError('Assisted not found');
-
     return this.assistedsRepository.deleteAssisteds(idAssisteds);
   }
 }

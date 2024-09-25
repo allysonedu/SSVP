@@ -26,6 +26,7 @@
     "run:seed": "knex seed:run",
     "create:seed": "knex seed:make",
     "rollback:table": "knex migrate:rollback",
+    "rollback:allTable": "knex migrate:rollback --all",
     "rollback:seed": "knex seed:rollback"
   }
 }

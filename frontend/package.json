@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
+    "@mui/x-date-pickers": "^7.17.0",
     "@unform/core": "^2.1.6",
     "@unform/web": "^2.1.6",
     "axios": "^1.7.4",

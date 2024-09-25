@@ -14,7 +14,7 @@ class AssistedsRepository {
     return connection('assisteds')
       .update(payload)
       .where({ id: payload.id })
-      .returning('*');
+      .returning('*')
   }
 
   async deleteAssisteds(idAssisteds) {
@@ -26,7 +26,8 @@ class AssistedsRepository {
   }
 
   async getOneAssisteds(idAssisteds) {
-    return connection('assisteds').where({ id: idAssisteds }).first();
+    return connection('assisteds')
+    .where('id', '=', `${idAssisteds}`).first();
   }
 }
 

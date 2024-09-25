@@ -4,7 +4,7 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 import { OpenRoutes } from './OpenRoutes';
 
-import { PrivateRoutes } from './PrivateRoutes'; 
+import { PrivateRoutes } from './PrivateRoutes';
 
 import { useAuth } from '../shared/hooks/auth';
 
@@ -16,14 +16,14 @@ export const AppRoutes: React.FC = () => {
   if (token) {
     const decoded = jwtDecode<JwtPayload>(token);
     if (user && decoded.exp && decoded.exp >= new Date().getTime() / 1000) {
-      return <PrivateRoutes />
+      return <PrivateRoutes />;
     }
     localStorage.removeItem(environment.APP_NAME);
   }
 
-  if (environment.DEV) {
-    return <PrivateRoutes />
-  }
+  // if (environment.DEV) {
+  //   return <PrivateRoutes />
+  // }
 
   return <OpenRoutes />;
 };

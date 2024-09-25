@@ -14,9 +14,16 @@ assistedsRoutes.post(
     [Segments.BODY]: {
       name: Joi.string().required('Name is required'),
       age: Joi.number().required('Age is required'),
+      address: Joi.string(),
+      address_number: Joi.string(),
+      neighborhood: Joi.string(),
+      zip_code: Joi.string(),
+      address_complement: Joi.string(),
+      city: Joi.string(),
+      state: Joi.string(),
+      country: Joi.string(),
       whatsapp: Joi.string(),
       profession: Joi.string().required('profession is required'),
-      district: Joi.string().required('district is required'),
       cpf: Joi.string().required('district is required'),
       Case_report: Joi.string(),
       family_income: Joi.string(),
@@ -24,7 +31,8 @@ assistedsRoutes.post(
       Spouse: Joi.string(),
       home: Joi.string(),
       maritalStatus: Joi.string(),
-      dependents: Joi.array().empty()
+      dependents: Joi.array().empty(),
+      conference_id: Joi.number()
       
     },
   }),

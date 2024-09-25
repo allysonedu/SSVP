@@ -1,22 +1,26 @@
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 
 import { TextField, Grid, Box, Button, Typography } from '@mui/material';
+import { IConferences } from '../../shared/dtos/IConferences';
+import { createConferences, getOneConferences, deleteConferences, updateConferences } from '../../api/conferences';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useToast } from '../../shared/hooks/Toast';
 
-interface FormValues {
-  name: string;
-  username: string;
-  state: string;
-  email: string;
-  city: string;
-  cep: string;
-}
 
 export const ConferencesAddEdit: React.FC = () => {
+  const { id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { addToast } = useToast()
+  const navigate = useNavigate()
+
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormValues>({
+    reset
+  } = useForm<IConferences>({
     defaultValues: {
       name: '',
       username: '',
@@ -24,11 +28,66 @@ export const ConferencesAddEdit: React.FC = () => {
       email: '',
       city: '',
       cep: '',
+      tel:''
     },
   });
 
-  const onSubmit = (data: FormValues) => {
-    console.log(data);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await getOneConferences(Number(id));
+        if (response?.data) {
+          reset(response.data);
+        }
+      } catch (err) {
+        setError('Erro ao carregar os dados.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchData();
+    } else {
+      setLoading(false); // Se não há id, é um novo registro, não precisa carregar dados
+    }
+  }, [id, reset]);
+
+  const handleDelete = (id: number) => {
+    try {
+      deleteConferences(id)
+      addToast({
+        type: 'success',
+        title: `Conferência deletada com sucesso!!`,
+      })
+      navigate('/conferencesView')
+    } catch (error: any) {
+      addToast({
+        type: 'error',
+        title: 'Erro ao Deletar a Conferencia',
+        description: error?.message,
+      })
+    }
+
+
+  }
+
+  const onSubmit: SubmitHandler<IConferences> = async (data: IConferences) => {
+    try {
+      if (!id) {
+        await createConferences(data);
+        alert('Conferência salva com sucesso!');
+      } else {
+        await updateConferences(data)
+        alert('Conferência atualizada com sucesso!');
+      }
+      navigate('/conferencesView')
+    } catch (err) {
+      console.error('Erro ao salvar a conferência!', err);
+    }
   };
 
   return (
@@ -95,16 +154,16 @@ export const ConferencesAddEdit: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={3}>
           <Controller
-            name="state"
+            name="tel"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 variant="standard"
-                label="estado"
+                label="Telefone"
                 fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
+                error={!!errors.tel}
+                helperText={errors.tel ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
@@ -167,6 +226,12 @@ export const ConferencesAddEdit: React.FC = () => {
       <Box mt={3}>
         <Button type="submit" variant="contained" color="primary">
           Cadastrar
+        </Button>
+        <Button type="button" onClick={() => { navigate("/conferencesView") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+          Cancelar
+        </Button>
+        <Button type="button" variant="contained" color="error" onClick={() => { handleDelete(Number(id)) }} sx={{ marginLeft: "10px" }}>
+          Excluir
         </Button>
       </Box>
     </Box>

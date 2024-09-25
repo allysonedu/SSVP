@@ -59,10 +59,6 @@ export const ListAssistids: React.FC<{ cadastros: IAssisteds[] }> = ({ cadastros
     
     return (
         <Box sx={{ padding: 2 }}>
-            <Typography variant="h6" gutterBottom>
-                Lista de Cadastros 
-            </Typography>
-
             <Grid container spacing={2} sx={{ marginBottom: 2 }}>
                 <Grid item xs={12} sm={12} >
                     <Button type="button" onClick={()=>{ navigate("/assisteds")}} variant="contained" color="primary">

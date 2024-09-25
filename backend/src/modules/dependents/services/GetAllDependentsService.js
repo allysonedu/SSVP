@@ -3,8 +3,8 @@ class GetAllDependentsService {
     this.dependentsRepository = dependentsRepository;
   }
 
-  async execute() {
-    return this.dependentsRepository.getAllDependents();
+  async execute(assisted_id) {
+    return this.dependentsRepository.getAllDependents(assisted_id);
   }
 }
 
