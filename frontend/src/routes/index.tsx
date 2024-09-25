@@ -21,9 +21,9 @@ export const AppRoutes: React.FC = () => {
     localStorage.removeItem(environment.APP_NAME);
   }
 
-  // if (environment.DEV) {
-  //   return <PrivateRoutes />
-  // }
+  if (environment.DEV) {
+    return <PrivateRoutes />;
+  }
 
   return <OpenRoutes />;
 };

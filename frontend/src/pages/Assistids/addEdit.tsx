@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useForm, Controller, useFieldArray, SubmitHandler } from 'react-hook-form';
+import {
+  useForm,
+  Controller,
+  useFieldArray,
+  SubmitHandler,
+} from 'react-hook-form';
 import {
   TextField,
   Grid,
@@ -14,49 +19,70 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
-import { createAssisteds, getOneAssisteds, deleteAssisteds, updateAssisteds } from '../../api/assisteds';
-import { getAllConferences } from '../../api/conferences'
+import {
+  createAssisteds,
+  getOneAssisteds,
+  deleteAssisteds,
+  updateAssisteds,
+} from '../../api/assisteds';
+import { getAllConferences } from '../../api/conferences';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { IConferences } from '../../shared/dtos/IConferences';
-
 
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [conferences, setConferences] = useState([])
-  
-  const { addToast } = useToast()
-  const navigate = useNavigate()
+  interface FormData {
+    withdrawnBy: string;
+    deliveredBy: string;
+    products: string;
+    date: string;
+    time: string;
+  }
+
+  const [formData, setFormData] = useState<FormData>({
+    withdrawnBy: '',
+    deliveredBy: '',
+    products: '',
+    date: '',
+    time: '',
+  });
+
+  const [conferences, setConferences] = useState([]);
+
+  const { addToast } = useToast();
+  const navigate = useNavigate();
   // useForm para gerenciar o formulário
-  const { control, handleSubmit, formState: { errors }, reset } = useForm<IAssisteds>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<IAssisteds>({
     defaultValues: {
       name: '',
-    }
+    },
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'dependents'
+    name: 'dependents',
   });
 
   useEffect(() => {
-
-
     const loadConferences = async () => {
-
-      setConferences(await getAllConferences())
-    }
+      setConferences(await getAllConferences());
+    };
     const fetchData = async () => {
       setLoading(true);
       setError(null);
-    
+
       try {
         const response = await getOneAssisteds(Number(id));
 
-   
         if (response?.data) {
           reset(response.data);
         }
@@ -67,8 +93,8 @@ export const AssistidsAddEdit: React.FC = () => {
       }
     };
 
-    loadConferences()
-    
+    loadConferences();
+
     if (id) {
       fetchData();
     } else {
@@ -76,37 +102,40 @@ export const AssistidsAddEdit: React.FC = () => {
     }
   }, [id, reset]);
 
-
- 
-   
   const handleDelete = (id: number) => {
     try {
-      deleteAssisteds(id)
+      deleteAssisteds(id);
       addToast({
         type: 'success',
         title: `Assistido deletado com sucesso!!`,
-      })
-      navigate('/assisteds-page')
+      });
+      navigate('/assisteds-page');
     } catch (error: any) {
       addToast({
         type: 'error',
         title: 'Erro ao Deletar o Assitido',
         description: error?.message,
-      })
+      });
     }
+  };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-  }
-  const onSubmit: SubmitHandler<IAssisteds> = async (data) => {
+  const onSubmit: SubmitHandler<IAssisteds> = async data => {
     try {
       if (!id) {
         await createAssisteds(data);
         alert('Assistido salvo com sucesso!');
       } else {
-        await updateAssisteds(data)
+        await updateAssisteds(data);
         alert('Assistido atualizado com sucesso!');
       }
-      navigate('/assisteds-page')
+      navigate('/assisteds-page');
     } catch (err) {
       console.error('Erro ao salvar o assistido', err);
     }
@@ -277,7 +306,6 @@ export const AssistidsAddEdit: React.FC = () => {
                 helperText={errors.zip_code ? 'Campo obrigatório' : ''}
               />
             )}
-         
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -291,10 +319,11 @@ export const AssistidsAddEdit: React.FC = () => {
                 label="Complemento"
                 fullWidth
                 error={!!errors.address_complement}
-                helperText={errors.address_complement ? 'Campo obrigatório' : ''}
+                helperText={
+                  errors.address_complement ? 'Campo obrigatório' : ''
+                }
               />
             )}
-            
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -311,7 +340,6 @@ export const AssistidsAddEdit: React.FC = () => {
                 helperText={errors.city ? 'Campo obrigatório' : ''}
               />
             )}
-           
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -328,7 +356,6 @@ export const AssistidsAddEdit: React.FC = () => {
                 helperText={errors.state ? 'Campo obrigatório' : ''}
               />
             )}
-
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -354,23 +381,24 @@ export const AssistidsAddEdit: React.FC = () => {
             name="conference_id"
             control={control}
             render={({ field }) => (
-              <FormControl fullWidth variant="outlined" error={!!errors.conference_id}>
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!errors.conference_id}
+              >
                 <InputLabel>Conferências</InputLabel>
                 <Select
                   {...field}
-
-                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  value={field.value || ''} // Assegura que o valor inicial seja uma string vazia caso não haja valor
                   label="Conferências"
                 >
-                  {
-                    conferences.map((item: IConferences, index) => {
-                      return (
-                        
-                          <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
-                        
-                      )
-                    })
-                  }
+                  {conferences.map((item: IConferences, index) => {
+                    return (
+                      <MenuItem key={index} value={item.id}>
+                        {item.name}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
                 <FormHelperText>
                   {errors.conference_id ? 'Campo obrigatório' : ''}
@@ -379,20 +407,22 @@ export const AssistidsAddEdit: React.FC = () => {
             )}
             rules={{ required: true }}
           />
-
         </Grid>
-
 
         <Grid item xs={12} sm={6}>
           <Controller
             name="maritalStatus"
             control={control}
             render={({ field }) => (
-              <FormControl fullWidth variant="standard" error={!!errors.maritalStatus}>
+              <FormControl
+                fullWidth
+                variant="standard"
+                error={!!errors.maritalStatus}
+              >
                 <InputLabel>Estado Civil</InputLabel>
                 <Select
                   {...field}
-                  value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  value={field.value || ''} // Assegura que o valor inicial seja uma string vazia caso não haja valor
                   label="Estado Civil"
                 >
                   <MenuItem value="solteiro">Solteiro(a)</MenuItem>
@@ -415,7 +445,12 @@ export const AssistidsAddEdit: React.FC = () => {
             render={({ field }) => (
               <FormControl fullWidth error={!!errors.home}>
                 <InputLabel>Casa</InputLabel>
-                <Select {...field} value={field.value || ""} variant="standard" label="Casa">
+                <Select
+                  {...field}
+                  value={field.value || ''}
+                  variant="standard"
+                  label="Casa"
+                >
                   <MenuItem value="propria">Própria</MenuItem>
                   <MenuItem value="alugada">Alugada</MenuItem>
                   <MenuItem value="gratuita">Gratuita</MenuItem>
@@ -451,7 +486,7 @@ export const AssistidsAddEdit: React.FC = () => {
         <Grid item xs={12} sm={12}>
           {fields.map((item, index) => (
             <Grid container spacing={2} key={item.id}>
-              <Grid item xs={12} sm={4} sx={{ display: "none" }}>
+              <Grid item xs={12} sm={4} sx={{ display: 'none' }}>
                 <Controller
                   name={`dependents.${index}.id`}
                   control={control}
@@ -466,10 +501,9 @@ export const AssistidsAddEdit: React.FC = () => {
                           ? 'Campo obrigatório'
                           : ''
                       }
-
                     />
                   )}
-                //rules={{ required: true }}
+                  //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -490,28 +524,28 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                //rules={{ required: true }}
+                  //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
-                  name={`dependents.${index}.age`}
+                  name={`dependents.${index}.date`}
                   control={control}
                   render={({ field }) => (
                     <TextField
-                      {...field}
-                      variant="standard"
-                      label="Idade"
                       fullWidth
-                      error={!!errors.dependents?.[index]?.age}
-                      helperText={
-                        errors.dependents?.[index]?.age
-                          ? 'Campo obrigatório'
-                          : ''
-                      }
+                      label="Data de nacimento"
+                      name="date"
+                      type="datetime-local"
+                      value={formData.date}
+                      onChange={handleChange}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      required
                     />
                   )}
-                //rules={{ required: true }}
+                  //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -532,7 +566,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                //rules={{ required: true }}
+                  //rules={{ required: true }}
                 />
               </Grid>
             </Grid>
@@ -542,7 +576,12 @@ export const AssistidsAddEdit: React.FC = () => {
               variant="contained"
               color="primary"
               onClick={() =>
-                append({name: '', age: 0, relationship: '', assisted_id: Number(id) })
+                append({
+                  name: '',
+                  date: 0,
+                  relationship: '',
+                  assisted_id: Number(id),
+                })
               }
             >
               Adicionar Dependente
@@ -572,17 +611,32 @@ export const AssistidsAddEdit: React.FC = () => {
       </Grid>
 
       <Box mt={3}>
-        <Button type="submit" variant="contained" color="primary" >
+        <Button type="submit" variant="contained" color="primary">
           Enviar
         </Button>
-        <Button type="button" onClick={() => { navigate("/assisteds-page") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+        <Button
+          type="button"
+          onClick={() => {
+            navigate('/assisteds-page');
+          }}
+          variant="contained"
+          color="warning"
+          sx={{ marginLeft: '10px' }}
+        >
           Cancelar
         </Button>
-        <Button type="button" variant="contained" color="error" onClick={() => { handleDelete(Number(id)) }} sx={{ marginLeft: "10px" }}>
+        <Button
+          type="button"
+          variant="contained"
+          color="error"
+          onClick={() => {
+            handleDelete(Number(id));
+          }}
+          sx={{ marginLeft: '10px' }}
+        >
           Excluir
         </Button>
       </Box>
-
     </Box>
   );
 };

@@ -3,7 +3,7 @@ export const environment = {
 
   APP_NAME: '@Ally',
 
-  // DEV: true,
+  DEV: true,
 
   LINE_LIMIT: 10,
   /**
