@@ -12,20 +12,20 @@ class SessionsService {
   async execute(payload) {
     const { email, password } = payload;
 
-    const users = await this.usersRepository.checkUsersEmail(email);
-    if (!users) throw new AppError('users not found');
+    const user = await this.usersRepository.checkUsersEmail(email);
+    if (!user) throw new AppError('user not found');
 
-    await compare(password, users.password);
+    await compare(password, user.password);
 
-    const token = jwt.sign({ id: users.id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRE,
     });
 
-    delete users.password;
+    delete user.password;
 
     return {
       token,
-      users,
+      user,
     };
   }
 }

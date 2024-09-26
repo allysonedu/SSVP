@@ -1,7 +1,7 @@
 export const environment = {
   BASE_URL: 'http://localhost:3333',
 
-  APP_NAME: '@Ally',
+  APP_NAME: 'SSVP',
 
   DEV: true,
 
@@ -15,5 +15,4 @@ export const environment = {
    */
   EMPTY_LIST: 'Nenhum registro encontrado',
 
-  DEV: 'S'
 };

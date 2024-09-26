@@ -34,12 +34,6 @@ export const PrivateRoutes: React.FC = () => {
         <Route path="/conferences" element={<ConferencesAddEdit />} />
         <Route path="/conferences/:id" element={<ConferencesAddEdit />} />
         <Route path="/conferencesView" element={<ConferencePage />} />
-<<<<<<< HEAD
-
-        <Route path="*" element={<Navigate to="/" />} />
-
-=======
->>>>>>> a619aa9c8f529ec78591b54b6ce61d1bc094bcbc
         <Route path="/positions" element={<PositionAddEdit />} />
         <Route path="/positions/:id" element={<PositionAddEdit />} />
         <Route path="/positionsView" element={<PositionsPage />} />

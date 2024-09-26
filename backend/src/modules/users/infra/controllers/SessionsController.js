@@ -8,9 +8,9 @@ class SessionsController {
   async login(request, response) {
     const sessionsService = new SessionsService(usersRepository);
 
-    const users = await sessionsService.execute(request.body);
+    const user = await sessionsService.execute(request.body);
 
-    return response.json(users);
+    return response.json(user);
   }
 }
 

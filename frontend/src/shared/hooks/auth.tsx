@@ -13,6 +13,7 @@ interface SignInCredencials {
 
 interface IUserResponseProps {
   user: IUser;
+  token: string
 }
 
 interface AuthContextData {

@@ -60,15 +60,15 @@ export const menu = [
       },
     ],
   },
-  {
-    title: 'Configurações',
-    icon: 'build',
-    items: [
-      {
-        label: 'Ajustes',
-        icon: 'display_settings',
-        path: '/sign-up',
-      },
-    ],
-  },
+  // {
+  //   title: 'Configurações',
+  //   icon: 'build',
+  //   items: [
+  //     {
+  //       label: 'Ajustes',
+  //       icon: 'display_settings',
+  //       path: '/sign-up',
+  //     },
+  //   ],
+  // },
 ];
