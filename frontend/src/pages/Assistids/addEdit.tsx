@@ -30,26 +30,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { IConferences } from '../../shared/dtos/IConferences';
 
+
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  interface FormData {
-    withdrawnBy: string;
-    deliveredBy: string;
-    products: string;
-    date: string;
-    time: string;
-  }
-
-  const [formData, setFormData] = useState<FormData>({
-    withdrawnBy: '',
-    deliveredBy: '',
-    products: '',
-    date: '',
-    time: '',
-  });
 
   const [conferences, setConferences] = useState([]);
 
@@ -82,8 +68,7 @@ export const AssistidsAddEdit: React.FC = () => {
 
       try {
         const response = await getOneAssisteds(Number(id));
-
-        if (response?.data) {
+        if (response?.data) {          
           reset(response.data);
         }
       } catch (err) {
@@ -119,12 +104,6 @@ export const AssistidsAddEdit: React.FC = () => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const onSubmit: SubmitHandler<IAssisteds> = async data => {
     try {
@@ -486,14 +465,14 @@ export const AssistidsAddEdit: React.FC = () => {
         <Grid item xs={12} sm={12}>
           {fields.map((item, index) => (
             <Grid container spacing={2} key={item.id}>
-              <Grid item xs={12} sm={4} sx={{ display: 'none' }}>
+              <Grid item xs={12} sm={3} sx={{ display: 'none' }}>
                 <Controller
                   name={`dependents.${index}.id`}
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      variant="standard"
+                      variant="outlined"
                       fullWidth
                       error={!!errors.dependents?.[index]?.id}
                       helperText={
@@ -506,14 +485,14 @@ export const AssistidsAddEdit: React.FC = () => {
                   //rules={{ required: true }}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name={`dependents.${index}.name`}
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      variant="standard"
+                      variant="outlined"
                       label={`Dependente ${index + 1} - Nome`}
                       fullWidth
                       error={!!errors.dependents?.[index]?.name}
@@ -527,35 +506,52 @@ export const AssistidsAddEdit: React.FC = () => {
                   //rules={{ required: true }}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
                 <Controller
-                  name={`dependents.${index}.date`}
+                  name={`dependents.${index}.birth_date`}
                   control={control}
                   render={({ field }) => (
                     <TextField
+                      {...field}
                       fullWidth
                       label="Data de nacimento"
-                      name="date"
-                      type="datetime-local"
-                      value={formData.date}
-                      onChange={handleChange}
+                      name="birth_date"
+                      type="date"
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      required
                     />
                   )}
                   //rules={{ required: true }}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} sm={3}>
+                <Controller
+                  name={`dependents.${index}.CPF`}
+                  control={control}
+                  render={({ field }) => (
+                    <TextField
+                      {...field}
+                      fullWidth
+                      label="CPF"
+                      name="CPF"
+                      type="text"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  )}
+                  //rules={{ required: true }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={3}>
                 <Controller
                   name={`dependents.${index}.relationship`}
                   control={control}
                   render={({ field }) => (
                     <TextField
                       {...field}
-                      variant="standard"
+                      variant="outlined"
                       label="Parentesco"
                       fullWidth
                       error={!!errors.dependents?.[index]?.relationship}
@@ -571,14 +567,14 @@ export const AssistidsAddEdit: React.FC = () => {
               </Grid>
             </Grid>
           ))}
-          <Grid item xs={12}>
+          <Grid item xs={12} mt={1}>
             <Button
               variant="contained"
               color="primary"
               onClick={() =>
                 append({
                   name: '',
-                  date: 0,
+                  birth_date: null,
                   relationship: '',
                   assisted_id: Number(id),
                 })

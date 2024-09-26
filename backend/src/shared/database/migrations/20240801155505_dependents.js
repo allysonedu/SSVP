@@ -7,7 +7,8 @@ exports.up = function (knex) {
     table.increments('id').primary();
     table.text('name').notNullable();
     table.text('relationship').notNullable();
-    table.date('age').nullable();
+    table.text('CPF').nullable();
+    table.date('birth_date').nullable();
     table.integer('assisted_id').unsigned().notNullable(); // Coluna para a chave estrangeira
     table
       .foreign('assisted_id')

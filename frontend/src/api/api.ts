@@ -61,7 +61,7 @@ interface IAssistedsCreateProps {
   cpf: string;
   Case_report: string;
   family_income: string;
-  dependents: [{ nome: string; date: string; relacao: string }];
+  dependents: [{ nome: string; birth_date: string; relacao: string,  }];
   explain: string;
   Spouse: string;
   home: string;

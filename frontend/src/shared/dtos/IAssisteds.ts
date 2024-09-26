@@ -19,14 +19,16 @@ export interface IAssisteds {
   Spouse: string;
   maritalStatus: string;
   home: string;
-  conference_id: number;
+  conference_id: number ;
   dependents: Array<IDependents>;
 }
 
 interface IDependents {
   id: Number | null;
   assisted_id: Number;
-  date: Number;
+  birth_date: Date | null;
   name: string;
   relationship: string;
+  CPF: string;
+  
 }
