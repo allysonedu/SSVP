@@ -29,11 +29,15 @@ conferencesRoutes.post(
   celebrate({
     [Segments.BODY]: {
       name: Joi.string().required('Name is required'),
-      username: Joi.string(),
       email: Joi.string().email(),
-      state: Joi.string(),
+      address: Joi.string(),
+      address_number: Joi.string(),
+      neighborhood: Joi.string(),
+      zip_code: Joi.string(),
+      address_complement: Joi.string(),
       city: Joi.string(),
-      cep: Joi.string().min(8),
+      state: Joi.string(),
+      country: Joi.string(),
       tel: Joi.string(),
     },
   }),

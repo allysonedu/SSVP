@@ -1,11 +1,15 @@
 export interface IConferences {
     id:number
     name: string
-    username: string
     email: string
-    state: string
+    address: string
+    address_number: string
+    neighborhood: string
+    zip_code: string
+    address_complement: string
     city: string
-    cep: string
+    state: string
+    country: string
     tel: string
 }
 

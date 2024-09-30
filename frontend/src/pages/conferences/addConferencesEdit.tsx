@@ -6,6 +6,7 @@ import { createConferences, getOneConferences, deleteConferences, updateConferen
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
+import AddressFields from '../../shared/components/form-components/AddressFields';
 
 
 export const ConferencesAddEdit: React.FC = () => {
@@ -23,12 +24,16 @@ export const ConferencesAddEdit: React.FC = () => {
   } = useForm<IConferences>({
     defaultValues: {
       name: '',
-      username: '',
       state: '',
       email: '',
       city: '',
-      cep: '',
-      tel:''
+      tel:'',
+      address: '',
+      address_number: '',
+      neighborhood: '',
+      zip_code: '',
+      address_complement: '',
+      country: '',
     },
   });
 
@@ -118,40 +123,25 @@ export const ConferencesAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="estado"
-                fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
+
         <Grid item xs={12} sm={3}>
           <Controller
-            name="username"
+            name="email"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 variant="standard"
-                label="Tipo do Usúario"
+                label="E-mail"
                 fullWidth
-                error={!!errors.username}
-                helperText={errors.username ? 'Campo obrigatório' : ''}
+                error={!!errors.email}
+                helperText={errors.email ? 'Campo obrigatório' : ''}
               />
             )}
             rules={{ required: true }}
           />
         </Grid>
+
         <Grid item xs={12} sm={3}>
           <Controller
             name="tel"
@@ -169,58 +159,9 @@ export const ConferencesAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="email"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="email"
-                fullWidth
-                error={!!errors.email}
-                helperText={errors.email ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Cidade"
-                fullWidth
-                error={!!errors.city}
-                helperText={errors.city ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
+          
+       <AddressFields control={control} errors={errors}/>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="cep"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="cep"
-                fullWidth
-                error={!!errors.cep}
-                helperText={errors.cep ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
       </Grid>
 
       <Box mt={3}>
