@@ -20,7 +20,8 @@ export const ConferencesAddEdit: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    setValue
   } = useForm<IConferences>({
     defaultValues: {
       name: '',
@@ -160,7 +161,7 @@ export const ConferencesAddEdit: React.FC = () => {
           />
         </Grid>
           
-       <AddressFields control={control} errors={errors}/>
+       <AddressFields control={control} errors={errors} setValue={setValue}/>
 
       </Grid>
 

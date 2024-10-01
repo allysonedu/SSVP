@@ -7,7 +7,10 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { getAllAssisteds } from "../,,/../../api/assisteds";
+import { getAllConferences } from "../,,/../../api/conferences";
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
+import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
+import { DateToInput } from '../../shared/utils/formatDate';
 
 
 export const MovementsAddEdit: React.FC = () => {
@@ -18,22 +21,6 @@ export const MovementsAddEdit: React.FC = () => {
   const navigate = useNavigate()
 
 
-  interface FormData {
-    withdrawnBy: string;
-    deliveredBy: string;
-    products: string;
-    date: string;
-    time: string;
-  }
-
-  const [formData, setFormData] = useState<FormData>({
-    withdrawnBy: "",
-    deliveredBy: "",
-    products: "",
-    date: "",
-    time: "",
-  });
-
   const {
     control,
     handleSubmit,
@@ -41,24 +28,25 @@ export const MovementsAddEdit: React.FC = () => {
     reset
   } = useForm<IMovements>({
     defaultValues: {
-      name: '',
-      username: '',
-      state: '',
-      email: '',
-      city: '',
-      cep: '',
+      deliveredBy: "",
+      products: [],
     },
   });
 
 
   const [assisteds, setAssisteds] = useState([])
+  const [conferences, setConferences] = useState([])
 
   useEffect(() => {
     const GetAssisteds = async () => {
       setAssisteds(await getAllAssisteds())
     };
+    const GetConferences = async () => {
+      setConferences(await getAllConferences())
+    };
 
     GetAssisteds()
+    GetConferences()
   }, [])
 
   useEffect(() => {
@@ -106,12 +94,6 @@ export const MovementsAddEdit: React.FC = () => {
 
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   const onSubmit: SubmitHandler<IMovements> = async (data: IMovements) => {
     try {
@@ -140,88 +122,93 @@ export const MovementsAddEdit: React.FC = () => {
       </Typography>
 
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={2}>
+
           <Controller
-            name="assisteds_list"
+            name="movement_date"
             control={control}
             render={({ field }) => (
-              <FormControl fullWidth variant="outlined" error={!!errors.assisteds_list}>
+              <TextField
+                fullWidth
+                {...field}
+                defaultValue={DateToInput(new Date)}
+                label="Data"
+                type="datetime-local"
+                error={!!errors.movement_date}
+                helperText={errors.movement_date ? 'Verifique este campo' : ''}
+                InputLabelProps={{shrink:true}}
+              />
+            )}
+
+          />
+
+        </Grid>
+        <Grid item xs={3}>
+          <Controller
+            name="assisted_id"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth variant="outlined" error={!!errors.assisted_id}>
                 <InputLabel>Assistidos</InputLabel>
                 <Select
                   {...field}
-                  
+
                   value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
                   label="Assistidos"
                 >
                   {
-                    assisteds.map((item : IAssisteds, index)  => {
+                    assisteds.map((item: IAssisteds, index) => {
                       return (
-                        <>
-                          <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
-                        </>
+                        <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
                       )
                     })
                   }
                 </Select>
                 <FormHelperText>
-                  {errors.assisteds_list ? 'Campo obrigatório' : ''}
+                  {errors.assisted_id ? 'Campo obrigatório' : ''}
                 </FormHelperText>
               </FormControl>
             )}
             rules={{ required: true }}
           />
-         
+
         </Grid>
 
-        <Grid item xs={4}>
-          <TextField
-            fullWidth
-            label="Quem entregou a doação"
-            name="deliveredBy"
-            value={formData.deliveredBy}
-            onChange={handleChange}
-            required
+        <Grid item xs={3}>
+          <Controller
+            name='deliveredBy'
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                label="Quem entregou a doação"
+                error={!!errors.deliveredBy}
+                helperText={errors.deliveredBy ? 'Verifique este campo' : ''}
+
+              />
+
+            )}
+
           />
         </Grid>
 
-        <Grid item xs={4}>
-          <TextField
-            fullWidth
-            label="Quem entregou a doação"
-            name="deliveredBy"
-            value={formData.deliveredBy}
-            onChange={handleChange}
-            required
+        <Grid item xs={3}>
+          <ConferencesSelect
+            control={control}
+            name="conference_id"
+            conferences={conferences}
+            error={!!errors.conference_id} // Passa se há erro
+            errorMessage={errors.conference_id ? 'Verifique este campo' : ''} // Mensagem de erro
           />
         </Grid>
 
         <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Produtos levados"
-            name="products"
-            value={formData.products}
-            onChange={handleChange}
-            required
-            multiline
-            rows={4}
-          />
+
+
+
         </Grid>
 
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            label="Data"
-            name="date"
-            type="datetime-local"
-            value={formData.date}
-            onChange={handleChange}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            required
-          />
-        </Grid>
 
       </Grid>
 

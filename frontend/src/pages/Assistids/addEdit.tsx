@@ -30,6 +30,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { IConferences } from '../../shared/dtos/IConferences';
 import AddressFields from '../../shared/components/form-components/AddressFields';
+import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
 
 
 export const AssistidsAddEdit: React.FC = () => {
@@ -48,6 +49,7 @@ export const AssistidsAddEdit: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue
   } = useForm<IAssisteds>({
     defaultValues: {
       name: '',
@@ -221,38 +223,15 @@ export const AssistidsAddEdit: React.FC = () => {
           />
         </Grid>
 
-        <AddressFields control={control} errors={errors}/>
+        <AddressFields control={control} errors={errors} setValue={setValue}/>
 
         <Grid item xs={4}>
-          <Controller
-            name="conference_id"
+        <ConferencesSelect
             control={control}
-            render={({ field }) => (
-              <FormControl
-                fullWidth
-                variant="outlined"
-                error={!!errors.conference_id}
-              >
-                <InputLabel>Conferências</InputLabel>
-                <Select
-                  {...field}
-                  value={field.value || ''} // Assegura que o valor inicial seja uma string vazia caso não haja valor
-                  label="Conferências"
-                >
-                  {conferences.map((item: IConferences, index) => {
-                    return (
-                      <MenuItem key={index} value={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText>
-                  {errors.conference_id ? 'Campo obrigatório' : ''}
-                </FormHelperText>
-              </FormControl>
-            )}
-            rules={{ required: true }}
+            name="conference_id"
+            conferences={conferences}
+            error={!!errors.conference_id} // Passa se há erro
+            errorMessage={errors.conference_id ? 'Campo obrigatório' : ''} // Mensagem de erro
           />
         </Grid>
 

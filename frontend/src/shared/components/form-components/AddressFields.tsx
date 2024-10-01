@@ -1,14 +1,50 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, TextField } from '@mui/material';
-import { Controller, Control, FieldErrors } from 'react-hook-form';
+import { Controller, Control, FieldErrors, useWatch, UseFormSetValue } from 'react-hook-form';
+import axios from 'axios';
 
 type AddressFieldsProps = {
   control: Control<any>;
   errors: FieldErrors<any>;
+  setValue: UseFormSetValue<any>;
 };
 
-const AddressFields: React.FC<AddressFieldsProps> = ({ control, errors }) => {
+const AddressFields: React.FC<AddressFieldsProps> = ({ control, errors, setValue }) => {
+    const zipCode = useWatch({
+        control,
+        name: 'zip_code', // Observe o campo de CEP
+      });
+    
+      useEffect(() => {
+        const fetchAddressFromZipCode = async (cep: string) => {
+          if (cep.length === 8) { // Validação simples para CEPs com 8 dígitos
+            try {
+              const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+              const data = response.data;
+    
+              if (!data.erro) {
+                // Preencher os campos com os dados retornados
+                setValue('address', data.logradouro);
+                setValue('neighborhood', data.bairro);
+                setValue('city', data.localidade);
+                setValue('state', data.uf);
+              } else {
+                console.error('CEP inválido');
+              }
+            } catch (error) {
+              console.error('Erro ao buscar o CEP:', error);
+            }
+          }
+        };
+    
+        if (zipCode) {
+          fetchAddressFromZipCode(zipCode);
+        }
+      }, [zipCode, setValue]);
+    
   return (
+
+    
     <>
       <Grid item xs={12} sm={6}>
         <Controller
