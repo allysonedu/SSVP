@@ -26,6 +26,8 @@ const transactionsRoutes = require('../../../modules/transactions/infra/routes/t
 
 const positionsRoutes = require('../../../modules/positions/infra/routes/positions.routes');
 
+const movementsRoutes = require('../../../modules/movements/infra/routes/movements.routes');
+
 
 // const ensureAuthenticated = require('../../../shared/middlewares/ensure.autenticated');
 
@@ -58,5 +60,7 @@ routes.use('/dependents', dependentsRoutes);
 routes.use('/transactions', transactionsRoutes);
 
 routes.use('/positions', positionsRoutes);
+
+routes.use('/movements', movementsRoutes);
 
 module.exports = routes;

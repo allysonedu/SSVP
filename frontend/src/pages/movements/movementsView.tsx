@@ -13,22 +13,25 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+import { StringDateToInput } from '../../shared/utils/formatDate';
 
-interface Cadastro {
+interface MovimentsView {
   id: number;
-  name: string;
-  email: string;
-  // city: string;
-  // cep: string;
-  // state: string;
-  // username: string;
+  user_id: number;
+  conference_id: number;
+  assisted_id: number;
+  movement_date: Date;
+  user_name: string;
+  conference_name: string;
+  assisted_name: string;
+  
 }
 
-export const ListMovements: React.FC<{ cadastros: Cadastro[] }> = ({
+export const ListMovements: React.FC<{ cadastros: MovimentsView[] }> = ({
   cadastros,
 }) => {
-  const [filteredCadastros, setFilteredCadastros] =
-    useState<Cadastro[]>(cadastros);
+  const [filteredMovimentsViews, setFilteredMovimentsViews] =
+    useState<MovimentsView[]>(cadastros);
   const [searchNome, setSearchNome] = useState('');
 
   const navigate = useNavigate();
@@ -38,17 +41,17 @@ export const ListMovements: React.FC<{ cadastros: Cadastro[] }> = ({
   };
 
   useEffect(() => {
-    const filterCadastros = () => {
+    const filterMovimentsViews = () => {
       let filtered = cadastros;
 
       if (searchNome) {
         filtered = filtered.filter(cadastro =>
-          cadastro.name.toLowerCase().includes(searchNome.toLowerCase())
+          cadastro.assisted_name.toLowerCase().includes(searchNome.toLowerCase())
         );
       }
-      setFilteredCadastros(filtered);
+      setFilteredMovimentsViews(filtered);
     };
-    filterCadastros();
+    filterMovimentsViews();
   }, [searchNome, cadastros]);
 
   return (
@@ -87,10 +90,10 @@ export const ListMovements: React.FC<{ cadastros: Cadastro[] }> = ({
       </Grid>
 
       <List sx={{ padding: 0 }}>
-        {filteredCadastros.length === 0 ? (
+        {filteredMovimentsViews.length === 0 ? (
           <Typography>Nenhum cadastro encontrado.</Typography>
         ) : (
-          filteredCadastros.map((cadastro, index) => (
+          filteredMovimentsViews.map((cadastro, index) => (
             <Paper
               key={index}
               sx={{
@@ -107,13 +110,16 @@ export const ListMovements: React.FC<{ cadastros: Cadastro[] }> = ({
               >
                 <ListItemText
                   primary={
-                    <Typography variant="h6" color="primary.main">
-                      Conferêcia: {cadastro.name}
-                    </Typography>
+                    <>
+                      <Typography color="primary.secondary">Data da Movimentação: {new Date(cadastro.movement_date).toLocaleDateString()}</Typography>
+                      <Typography variant="h6" color="primary.main">
+                        Conferêcia: {cadastro.conference_name}
+                      </Typography>
+                    </>
                   }
                   secondary={
                     <Typography variant="subtitle1" color="primary.dark">
-                      Email: {cadastro.email}
+                      Assistido: {cadastro.assisted_name}
                     </Typography>
                   }
                 />

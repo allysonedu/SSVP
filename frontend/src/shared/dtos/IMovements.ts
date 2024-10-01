@@ -4,10 +4,16 @@ import { IConferences } from "./IConferences"
 
 export interface IMovements {
     id: number
-    deliveredBy: "",
+    user_id: number,
     movement_date: Date,
     assisted_id: Array<IAssisteds>
     conference_id: Array<IConferences>
-    products: Array<string>,
+    movement_items: Array<IDonationsItems>,
 }
 
+export interface IDonationsItems {
+    id: number
+    name: string
+    quantity: number
+    movement_id: number
+}

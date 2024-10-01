@@ -3,11 +3,11 @@ import { ListMovements } from './movementsView';
 import { getAllMovements } from '../../api/movements';
 
 export const MovementsPage: React.FC = () => {
-  const [movements, setMovimentss] = useState([])
+  const [movements, setMoviments] = useState([])
 
   useEffect(() => {
     const GetMoviments = async () => {
-      setMovimentss(await getAllMovements())
+      setMoviments(await getAllMovements())
     };
    
    GetMoviments()

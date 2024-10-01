@@ -1,6 +1,6 @@
 import { useForm, Controller, SubmitHandler, useFieldArray } from 'react-hook-form';
 
-import { TextField, Grid, Box, Button, Typography, Select, FormControl, InputLabel, MenuItem, FormHelperText } from '@mui/material';
+import { TextField, Grid, Box, Button, Typography, Select, FormControl, InputLabel, MenuItem, FormHelperText, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, useTheme } from '@mui/material';
 import { IMovements } from '../../shared/dtos/IMovements';
 import { createMovements, getOneMovements, deleteMovements, updateMovements } from '../../api/movements';
 import { useEffect, useState } from 'react';
@@ -13,6 +13,7 @@ import ConferencesSelect from '../../shared/components/form-components/Conferenc
 import { DateToInput } from '../../shared/utils/formatDate';
 
 
+
 export const MovementsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,7 @@ export const MovementsAddEdit: React.FC = () => {
   const { addToast } = useToast()
   const navigate = useNavigate()
 
-
+  const theme = useTheme();
   const {
     control,
     handleSubmit,
@@ -28,14 +29,16 @@ export const MovementsAddEdit: React.FC = () => {
     reset
   } = useForm<IMovements>({
     defaultValues: {
-      deliveredBy: "",
-      products: [],
+      user_id: 1,
+      movement_items: [],
     },
   });
 
 
   const [assisteds, setAssisteds] = useState([])
   const [conferences, setConferences] = useState([])
+  const [productDonate, setProductDonate] = useState('')
+  const [quantityDonate, setQuantityDonate] = useState('')
 
   useEffect(() => {
     const GetAssisteds = async () => {
@@ -55,7 +58,9 @@ export const MovementsAddEdit: React.FC = () => {
       setError(null);
       try {
         const response = await getOneMovements(Number(id));
+        
         if (response?.data) {
+
           reset(response.data);
         }
       } catch (err) {
@@ -82,7 +87,7 @@ export const MovementsAddEdit: React.FC = () => {
         type: 'success',
         title: `Conferência deletada com sucesso!!`,
       })
-      navigate('/conferencesView')
+      navigate('/movementsView')
     } catch (error: any) {
       addToast({
         type: 'error',
@@ -94,17 +99,21 @@ export const MovementsAddEdit: React.FC = () => {
 
   }
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'movement_items',
+  });
 
   const onSubmit: SubmitHandler<IMovements> = async (data: IMovements) => {
     try {
       if (!id) {
         await createMovements(data);
-        alert('Conferência salva com sucesso!');
+        alert('Movimentação salva com sucesso!');
       } else {
         await updateMovements(data)
-        alert('Conferência atualizada com sucesso!');
+        alert('Movimentação atualizada com sucesso!');
       }
-      navigate('/conferencesView')
+      navigate('/movementsView')
     } catch (err) {
       console.error('Erro ao salvar a conferência!', err);
     }
@@ -131,12 +140,11 @@ export const MovementsAddEdit: React.FC = () => {
               <TextField
                 fullWidth
                 {...field}
-                defaultValue={DateToInput(new Date)}
                 label="Data"
                 type="datetime-local"
                 error={!!errors.movement_date}
                 helperText={errors.movement_date ? 'Verifique este campo' : ''}
-                InputLabelProps={{shrink:true}}
+                InputLabelProps={{ shrink: true }}
               />
             )}
 
@@ -176,15 +184,15 @@ export const MovementsAddEdit: React.FC = () => {
 
         <Grid item xs={3}>
           <Controller
-            name='deliveredBy'
+            name='user_id'
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
                 fullWidth
                 label="Quem entregou a doação"
-                error={!!errors.deliveredBy}
-                helperText={errors.deliveredBy ? 'Verifique este campo' : ''}
+                error={!!errors.user_id}
+                helperText={errors.user_id ? 'Verifique este campo' : ''}
 
               />
 
@@ -203,8 +211,83 @@ export const MovementsAddEdit: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12}>
 
+        <Grid item xs={12} sm={12}>
+          <Grid container spacing={2} >
+            <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={6} sm={6}>
+                  <TextField
+                    fullWidth
+                    variant='standard'
+                    label="Produto Doado"
+                    value={productDonate}
+                    onChange={(e) => { setProductDonate(e.target.value) }}
+                  />
+                </Grid>
+                <Grid item xs={3} sm={3}>
+                  <TextField
+                    fullWidth
+                    variant='standard'
+                    label="Quantidade"
+                    value={quantityDonate}
+                    onChange={(e) => { setQuantityDonate(e.target.value) }}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={3} mt={1} >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() =>
+                      append({
+                        name: productDonate,
+                        quantity: Number(quantityDonate),
+                        movement_id: Number(id),
+                      })
+                    }
+                  >
+                    Adicionar
+                  </Button>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2} mt={1}>
+                <Grid item xs={12} sm={12}>
+                  <TableContainer component={Paper} >
+                    <Table aria-label="simple table" size="small" >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{
+                            backgroundColor: theme.palette.primary.main, // Usando a cor primária do tema
+                            color: theme.palette.primary.contrastText,  // Texto em contraste com a cor primária
+                          }} align="center">Nome da Doação</TableCell>
+                          <TableCell sx={{
+                            backgroundColor: theme.palette.primary.main, // Usando a cor primária do tema
+                            color: theme.palette.primary.contrastText,  // Texto em contraste com a cor primária
+                          }} align="center">Quantidade</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {fields.map((item, index) => (
+                          <TableRow
+                            key={item.id}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {item.name}
+                            </TableCell>
+                            <TableCell component="th" align='center' scope="row">
+                              {item.quantity}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
 
 
         </Grid>
@@ -217,7 +300,7 @@ export const MovementsAddEdit: React.FC = () => {
         <Button type="submit" variant="contained" color="primary">
           Cadastrar
         </Button>
-        <Button type="button" onClick={() => { navigate("/conferencesView") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+        <Button type="button" onClick={() => { navigate("/movementsView") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
           Cancelar
         </Button>
         <Button type="button" variant="contained" color="error" onClick={() => { handleDelete(Number(id)) }} sx={{ marginLeft: "10px" }}>
