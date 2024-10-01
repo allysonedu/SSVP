@@ -41,8 +41,27 @@ class UsersRepository {
     });
   }
 
+  async updateUsers(payload) {
+    return connection('users')
+      .update(payload)
+      .where({ id: payload.id })
+      .returning('*');
+  }
+
   async getPersonById(usersId) {
     return connection('users').where({ id: usersId }).first();
+  }
+
+  async getAllUsers() {
+    return connection('users');
+  }
+
+  async getOneUser(userId) {
+    return connection('users').where({ id: userId }).first();
+  }
+
+  async deleteUsers(userId) {
+    return connection('users').del().where({ id: userId });
   }
 }
 

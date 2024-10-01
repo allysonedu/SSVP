@@ -3,4 +3,6 @@ export interface IUser {
   name: string;
   email: string;
   whatsapp: string;
+  password: string;
+  username: string;
 }

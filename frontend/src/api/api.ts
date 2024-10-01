@@ -2,6 +2,45 @@ import { api } from '../shared/services/api';
 
 import { IResetPassword } from '../shared/dtos';
 
+import { IUser } from '../shared/dtos/IUser';
+
+const updateUsers = async (data: IUser) => {
+  try {
+    const result = await api.put(`/users/${data.id}`, data);
+
+    return result.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+const getAllUsers = async () => {
+  try {
+    const result = await api.get('/users');
+    return result.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+const getOneuser = async (id: Number) => {
+  try {
+    return await api.get(`/users/${id}`);
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
+const deleteUsers = async (id: Number) => {
+  try {
+    const result = await api.delete(`/users/${id}`);
+
+    return result.data;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};
+
 const forgotPassword = async (email: string) => {
   try {
     const result = await api.post('/forgot_users', { email });
@@ -61,7 +100,7 @@ interface IAssistedsCreateProps {
   cpf: string;
   Case_report: string;
   family_income: string;
-  dependents: [{ nome: string; birth_date: string; relacao: string,  }];
+  dependents: [{ nome: string; birth_date: string; relacao: string }];
   explain: string;
   Spouse: string;
   home: string;
@@ -77,4 +116,14 @@ const createAssistids = async (data: IAssistedsCreateProps) => {
   }
 };
 
-export { login, users, forgotPassword, resetPassword, createAssistids };
+export {
+  login,
+  users,
+  forgotPassword,
+  resetPassword,
+  createAssistids,
+  updateUsers,
+  getAllUsers,
+  getOneuser,
+  deleteUsers,
+};

@@ -30,11 +30,21 @@ export const menu = [
     title: 'Assistidos',
     icon: 'receipt_long',
     items: [
-
       {
         label: 'Listar Assistidos',
         icon: 'user',
         path: '/assisteds-page',
+      },
+    ],
+  },
+  {
+    title: 'Usuários',
+    icon: 'person',
+    items: [
+      {
+        label: 'Usuários',
+        icon: 'person',
+        path: '/users',
       },
     ],
   },

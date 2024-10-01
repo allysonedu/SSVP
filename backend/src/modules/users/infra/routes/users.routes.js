@@ -7,6 +7,7 @@ const UsersController = require('../controllers/UsersController');
 const {
   verifyIfEmailAlreadyExists,
 } = require('../../middleware/users.middleware');
+const assistedsRoutes = require('../../../assisteds/infra/routes/assisteds.routes');
 
 const usersRoutes = Router();
 
@@ -29,8 +30,34 @@ usersRoutes.post(
 
 usersRoutes.get('/', usersController.getAllUsers);
 
-usersRoutes.put('/', usersController.updateUsers);
+usersRoutes.get(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().required('ID is require'),
+    },
+  }),
+  usersController.getOneUser
+);
 
-usersRoutes.delete('/', usersController.deleteUsers);
+usersRoutes.put(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().required('Id is required'),
+    },
+  }),
+  usersController.updateUsers
+);
+
+usersRoutes.delete(
+  '/:id',
+  celebrate({
+    [Segments.PARAMS]: {
+      id: Joi.string().required('Id is required'),
+    },
+  }),
+  usersController.deleteUsers
+);
 
 module.exports = usersRoutes;

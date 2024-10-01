@@ -2,11 +2,16 @@ const CreateUsersService = require('../../services/CreateUsersService');
 
 const ForgotPasswordUsersService = require('../../services/ForgotPasswordUsersService');
 
+const GetAllUsersService = require('../../services/GetAllUsersService');
+
 const ResetPasswordUsersService = require('../../services/ResetPasswordUsersService');
 
 const UsersRepository = require('../../repositories/usersRepository');
 
 const MailProvider = require('../../../../shared/providers/MailProvider');
+const GetOneUserService = require('../../services/GetOneUsersService');
+const UpdateUsersService = require('../../services/UpdateUsersService');
+const DeleteUsersService = require('../../services/DeleteUsersService');
 
 const usersRepository = new UsersRepository();
 
@@ -56,15 +61,48 @@ class UsersController {
   }
 
   async getAllUsers(request, response) {
-    return response.json({ getAll: true });
+    const getAll = new GetAllUsersService(usersRepository);
+
+    const users = await getAll.execute();
+
+    return response.json(users);
+  }
+
+  async getOneUser(request, response) {
+    const { id } = request.params;
+
+    const getOne = new GetOneUserService(usersRepository);
+
+    const users = await getOne.execute(id);
+    return response.json(users);
   }
 
   async updateUsers(request, response) {
-    return response.json({ update: true });
+    const { id } = request.params;
+
+    const payload = {
+      id,
+      ...request.body,
+    };
+    const updateUsers = new UpdateUsersService(usersRepository);
+
+    const update = await updateUsers.execute(payload);
+
+    return response.json(update);
   }
 
   async deleteUsers(request, response) {
-    return response.json({ delete: true });
+    const { id } = request.params;
+
+    const deleteUser = new DeleteUsersService(usersRepository);
+
+    await deleteUser.execute(id);
+    return response.json({
+      users: {
+        id,
+        deleted: true,
+      },
+    });
   }
 }
 

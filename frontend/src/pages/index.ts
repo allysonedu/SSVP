@@ -7,3 +7,4 @@ export * from './Assistids/assistidsPage';
 export * from './reset-password/ResetPassword';
 export * from './conferences/addConferencesEdit';
 export * from './conferences/conferencesPage';
+export * from './users/Users';

@@ -30,12 +30,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { IConferences } from '../../shared/dtos/IConferences';
 
-
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
 
   const [conferences, setConferences] = useState([]);
 
@@ -68,7 +66,7 @@ export const AssistidsAddEdit: React.FC = () => {
 
       try {
         const response = await getOneAssisteds(Number(id));
-        if (response?.data) {          
+        if (response?.data) {
           reset(response.data);
         }
       } catch (err) {
@@ -103,7 +101,6 @@ export const AssistidsAddEdit: React.FC = () => {
       });
     }
   };
-
 
   const onSubmit: SubmitHandler<IAssisteds> = async data => {
     try {

@@ -10,6 +10,8 @@ import {
   AssistidsAddEdit,
 } from '../pages';
 
+import { Users } from '../pages/users/Users';
+
 import { MenuSideBar } from '../shared/components';
 import { menu } from '../shared/utils/menu';
 import { MovementsAddEdit } from '../pages/movements/addMovementsEdit';
@@ -40,6 +42,7 @@ export const PrivateRoutes: React.FC = () => {
         <Route path="/movements" element={<MovementsAddEdit />} />
         <Route path="/movements/:id" element={<MovementsAddEdit />} />
         <Route path="/movementsView" element={<MovementsPage />} />
+        <Route path="/users" element={<Users />} />
 
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>
