@@ -6,7 +6,7 @@ import { IMovements } from '../shared/dtos/IMovements';
 
 const createMovements = async (data: IMovements) => {
   try {
-    const result = await api.post('/conferences',  data );
+    const result = await api.post('/movements',  data );
 
     return result.data;
   } catch (error: any) {
@@ -16,7 +16,7 @@ const createMovements = async (data: IMovements) => {
 
 const updateMovements = async (data: IMovements) => {
   try {
-    const result = await api.put(`/conferences/${data.id}`, data);
+    const result = await api.put(`/movements/${data.id}`, data);
     return result.data;
   } catch (error: any) {
     throw new Error(error.message);
@@ -25,7 +25,7 @@ const updateMovements = async (data: IMovements) => {
 
 const deleteMovements = async (id: number) => {
   try {
-    const result = await api.delete(`/conferences/${id}`);
+    const result = await api.delete(`/movements/${id}`);
 
     return result.data;
   } catch (error: any) {
@@ -37,7 +37,7 @@ const deleteMovements = async (id: number) => {
 const getAllMovements = async () => {
   try {
    
-    const result = await api.get('/conferences');
+    const result = await api.get('/movements');
     return result.data;
   } catch (error: any) {
     throw new Error(error.message);
@@ -47,7 +47,7 @@ const getAllMovements = async () => {
 const getOneMovements = async (id: Number) => {
   try {
 
-    return await api.get(`/conferences/${id}`);
+    return await api.get(`/movements/${id}`);
   } catch (error: any) {
     throw new Error(error.message);
   }

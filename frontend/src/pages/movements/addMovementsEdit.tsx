@@ -1,13 +1,17 @@
 import { useForm, Controller, SubmitHandler, useFieldArray } from 'react-hook-form';
 
-import { TextField, Grid, Box, Button, Typography, Select, FormControl, InputLabel, MenuItem, FormHelperText } from '@mui/material';
+import { TextField, Grid, Box, Button, Typography, Select, FormControl, InputLabel, MenuItem, FormHelperText, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, Paper, useTheme } from '@mui/material';
 import { IMovements } from '../../shared/dtos/IMovements';
 import { createMovements, getOneMovements, deleteMovements, updateMovements } from '../../api/movements';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { getAllAssisteds } from "../,,/../../api/assisteds";
+import { getAllConferences } from "../,,/../../api/conferences";
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
+import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
+import { DateToInput } from '../../shared/utils/formatDate';
+
 
 
 export const MovementsAddEdit: React.FC = () => {
@@ -17,23 +21,7 @@ export const MovementsAddEdit: React.FC = () => {
   const { addToast } = useToast()
   const navigate = useNavigate()
 
-
-  interface FormData {
-    withdrawnBy: string;
-    deliveredBy: string;
-    products: string;
-    date: string;
-    time: string;
-  }
-
-  const [formData, setFormData] = useState<FormData>({
-    withdrawnBy: "",
-    deliveredBy: "",
-    products: "",
-    date: "",
-    time: "",
-  });
-
+  const theme = useTheme();
   const {
     control,
     handleSubmit,
@@ -41,24 +29,27 @@ export const MovementsAddEdit: React.FC = () => {
     reset
   } = useForm<IMovements>({
     defaultValues: {
-      name: '',
-      username: '',
-      state: '',
-      email: '',
-      city: '',
-      cep: '',
+      user_id: 1,
+      movement_items: [],
     },
   });
 
 
   const [assisteds, setAssisteds] = useState([])
+  const [conferences, setConferences] = useState([])
+  const [productDonate, setProductDonate] = useState('')
+  const [quantityDonate, setQuantityDonate] = useState('')
 
   useEffect(() => {
     const GetAssisteds = async () => {
       setAssisteds(await getAllAssisteds())
     };
+    const GetConferences = async () => {
+      setConferences(await getAllConferences())
+    };
 
     GetAssisteds()
+    GetConferences()
   }, [])
 
   useEffect(() => {
@@ -67,7 +58,9 @@ export const MovementsAddEdit: React.FC = () => {
       setError(null);
       try {
         const response = await getOneMovements(Number(id));
+        
         if (response?.data) {
+
           reset(response.data);
         }
       } catch (err) {
@@ -94,7 +87,7 @@ export const MovementsAddEdit: React.FC = () => {
         type: 'success',
         title: `Conferência deletada com sucesso!!`,
       })
-      navigate('/conferencesView')
+      navigate('/movementsView')
     } catch (error: any) {
       addToast({
         type: 'error',
@@ -106,23 +99,21 @@ export const MovementsAddEdit: React.FC = () => {
 
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'movement_items',
+  });
 
   const onSubmit: SubmitHandler<IMovements> = async (data: IMovements) => {
     try {
       if (!id) {
         await createMovements(data);
-        alert('Conferência salva com sucesso!');
+        alert('Movimentação salva com sucesso!');
       } else {
         await updateMovements(data)
-        alert('Conferência atualizada com sucesso!');
+        alert('Movimentação atualizada com sucesso!');
       }
-      navigate('/conferencesView')
+      navigate('/movementsView')
     } catch (err) {
       console.error('Erro ao salvar a conferência!', err);
     }
@@ -140,88 +131,167 @@ export const MovementsAddEdit: React.FC = () => {
       </Typography>
 
       <Grid container spacing={2}>
-        <Grid item xs={4}>
+        <Grid item xs={2}>
+
           <Controller
-            name="assisteds_list"
+            name="movement_date"
             control={control}
             render={({ field }) => (
-              <FormControl fullWidth variant="outlined" error={!!errors.assisteds_list}>
+              <TextField
+                fullWidth
+                {...field}
+                label="Data"
+                type="datetime-local"
+                error={!!errors.movement_date}
+                helperText={errors.movement_date ? 'Verifique este campo' : ''}
+                InputLabelProps={{ shrink: true }}
+              />
+            )}
+
+          />
+
+        </Grid>
+        <Grid item xs={3}>
+          <Controller
+            name="assisted_id"
+            control={control}
+            render={({ field }) => (
+              <FormControl fullWidth variant="outlined" error={!!errors.assisted_id}>
                 <InputLabel>Assistidos</InputLabel>
                 <Select
                   {...field}
-                  
+
                   value={field.value || ""}  // Assegura que o valor inicial seja uma string vazia caso não haja valor
                   label="Assistidos"
                 >
                   {
-                    assisteds.map((item : IAssisteds, index)  => {
+                    assisteds.map((item: IAssisteds, index) => {
                       return (
-                        <>
-                          <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
-                        </>
+                        <MenuItem key={index} value={item.id}>{item.name}</MenuItem>
                       )
                     })
                   }
                 </Select>
                 <FormHelperText>
-                  {errors.assisteds_list ? 'Campo obrigatório' : ''}
+                  {errors.assisted_id ? 'Campo obrigatório' : ''}
                 </FormHelperText>
               </FormControl>
             )}
             rules={{ required: true }}
           />
-         
+
         </Grid>
 
-        <Grid item xs={4}>
-          <TextField
-            fullWidth
-            label="Quem entregou a doação"
-            name="deliveredBy"
-            value={formData.deliveredBy}
-            onChange={handleChange}
-            required
+        <Grid item xs={3}>
+          <Controller
+            name='user_id'
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                fullWidth
+                label="Quem entregou a doação"
+                error={!!errors.user_id}
+                helperText={errors.user_id ? 'Verifique este campo' : ''}
+
+              />
+
+            )}
+
           />
         </Grid>
 
-        <Grid item xs={4}>
-          <TextField
-            fullWidth
-            label="Quem entregou a doação"
-            name="deliveredBy"
-            value={formData.deliveredBy}
-            onChange={handleChange}
-            required
+        <Grid item xs={3}>
+          <ConferencesSelect
+            control={control}
+            name="conference_id"
+            conferences={conferences}
+            error={!!errors.conference_id} // Passa se há erro
+            errorMessage={errors.conference_id ? 'Verifique este campo' : ''} // Mensagem de erro
           />
         </Grid>
 
-        <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Produtos levados"
-            name="products"
-            value={formData.products}
-            onChange={handleChange}
-            required
-            multiline
-            rows={4}
-          />
+
+        <Grid item xs={12} sm={12}>
+          <Grid container spacing={2} >
+            <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
+              <Grid container spacing={2}>
+                <Grid item xs={6} sm={6}>
+                  <TextField
+                    fullWidth
+                    variant='standard'
+                    label="Produto Doado"
+                    value={productDonate}
+                    onChange={(e) => { setProductDonate(e.target.value) }}
+                  />
+                </Grid>
+                <Grid item xs={3} sm={3}>
+                  <TextField
+                    fullWidth
+                    variant='standard'
+                    label="Quantidade"
+                    value={quantityDonate}
+                    onChange={(e) => { setQuantityDonate(e.target.value) }}
+                  />
+                </Grid>
+                <Grid item xs={2} sm={3} mt={1} >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() =>
+                      append({
+                        name: productDonate,
+                        quantity: Number(quantityDonate),
+                        movement_id: Number(id),
+                      })
+                    }
+                  >
+                    Adicionar
+                  </Button>
+                </Grid>
+              </Grid>
+
+              <Grid container spacing={2} mt={1}>
+                <Grid item xs={12} sm={12}>
+                  <TableContainer component={Paper} >
+                    <Table aria-label="simple table" size="small" >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell sx={{
+                            backgroundColor: theme.palette.primary.main, // Usando a cor primária do tema
+                            color: theme.palette.primary.contrastText,  // Texto em contraste com a cor primária
+                          }} align="center">Nome da Doação</TableCell>
+                          <TableCell sx={{
+                            backgroundColor: theme.palette.primary.main, // Usando a cor primária do tema
+                            color: theme.palette.primary.contrastText,  // Texto em contraste com a cor primária
+                          }} align="center">Quantidade</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {fields.map((item, index) => (
+                          <TableRow
+                            key={item.id}
+                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                          >
+                            <TableCell component="th" scope="row">
+                              {item.name}
+                            </TableCell>
+                            <TableCell component="th" align='center' scope="row">
+                              {item.quantity}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+
+
         </Grid>
 
-        <Grid item xs={6}>
-          <TextField
-            fullWidth
-            label="Data"
-            name="date"
-            type="datetime-local"
-            value={formData.date}
-            onChange={handleChange}
-            InputLabelProps={{
-              shrink: true,
-            }}
-            required
-          />
-        </Grid>
 
       </Grid>
 
@@ -230,7 +300,7 @@ export const MovementsAddEdit: React.FC = () => {
         <Button type="submit" variant="contained" color="primary">
           Cadastrar
         </Button>
-        <Button type="button" onClick={() => { navigate("/conferencesView") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+        <Button type="button" onClick={() => { navigate("/movementsView") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
           Cancelar
         </Button>
         <Button type="button" variant="contained" color="error" onClick={() => { handleDelete(Number(id)) }} sx={{ marginLeft: "10px" }}>

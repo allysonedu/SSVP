@@ -6,14 +6,17 @@ exports.up = function (knex) {
   return knex.schema.createTable('conferences', table => {
     table.increments('id').primary();
     table.text('name').notNullable();
-    table.text('cep', 8).notNullable();
     table.text('tel').notNullable();
-    table.text('city').notNullable();
-    table.text('state').notNullable();
-    table.text('username').notNullable();
+    table.text('address').notNullable;
+    table.text('address_number').notNullable;
+    table.text('neighborhood').notNullable;
+    table.text('zip_code').notNullable;
+    table.text('address_complement').notNullable;
+    table.text('city').notNullable;
+    table.text('state').notNullable;
+    table.text('country').notNullable;
     table.text('email').notNullable();
-    table.integer('users_id').unsigned();
-    table.foreign('users_id').references('id').inTable('users');
+    
   });
 };
 

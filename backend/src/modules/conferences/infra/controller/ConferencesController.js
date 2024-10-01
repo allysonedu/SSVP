@@ -18,7 +18,16 @@ const conferencesRepository = new ConferencesRepository();
 
 class ConferencesController {
   async createConferences(request, response) {
-    const { name, cep, city, state, username,tel, email } = request.body;
+    const { name, address,
+      address_number,
+      neighborhood,
+      zip_code,
+      address_complement,
+      city,
+      state,
+      country,
+      tel, 
+      email } = request.body;
 
     const createConference = new CreateNewConferencesService(
       conferencesRepository
@@ -26,10 +35,8 @@ class ConferencesController {
 
     const conference = await createConference.execute({
       name,
-      cep,
       city,
       state,
-      username,
       tel,
       email,
     });

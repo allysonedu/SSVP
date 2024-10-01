@@ -3,6 +3,7 @@
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
+
   return knex.schema.createTable('users', table => {
     table.increments('id').primary();
     table.text('name').notNullable();
@@ -11,6 +12,8 @@ exports.up = function (knex) {
     table.text('whatsapp').nullable();
     table.text('username').nullable();
     table.integer('type_id').unsigned();
+    
+
   });
 };
 

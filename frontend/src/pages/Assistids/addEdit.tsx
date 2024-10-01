@@ -29,6 +29,8 @@ import { getAllConferences } from '../../api/conferences';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
 import { IConferences } from '../../shared/dtos/IConferences';
+import AddressFields from '../../shared/components/form-components/AddressFields';
+import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
 
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();
@@ -45,6 +47,7 @@ export const AssistidsAddEdit: React.FC = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue
   } = useForm<IAssisteds>({
     defaultValues: {
       name: '',
@@ -217,171 +220,15 @@ export const AssistidsAddEdit: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="address"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Endereço"
-                fullWidth
-                error={!!errors.address}
-                helperText={errors.address ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={1} sm={1}>
-          <Controller
-            name="address_number"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Numero"
-                fullWidth
-                error={!!errors.address_number}
-                helperText={errors.address_number ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={2}>
-          <Controller
-            name="neighborhood"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Bairro"
-                fullWidth
-                error={!!errors.neighborhood}
-                helperText={errors.neighborhood ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="zip_code"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="CEP"
-                fullWidth
-                error={!!errors.zip_code}
-                helperText={errors.zip_code ? 'Campo obrigatório' : ''}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="address_complement"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Complemento"
-                fullWidth
-                error={!!errors.address_complement}
-                helperText={
-                  errors.address_complement ? 'Campo obrigatório' : ''
-                }
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Cidade"
-                fullWidth
-                error={!!errors.city}
-                helperText={errors.city ? 'Campo obrigatório' : ''}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="UF"
-                fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={3}>
-          <Controller
-            name="country"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="País"
-                fullWidth
-                error={!!errors.country}
-                helperText={errors.country ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid>
+        <AddressFields control={control} errors={errors} setValue={setValue}/>
 
         <Grid item xs={4}>
-          <Controller
-            name="conference_id"
+        <ConferencesSelect
             control={control}
-            render={({ field }) => (
-              <FormControl
-                fullWidth
-                variant="outlined"
-                error={!!errors.conference_id}
-              >
-                <InputLabel>Conferências</InputLabel>
-                <Select
-                  {...field}
-                  value={field.value || ''} // Assegura que o valor inicial seja uma string vazia caso não haja valor
-                  label="Conferências"
-                >
-                  {conferences.map((item: IConferences, index) => {
-                    return (
-                      <MenuItem key={index} value={item.id}>
-                        {item.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-                <FormHelperText>
-                  {errors.conference_id ? 'Campo obrigatório' : ''}
-                </FormHelperText>
-              </FormControl>
-            )}
-            rules={{ required: true }}
+            name="conference_id"
+            conferences={conferences}
+            error={!!errors.conference_id} // Passa se há erro
+            errorMessage={errors.conference_id ? 'Campo obrigatório' : ''} // Mensagem de erro
           />
         </Grid>
 
