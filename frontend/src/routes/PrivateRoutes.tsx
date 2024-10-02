@@ -8,6 +8,7 @@ import {
   ConferencesAddEdit,
   ConferencePage,
   AssistidsAddEdit,
+  UsersPage,
 } from '../pages';
 
 import { Users } from '../pages/users/Users';
@@ -43,6 +44,7 @@ export const PrivateRoutes: React.FC = () => {
         <Route path="/movements/:id" element={<MovementsAddEdit />} />
         <Route path="/movementsView" element={<MovementsPage />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/usersView" element={<UsersPage />} />
 
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

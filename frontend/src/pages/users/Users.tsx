@@ -26,6 +26,7 @@ import { IUser } from '../../shared/dtos';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useToast } from '../../shared/hooks/Toast';
+import { blue } from '@mui/material/colors';
 
 export const Users: React.FC = () => {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ export const Users: React.FC = () => {
         type: 'success',
         title: `Usúario deletado com sucesso!!`,
       });
-      navigate('/p');
+      navigate('/usersView');
     } catch (error: any) {
       addToast({
         type: 'error',
@@ -96,7 +97,7 @@ export const Users: React.FC = () => {
         await updateUsers(data);
         alert('Usúario atualizada com sucesso!');
       }
-      navigate('/p');
+      navigate('/usersView');
     } catch (err) {
       console.error('Erro ao salvar a conferência!', err);
     }
@@ -242,7 +243,7 @@ export const Users: React.FC = () => {
         <Button
           type="button"
           onClick={() => {
-            navigate('/conferencesView');
+            navigate('/usersView');
           }}
           variant="contained"
           color="warning"
@@ -260,6 +261,17 @@ export const Users: React.FC = () => {
           sx={{ marginLeft: '10px' }}
         >
           Excluir
+        </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            navigate('/usersView');
+          }}
+          variant="contained"
+          color="primary"
+          sx={{ marginLeft: '10px' }}
+        >
+          Voltar
         </Button>
       </Box>
     </Box>
