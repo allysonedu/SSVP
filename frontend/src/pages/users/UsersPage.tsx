@@ -16,7 +16,7 @@ export const UsersPage: React.FC = () => {
 
   return (
     <div style={{ marginTop: '100px' }}>
-      <ListUsers usersView={users} />
+      <ListUsers usersViews={users} />
     </div>
   );
 };

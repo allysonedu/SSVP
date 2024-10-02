@@ -1,32 +1,13 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BaseLayoutPage } from '../../shared/layouts';
 
-import {
-  TextField,
-  Grid,
-  Button,
-  Typography,
-  MenuItem,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  FormHelperText,
-} from '@mui/material';
-import {
-  users,
-  getAllUsers,
-  getOneuser,
-  updateUsers,
-  deleteUsers,
-} from '../../api/api';
+import { TextField, Grid, Button, Typography } from '@mui/material';
+import { users, getOneuser, updateUsers, deleteUsers } from '../../api/api';
 
-import { IUser } from '../../shared/dtos';
+import { IUser } from '../../shared/dtos/IUser';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useToast } from '../../shared/hooks/Toast';
-import { blue } from '@mui/material/colors';
 
 export const Users: React.FC = () => {
   const navigate = useNavigate();

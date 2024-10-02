@@ -45,6 +45,7 @@ export const PrivateRoutes: React.FC = () => {
         <Route path="/movementsView" element={<MovementsPage />} />
         <Route path="/users" element={<Users />} />
         <Route path="/usersView" element={<UsersPage />} />
+        <Route path="/users/:id" element={<Users />} />
 
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

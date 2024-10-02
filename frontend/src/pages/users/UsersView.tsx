@@ -26,11 +26,11 @@ interface UsersView {
   // state: string;
 }
 
-export const ListUsers: React.FC<{ usersView: UsersView[] }> = ({
-  usersView,
+export const ListUsers: React.FC<{ usersViews: UsersView[] }> = ({
+  usersViews,
 }) => {
   const [filteredUsersView, setFilteredUsersView] =
-    useState<UsersView[]>(usersView);
+    useState<UsersView[]>(usersViews);
   const [searchName, setSearchName] = useState('');
 
   const navigate = useNavigate();
@@ -41,7 +41,7 @@ export const ListUsers: React.FC<{ usersView: UsersView[] }> = ({
 
   useEffect(() => {
     const filterUsersView = () => {
-      let filtered = usersView;
+      let filtered = usersViews;
 
       if (searchName) {
         filtered = filtered.filter(usersView =>
@@ -51,7 +51,7 @@ export const ListUsers: React.FC<{ usersView: UsersView[] }> = ({
       setFilteredUsersView(filtered);
     };
     filterUsersView();
-  }, [searchName, usersView]);
+  }, [searchName, usersViews]);
 
   return (
     <Box sx={{ padding: 2 }}>
