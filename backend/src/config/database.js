@@ -30,4 +30,20 @@ module.exports = {
       directory: seedsDir,
     },
   },
+  
+  production: {
+    client: 'pg', // ou 'mysql', dependendo do seu banco de dados
+    connection: {
+      host: "db",
+      user: "admin",
+      password: "123456",
+      database: "ssvp"
+    },
+    migrations: {
+      directory: migrationsDir,
+    },
+    seeds: {
+      directory: seedsDir,
+    },
+  }
 };

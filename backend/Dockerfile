@@ -16,4 +16,4 @@ COPY . .
 EXPOSE 5000
 
 # Comando para rodar a aplicação
-CMD ["node", "index.js"]  # Substitua index.js pelo seu arquivo principal
+CMD ["sh", "-c", "npx knex migrate:latest --env production && npx knex seed:run --env production && node src/shared/infra/app.js"]

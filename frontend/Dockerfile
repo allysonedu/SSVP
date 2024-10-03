@@ -19,10 +19,18 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copiar os arquivos de build da etapa anterior (diretório 'dist' gerado pelo Vite)
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY dist /usr/share/nginx/html
+
+# Copie a configuração do nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expor a porta 80 para servir a aplicação
 EXPOSE 80
 
+
+
+
 # Comando para rodar o Nginx
 CMD ["nginx", "-g", "daemon off;"]
+
+

@@ -1,2 +1,4 @@
 backend/docker-compose.yml
 backend/.vscode/
+frontend/node_modules
+frontend/dist
