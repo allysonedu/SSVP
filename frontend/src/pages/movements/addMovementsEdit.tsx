@@ -10,7 +10,7 @@ import { getAllAssisteds } from "../,,/../../api/assisteds";
 import { getAllConferences } from "../,,/../../api/conferences";
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
-import { DateToInput } from '../../shared/utils/formatDate';
+
 
 
 
@@ -30,9 +30,16 @@ export const MovementsAddEdit: React.FC = () => {
   } = useForm<IMovements>({
     defaultValues: {
       user_id: 1,
-      movement_items: [],
+      movement_items: []
     },
   });
+
+  if (loading) {
+    
+  }
+  if (error) {
+    
+  }
 
 
   const [assisteds, setAssisteds] = useState([])
@@ -238,13 +245,20 @@ export const MovementsAddEdit: React.FC = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() =>
-                      append({
-                        name: productDonate,
-                        quantity: Number(quantityDonate),
-                        movement_id: Number(id),
-                      })
-                    }
+                    onClick={() => {
+                      if (productDonate && quantityDonate) {
+                        append({
+                          name: productDonate,
+                          quantity: Number(quantityDonate),
+                          // O campo `id` é omitido aqui, pois será tratado no backend
+                          movement_id: Number(id),  // Certifique-se de que o movimento tem um ID, se não for uma nova criação
+                        });
+                        setProductDonate('');  // Limpa os campos após adicionar o item
+                        setQuantityDonate('');
+                      } else {
+                        alert("Preencha todos os campos antes de adicionar um item.");
+                      }
+                    }}
                   >
                     Adicionar
                   </Button>
@@ -265,12 +279,16 @@ export const MovementsAddEdit: React.FC = () => {
                             backgroundColor: theme.palette.primary.main, // Usando a cor primária do tema
                             color: theme.palette.primary.contrastText,  // Texto em contraste com a cor primária
                           }} align="center">Quantidade</TableCell>
+                          <TableCell sx={{
+                            backgroundColor: theme.palette.primary.main, // Usando a cor primária do tema
+                            color: theme.palette.primary.contrastText,  // Texto em contraste com a cor primária
+                          }} align="center"></TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {fields.map((item, index) => (
                           <TableRow
-                            key={item.id}
+                            key={index}
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                           >
                             <TableCell component="th" scope="row">
@@ -278,6 +296,9 @@ export const MovementsAddEdit: React.FC = () => {
                             </TableCell>
                             <TableCell component="th" align='center' scope="row">
                               {item.quantity}
+                            </TableCell>
+                            <TableCell component="th" align='center' scope="row">
+                              <Button type='button' variant="contained" color="error" onClick={() => {remove(index)}} >X</Button>
                             </TableCell>
                           </TableRow>
                         ))}

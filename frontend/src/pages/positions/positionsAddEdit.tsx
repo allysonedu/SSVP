@@ -53,6 +53,12 @@ export const PositionAddEdit: React.FC = () => {
     }
   }, [id, reset]);
 
+  if (loading) {
+    
+  }
+  if (error) {
+    
+  }
   const handleDelete = (id: number) => {
     try {
       deletePositions(id)

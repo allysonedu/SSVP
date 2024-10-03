@@ -84,7 +84,7 @@ class MovementsController {
       const setMovementItems = movement_items.map((x) => { return { ...x, movement_id: assistedUpdated[0].id } })
 
       //E aqui os dependentes são salvos
-      await updateMovementItems.execute(setMovementItems)
+      await updateMovementItems.execute(setMovementItems, assistedUpdated[0].id)
     }
 
 

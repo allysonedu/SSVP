@@ -81,6 +81,14 @@ export const ConferencesAddEdit: React.FC = () => {
 
   }
 
+  if (loading) {
+    
+  }
+
+  if (error) {
+    
+  }
+
   const onSubmit: SubmitHandler<IConferences> = async (data: IConferences) => {
     try {
       if (!id) {

@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydatabase
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+    env_file:
+      - ./backend/.env.production
+
+  migrate:
+    image: node:20  # Use a mesma versão do Node.js que está no seu Dockerfile
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: sh -c "npx knex migrate:latest --env production && npx knex seed:run --env production"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - ./backend/.env.production
+    depends_on:
+      - db
+
+volumes:
+  db-data:

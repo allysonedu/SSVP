@@ -28,7 +28,6 @@ import {
 import { getAllConferences } from '../../api/conferences';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
-import { IConferences } from '../../shared/dtos/IConferences';
 import AddressFields from '../../shared/components/form-components/AddressFields';
 import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
 
@@ -54,7 +53,7 @@ export const AssistidsAddEdit: React.FC = () => {
     },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append } = useFieldArray({
     control,
     name: 'dependents',
   });
@@ -421,6 +420,7 @@ export const AssistidsAddEdit: React.FC = () => {
                   birth_date: null,
                   relationship: '',
                   assisted_id: Number(id),
+                  CPF:""
                 })
               }
             >

@@ -24,7 +24,7 @@ export interface IAssisteds {
 }
 
 interface IDependents {
-  id: Number | null;
+  id?: Number | null;
   assisted_id: Number;
   birth_date: Date | null;
   name: string;

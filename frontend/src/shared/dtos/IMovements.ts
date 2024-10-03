@@ -12,7 +12,7 @@ export interface IMovements {
 }
 
 export interface IDonationsItems {
-    id: number
+    id?: number 
     name: string
     quantity: number
     movement_id: number

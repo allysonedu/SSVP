@@ -2,9 +2,9 @@ const connection = require('../../../shared/database/connection');
 
 class MovementItemsRepository {
   async createMovementItems(payload) {
-   
-     const [createdMovementItems] = await connection.transaction(async trx =>
-       trx('movement_items').insert(payload).returning('*')
+
+    const [createdMovementItems] = await connection.transaction(async trx =>
+      trx('movement_items').insert(payload).returning('*')
     );
 
     return createdMovementItems
@@ -27,17 +27,20 @@ class MovementItemsRepository {
     );
   }
 
-  async deleteMovementItems(idMovementItems) {
-    return connection('movement_items').del().where({ id: idMovementItems });
+  async deleteMovementItems(idsToDelete) {
+    return connection('movement_items').whereIn("id", idsToDelete).del();
   }
 
-  async getAllMovementItems() {
-    return connection('movement_items');
+  async getAllMovementItems(movement_id) {
+    if (movement_id)
+      return connection('movement_items').where({ movement_id: movement_id });
+
+    return connection('movement_items')
   }
 
   async getOneMovementItems(idMovementItems) {
     return connection('movement_items')
-    .where('id', '=', `${idMovementItems}`).first();
+      .where('id', '=', `${idMovementItems}`).first();
   }
 }
 

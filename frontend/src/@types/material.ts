@@ -1,4 +1,4 @@
-import { Theme } from '@mui/material/styles'
+
 
 // Estendendo a interface ThemeOptions para adicionar novas propriedades personalizadas
 declare module '@mui/material/styles' {

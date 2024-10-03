@@ -1,10 +1,10 @@
 class GetAllMovementItemsService {
-  constructor(assistedsRepository) {
-    this.assistedsRepository = assistedsRepository;
+  constructor(movementItemsRepository) {
+    this.movementItemsRepository = movementItemsRepository;
   }
 
-  async execute() {
-    return this.assistedsRepository.getAllMovementItems();
+  async execute(movement_id) {
+    return this.movementItemsRepository.getAllMovementItems(movement_id);
   }
 }
 

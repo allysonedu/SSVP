@@ -1,22 +1,15 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { BaseLayoutPage } from '../../shared/layouts';
+
 
 import {
   TextField,
   Grid,
   Button,
   Typography,
-  MenuItem,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  Select,
-  FormHelperText,
 } from '@mui/material';
 import {
   users,
-  getAllUsers,
   getOneuser,
   updateUsers,
   deleteUsers,
@@ -31,7 +24,7 @@ export const Users: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { addToast } = useToast();
-  const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
 
   const {
@@ -51,8 +44,8 @@ export const Users: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
+      
+      
       try {
         const response = await getOneuser(Number(id));
         if (response?.data) {
@@ -61,13 +54,13 @@ export const Users: React.FC = () => {
       } catch (err) {
         setError('Erro ao carregar os dados.');
       } finally {
-        setLoading(false);
+      
       }
     };
     if (id) {
       fetchData();
     } else {
-      setLoading(false); // Se não há id, é um novo registro, não precisa carregar dados
+     // Se não há id, é um novo registro, não precisa carregar dados
     }
   }, [id, reset]);
 
@@ -110,7 +103,7 @@ export const Users: React.FC = () => {
       style={{ marginTop: '10vh' }}
     >
       <Typography variant="h6" gutterBottom>
-        Cadastro Usúario
+        Cadastro Usúario {error}
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -198,23 +191,7 @@ export const Users: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Cidade"
-                fullWidth
-                error={!!errors.city}
-                helperText={errors.city ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid> */}
+       
 
         <Grid item xs={12} sm={6}>
           <Controller
