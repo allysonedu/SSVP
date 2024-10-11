@@ -12,8 +12,7 @@ exports.up = function (knex) {
     table.text('whatsapp').nullable();
     table.text('username').nullable();
     table.integer('type_id').unsigned();
-    
-
+  
   });
 };
 

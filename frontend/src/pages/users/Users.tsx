@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-
+import { getAllPositions } from '../../api/positions';
 
 import {
   TextField,
@@ -20,6 +20,7 @@ import { IUser } from '../../shared/dtos/IUser';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useToast } from '../../shared/hooks/Toast';
+import PositionsSelect from '../../shared/components/form-components/PositionsSelect';
 
 export const Users: React.FC = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ export const Users: React.FC = () => {
 
   const [error, setError] = useState<string | null>(null);
 
+  const [positions, setPositions] = useState([])
   const {
     control,
     handleSubmit,
@@ -43,10 +45,17 @@ export const Users: React.FC = () => {
     },
   });
 
+  
+
   useEffect(() => {
+
+    const GetPositions= async () => {
+      setPositions(await getAllPositions())
+    };
+
     const fetchData = async () => {
-      
-      
+
+
       try {
         const response = await getOneuser(Number(id));
         if (response?.data) {
@@ -55,13 +64,15 @@ export const Users: React.FC = () => {
       } catch (err) {
         setError('Erro ao carregar os dados.');
       } finally {
-      
+
       }
     };
+
+    GetPositions()
     if (id) {
       fetchData();
     } else {
-     // Se não há id, é um novo registro, não precisa carregar dados
+      // Se não há id, é um novo registro, não precisa carregar dados
     }
   }, [id, reset]);
 
@@ -124,23 +135,7 @@ export const Users: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="estado"
-                fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid> */}
+
         <Grid item xs={12} sm={3}>
           <Controller
             name="username"
@@ -192,7 +187,7 @@ export const Users: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-       
+
 
         <Grid item xs={12} sm={6}>
           <Controller
@@ -210,6 +205,18 @@ export const Users: React.FC = () => {
             )}
             rules={{ required: true }}
           />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+
+          <PositionsSelect
+            control={control}
+            name='position_id'
+            positions={positions}
+            error={!!errors.position_id}
+            errorMessage={errors.position_id ? 'Campo obrigatório' : ''}
+          />
+          
         </Grid>
       </Grid>
 

@@ -44,7 +44,7 @@ export const menu = [
       {
         label: 'Usuários',
         icon: 'person',
-        path: '/users',
+        path: '/usersView',
       },
     ],
   },

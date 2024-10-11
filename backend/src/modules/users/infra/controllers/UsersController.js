@@ -27,6 +27,7 @@ class UsersController {
       whatsapp,
       password,
       username,
+      position_id
     });
 
     return response.json({ users });

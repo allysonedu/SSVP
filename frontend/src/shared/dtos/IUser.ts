@@ -5,4 +5,5 @@ export interface IUser {
   whatsapp: string;
   password: string;
   username: string;
+  position_id: number | null
 }
