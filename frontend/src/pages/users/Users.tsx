@@ -21,6 +21,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useToast } from '../../shared/hooks/Toast';
 import PositionsSelect from '../../shared/components/form-components/PositionsSelect';
+import { IPosition } from '../../shared/dtos/IPosition';
+import Grid2 from '@mui/material/Unstable_Grid2';
 
 export const Users: React.FC = () => {
   const navigate = useNavigate();
@@ -28,12 +30,13 @@ export const Users: React.FC = () => {
   const { addToast } = useToast();
 
   const [error, setError] = useState<string | null>(null);
-
-  const [positions, setPositions] = useState([])
+  const [hasMandate, setHasMandate] = useState<boolean>(false);
+  const [positions, setPositions] = useState<IPosition[]>([])
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
     reset,
   } = useForm<IUser>({
     defaultValues: {
@@ -42,14 +45,15 @@ export const Users: React.FC = () => {
       whatsapp: '',
       password: '',
       username: '',
+      position_id: null
     },
   });
 
-  
+
 
   useEffect(() => {
 
-    const GetPositions= async () => {
+    const GetPositions = async () => {
       setPositions(await getAllPositions())
     };
 
@@ -106,6 +110,17 @@ export const Users: React.FC = () => {
       console.error('Erro ao salvar a conferência!', err);
     }
   };
+
+  const positionValue = watch("position_id");
+
+  
+  // Opcional: executa algo baseado no valor observado
+  useEffect(() => {
+    if (positionValue) {
+
+      setHasMandate(positions.find(x => x.id == positionValue)?.hasMandate || false)
+    }
+  }, [positionValue]);
 
   return (
     <Box
@@ -216,8 +231,28 @@ export const Users: React.FC = () => {
             error={!!errors.position_id}
             errorMessage={errors.position_id ? 'Campo obrigatório' : ''}
           />
-          
+
         </Grid>
+
+        {hasMandate && <Grid item xs={12} sm={6}>
+
+          <Controller
+            name="mandateDate"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                {...field}
+                label="Data Final do Mandato"
+                type="datetime-local"
+                error={!!errors.mandateDate}
+                helperText={errors.mandateDate ? 'Verifique este campo' : ''}
+                InputLabelProps={{ shrink: true }}
+              />
+            )}
+
+          />
+        </Grid>}
       </Grid>
 
       <Box mt={3}>

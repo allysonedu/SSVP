@@ -11,10 +11,12 @@ interface PositionsSelectProps {
   name: string;          // Nome do campo
   positions: IPosition[]; // A lista de assistidos que será exibida no select
   error?: boolean;       // Se existe erro no campo
-  errorMessage?: string; // Mensagem de erro personalizada
+  errorMessage?: string;
+  hasMandate?: Function; // Caso o cargo tenha mandato ou não
 }
 
-const PositionsSelect: React.FC<PositionsSelectProps> = ({ control, name, positions, error, errorMessage }) => {
+const PositionsSelect: React.FC<PositionsSelectProps> = ({ control, name, positions, error, errorMessage, hasMandate }) => {
+
   return (
     <Controller
       name={name}
@@ -26,6 +28,7 @@ const PositionsSelect: React.FC<PositionsSelectProps> = ({ control, name, positi
             {...field}
             value={field.value || ""}  // Garantindo que o valor inicial seja uma string vazia se não houver valor
             label="Cargos"
+          
           >
             {positions.map((item) => (
               <MenuItem key={item.id} value={item.id}>

@@ -6,4 +6,5 @@ export interface IUser {
   password: string;
   username: string;
   position_id: number | null
+  mandateDate: Date | null
 }

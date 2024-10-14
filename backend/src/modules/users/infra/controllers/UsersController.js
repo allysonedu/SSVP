@@ -17,7 +17,7 @@ const usersRepository = new UsersRepository();
 
 class UsersController {
   async createUsers(request, response) {
-    const { name, email, whatsapp, password, username } = request.body;
+    const { name, email, whatsapp, password, username, position_id } = request.body;
 
     const createUsers = new CreateUsersService(usersRepository);
 

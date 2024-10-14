@@ -22,7 +22,7 @@ usersRoutes.post(
       whatsapp: Joi.string(),
       password: Joi.string().min(6).required('Password is required'),
       username: Joi.string(),
-      position_id: Joi.string(),
+      position_id: Joi.number(),
     },
   }),
   verifyIfEmailAlreadyExists,
