@@ -23,6 +23,8 @@ usersRoutes.post(
       password: Joi.string().min(6).required('Password is required'),
       username: Joi.string(),
       position_id: Joi.number(),
+      conference_id:Joi.number(),
+      mandateDate: Joi.date().allow(null)
     },
   }),
   verifyIfEmailAlreadyExists,

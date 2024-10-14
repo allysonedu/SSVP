@@ -50,6 +50,13 @@ export const AssistidsAddEdit: React.FC = () => {
   } = useForm<IAssisteds>({
     defaultValues: {
       name: '',
+      address: "",
+      neighborhood: "",
+      city:"",
+      state: "",
+      country: "",
+      address_complement: ""
+
     },
   });
 

@@ -22,7 +22,9 @@ import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useToast } from '../../shared/hooks/Toast';
 import PositionsSelect from '../../shared/components/form-components/PositionsSelect';
 import { IPosition } from '../../shared/dtos/IPosition';
-import Grid2 from '@mui/material/Unstable_Grid2';
+
+import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
+import { getAllConferences } from '../../api/conferences';
 
 export const Users: React.FC = () => {
   const navigate = useNavigate();
@@ -32,6 +34,8 @@ export const Users: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [hasMandate, setHasMandate] = useState<boolean>(false);
   const [positions, setPositions] = useState<IPosition[]>([])
+
+  const [conferences, setConferences] = useState([])
   const {
     control,
     handleSubmit,
@@ -45,11 +49,18 @@ export const Users: React.FC = () => {
       whatsapp: '',
       password: '',
       username: '',
-      position_id: null
+      position_id: null,
     },
   });
 
+  useEffect(() => {
+   
+    const GetConferences = async () => {
+      setConferences(await getAllConferences())
+    };
 
+    GetConferences()
+  }, [])
 
   useEffect(() => {
 
@@ -63,6 +74,8 @@ export const Users: React.FC = () => {
       try {
         const response = await getOneuser(Number(id));
         if (response?.data) {
+
+          response.data.mandateDate = response.data.mandateDate.split("T")[0]
           reset(response.data);
         }
       } catch (err) {
@@ -100,20 +113,20 @@ export const Users: React.FC = () => {
     try {
       if (!id) {
         await users(data);
-        alert('Usúario salva com sucesso!');
+        alert('Usúario salvo com sucesso!');
       } else {
         await updateUsers(data);
-        alert('Usúario atualizada com sucesso!');
+        alert('Usúario atualizado com sucesso!');
       }
       navigate('/usersView');
     } catch (err) {
-      console.error('Erro ao salvar a conferência!', err);
+      console.error('Erro ao salvar o usúario !', err);
     }
   };
 
   const positionValue = watch("position_id");
 
-  
+
   // Opcional: executa algo baseado no valor observado
   useEffect(() => {
     if (positionValue) {
@@ -222,7 +235,7 @@ export const Users: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
 
           <PositionsSelect
             control={control}
@@ -234,7 +247,7 @@ export const Users: React.FC = () => {
 
         </Grid>
 
-        {hasMandate && <Grid item xs={12} sm={6}>
+        {hasMandate && <Grid item xs={12} sm={4}>
 
           <Controller
             name="mandateDate"
@@ -244,7 +257,7 @@ export const Users: React.FC = () => {
                 fullWidth
                 {...field}
                 label="Data Final do Mandato"
-                type="datetime-local"
+                type="date"
                 error={!!errors.mandateDate}
                 helperText={errors.mandateDate ? 'Verifique este campo' : ''}
                 InputLabelProps={{ shrink: true }}
@@ -253,6 +266,17 @@ export const Users: React.FC = () => {
 
           />
         </Grid>}
+
+        <Grid item xs={12} sm={4}>
+          <ConferencesSelect
+            control={control}
+            name="conference_id"
+            conferences={conferences}
+            error={!!errors.conference_id} // Passa se há erro
+            errorMessage={errors.conference_id ? 'Campo obrigatório' : ''} // Mensagem de erro
+          />
+        </Grid>
+
       </Grid>
 
       <Box mt={3}>

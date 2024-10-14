@@ -40,7 +40,7 @@ const AddressFields: React.FC<AddressFieldsProps> = ({ control, errors, setValue
         if (zipCode) {
           fetchAddressFromZipCode(zipCode);
         }
-      }, [zipCode, setValue]);
+      }, [zipCode]);
     
   return (
 
