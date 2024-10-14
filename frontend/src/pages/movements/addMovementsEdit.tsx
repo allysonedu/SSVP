@@ -10,6 +10,7 @@ import { getAllAssisteds } from "../,,/../../api/assisteds";
 import { getAllConferences } from "../,,/../../api/conferences";
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
+import { DateToInput } from '../../shared/utils/formatDate';
 
 
 
@@ -30,6 +31,7 @@ export const MovementsAddEdit: React.FC = () => {
   } = useForm<IMovements>({
     defaultValues: {
       user_id: 1,
+      movement_date: DateToInput(new Date()),
       movement_items: []
     },
   });

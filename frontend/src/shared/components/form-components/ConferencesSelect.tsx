@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, Control } from 'react-hook-form';
 import { FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
 import { IConferences } from '../../dtos/IConferences';
+import { useAuth } from '../../hooks/auth';
 
 
 
@@ -15,6 +16,12 @@ interface ConferencesSelectProps {
 }
 
 const ConferencesSelect: React.FC<ConferencesSelectProps> = ({ control, name, conferences, error, errorMessage }) => {
+  const { user } = useAuth();
+
+  const defaultConference = user.conference_id || ""
+
+
+
   return (
     <Controller
       name={name}
@@ -24,7 +31,7 @@ const ConferencesSelect: React.FC<ConferencesSelectProps> = ({ control, name, co
           <InputLabel>Conferências</InputLabel>
           <Select
             {...field}
-            value={field.value || ""}  // Garantindo que o valor inicial seja uma string vazia se não houver valor
+            value={field.value || defaultConference}  // Garantindo que o valor inicial seja uma string vazia se não houver valor
             label="Conferências"
           >
             {conferences.map((item) => (
