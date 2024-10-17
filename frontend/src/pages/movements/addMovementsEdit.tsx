@@ -11,6 +11,8 @@ import { getAllConferences } from "../,,/../../api/conferences";
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
 import { DateToInput } from '../../shared/utils/formatDate';
+import UsersSelect from '../../shared/components/form-components/UsersSelect';
+import { getAllUsers } from '../../api/api';
 
 
 
@@ -37,10 +39,10 @@ export const MovementsAddEdit: React.FC = () => {
   });
 
   if (loading) {
-    
+
   }
   if (error) {
-    
+
   }
 
 
@@ -48,6 +50,7 @@ export const MovementsAddEdit: React.FC = () => {
   const [conferences, setConferences] = useState([])
   const [productDonate, setProductDonate] = useState('')
   const [quantityDonate, setQuantityDonate] = useState('')
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const GetAssisteds = async () => {
@@ -56,7 +59,11 @@ export const MovementsAddEdit: React.FC = () => {
     const GetConferences = async () => {
       setConferences(await getAllConferences())
     };
+    const GetUsers= async () => {
+      setUsers(await getAllUsers())
+    };
 
+    GetUsers()
     GetAssisteds()
     GetConferences()
   }, [])
@@ -67,7 +74,7 @@ export const MovementsAddEdit: React.FC = () => {
       setError(null);
       try {
         const response = await getOneMovements(Number(id));
-        
+
         if (response?.data) {
 
           reset(response.data);
@@ -161,6 +168,8 @@ export const MovementsAddEdit: React.FC = () => {
 
         </Grid>
         <Grid item xs={3}>
+
+
           <Controller
             name="assisted_id"
             control={control}
@@ -192,22 +201,15 @@ export const MovementsAddEdit: React.FC = () => {
         </Grid>
 
         <Grid item xs={3}>
-          <Controller
-            name='user_id'
+
+          <UsersSelect
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Quem entregou a doação"
-                error={!!errors.user_id}
-                helperText={errors.user_id ? 'Verifique este campo' : ''}
-
-              />
-
-            )}
-
+            name="user_id"
+            users={users}
+            error={!!errors.user_id} // Passa se há erro
+            errorMessage={errors.user_id ? 'Campo obrigatório' : ''} // Mensagem de erro
           />
+
         </Grid>
 
         <Grid item xs={3}>
@@ -300,7 +302,7 @@ export const MovementsAddEdit: React.FC = () => {
                               {item.quantity}
                             </TableCell>
                             <TableCell component="th" align='center' scope="row">
-                              <Button type='button' variant="contained" color="error" onClick={() => {remove(index)}} >X</Button>
+                              <Button type='button' variant="contained" color="error" onClick={() => { remove(index) }} >X</Button>
                             </TableCell>
                           </TableRow>
                         ))}
