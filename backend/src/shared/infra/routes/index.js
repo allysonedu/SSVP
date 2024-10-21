@@ -28,6 +28,7 @@ const positionsRoutes = require('../../../modules/positions/infra/routes/positio
 
 const movementsRoutes = require('../../../modules/movements/infra/routes/movements.routes');
 
+const helpingHandsRoutes = require('../../../modules/helping_hands/infra/routes/helpingHands.routes');
 
 // const ensureAuthenticated = require('../../../shared/middlewares/ensure.autenticated');
 
@@ -62,5 +63,7 @@ routes.use('/transactions', transactionsRoutes);
 routes.use('/positions', positionsRoutes);
 
 routes.use('/movements', movementsRoutes);
+
+routes.use('/helping_hands', helpingHandsRoutes);
 
 module.exports = routes;

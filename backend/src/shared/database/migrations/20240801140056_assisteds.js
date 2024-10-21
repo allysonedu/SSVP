@@ -15,17 +15,21 @@ exports.up = function (knex) {
     table.text('city').notNullable;
     table.text('state').notNullable;
     table.text('country').notNullable;
-    table.string('maritalStatus').notNullable()
+    table.string('maritalStatus').notNullable();
     table.text('profession').notNullable();
     table.text('whatsapp').notNullable();
     table.text('cpf').notNullable();
     table.text('Case_report');
-    table.string('home').notNullable()
+    table.string('home').notNullable();
     table.text('family_income').notNullable();
     table.text('explain');
     table.text('Spouse');
     table.integer('conference_id').unsigned().notNullable(); // Coluna para a chave estrangeira
-    table.foreign('conference_id').references('id').inTable('conferences').onDelete('RESTRICT');
+    table
+      .foreign('conference_id')
+      .references('id')
+      .inTable('conferences')
+      .onDelete('RESTRICT');
   });
 };
 

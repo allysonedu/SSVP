@@ -13,6 +13,8 @@ import {
 
 import { Users } from '../pages/users/Users';
 
+import { HelpingHandsAddEdit } from '../pages';
+
 import { MenuSideBar } from '../shared/components';
 import { menu } from '../shared/utils/menu';
 import { MovementsAddEdit } from '../pages/movements/addMovementsEdit';
@@ -46,6 +48,7 @@ export const PrivateRoutes: React.FC = () => {
         <Route path="/users" element={<Users />} />
         <Route path="/usersView" element={<UsersPage />} />
         <Route path="/users/:id" element={<Users />} />
+        <Route path="/helping_hands" element={<HelpingHandsAddEdit />} />
 
         <Route path="*" element={<Navigate to="/home" />} />
       </Routes>

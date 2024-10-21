@@ -9,3 +9,4 @@ export * from './conferences/addConferencesEdit';
 export * from './conferences/conferencesPage';
 export * from './users/Users';
 export * from './users/UsersPage';
+export * from './helping_hands/addhelping_hands';

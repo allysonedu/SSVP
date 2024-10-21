@@ -1,4 +1,6 @@
 import React, { useCallback, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { createTheme } from '@mui/material/styles';
 import {
   Avatar,
@@ -34,6 +36,7 @@ const defaultTheme = createTheme();
 
 export const SignUp: React.FC = () => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const methods = useForm<SignUpFormType>({
     resolver: zodResolver(SignUpFormValidationSchema),
@@ -52,6 +55,8 @@ export const SignUp: React.FC = () => {
         setLoading(true);
 
         await users(data);
+
+        navigate('/signin');
       } catch (err: any) {
       } finally {
         setLoading(false);
