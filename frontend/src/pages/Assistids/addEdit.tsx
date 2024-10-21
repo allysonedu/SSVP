@@ -28,7 +28,6 @@ import {
 import { getAllConferences } from '../../api/conferences';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useToast } from '../../shared/hooks/Toast';
-import { IConferences } from '../../shared/dtos/IConferences';
 import AddressFields from '../../shared/components/form-components/AddressFields';
 import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
 
@@ -41,19 +40,30 @@ export const AssistidsAddEdit: React.FC = () => {
 
   const { addToast } = useToast();
   const navigate = useNavigate();
+
+ 
   // useForm para gerenciar o formulário
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
     reset,
     setValue
   } = useForm<IAssisteds>({
     defaultValues: {
       name: '',
+      address: "",
+      neighborhood: "",
+      city:"",
+      state: "",
+      country: "",
+      address_complement: ""
+
     },
   });
 
+  const family_income : number = Number(watch("family_income")) 
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'dependents',
@@ -261,7 +271,7 @@ export const AssistidsAddEdit: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <Controller
             name="home"
             control={control}
@@ -288,7 +298,7 @@ export const AssistidsAddEdit: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <Controller
             name="family_income"
             control={control}
@@ -297,6 +307,8 @@ export const AssistidsAddEdit: React.FC = () => {
                 {...field}
                 variant="standard"
                 label="Renda Familiar"
+                type='number'
+                inputProps={{step: 0.1}}
                 fullWidth
                 error={!!errors.family_income}
                 helperText={errors.family_income ? 'Campo obrigatório' : ''}
@@ -305,10 +317,16 @@ export const AssistidsAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
+        <Grid item xs={12} sm={4}>
+          <Typography>
+            Classificação Social
+          </Typography>
+          {(family_income / fields.length).toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+        </Grid>
 
         <Grid item xs={12} sm={12}>
           {fields.map((item, index) => (
-            <Grid container spacing={2} key={item.id}>
+            <Grid container spacing={2} mt={1} key={item.id}>
               <Grid item xs={12} sm={3} sx={{ display: 'none' }}>
                 <Controller
                   name={`dependents.${index}.id`}
@@ -388,7 +406,7 @@ export const AssistidsAddEdit: React.FC = () => {
                   //rules={{ required: true }}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={2}>
                 <Controller
                   name={`dependents.${index}.relationship`}
                   control={control}
@@ -409,6 +427,9 @@ export const AssistidsAddEdit: React.FC = () => {
                   //rules={{ required: true }}
                 />
               </Grid>
+              <Grid item xs={1} sm={1} alignSelf={"center"}>
+                  <Button type='button'   variant='contained' color='error' onClick={() => {remove(index)}}>X</Button>
+              </Grid>
             </Grid>
           ))}
           <Grid item xs={12} mt={1}>
@@ -421,6 +442,7 @@ export const AssistidsAddEdit: React.FC = () => {
                   birth_date: null,
                   relationship: '',
                   assisted_id: Number(id),
+                  CPF:""
                 })
               }
             >

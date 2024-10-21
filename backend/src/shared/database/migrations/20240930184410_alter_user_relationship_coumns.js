@@ -4,6 +4,7 @@
  */
 exports.up = function(knex) {
    return knex.schema.alterTable('users', table => {
+    table.date('mandateDate').nullable();
     table.integer('conference_id').unsigned();
     table.integer('position_id').unsigned();
     table.foreign('conference_id').references('id').inTable('conferences');

@@ -1,0 +1,45 @@
+services:
+  client:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:80" # Porta do host: porta do container
+    #image: andrecrozatti/client:latest
+    networks:
+      - app-network
+    depends_on:
+      - db
+  server:
+    build:
+      context: ./backend
+    ports:
+      - "3333:3333" # Porta do host: porta do container
+    #image: andrecrozatti/server:latest
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - db
+    env_file:
+      - ./backend/.env.production
+    networks:
+      - app-network
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: ssvp
+      POSTGRES_HOST_AUTH_METHOD: trust 
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - app-network  
+
+volumes:
+  db_data:
+
+networks:
+  app-network:

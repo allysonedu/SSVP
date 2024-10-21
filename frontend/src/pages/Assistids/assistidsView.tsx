@@ -4,17 +4,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 import { useNavigate } from 'react-router-dom';
 
-interface Dependente {
-    nome: string;
-    idade: string;
-    relacao: string;
-}
 
-interface Cadastro {
-    nome: string;
-    cpf: string;
-    dependentes: Dependente[];
-}
+
+
 
 export const ListAssistids: React.FC<{ cadastros: IAssisteds[] }> = ({ cadastros }) => {
     const [filteredCadastros, setFilteredCadastros] = useState<IAssisteds[]>(cadastros);

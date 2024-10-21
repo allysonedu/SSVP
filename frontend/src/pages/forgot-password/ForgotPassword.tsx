@@ -33,7 +33,7 @@ type ForgotPasswordFormType = zod.infer<typeof forgotPasswordValidationSchema>;
 export const ForgotPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const timeToBack = useRef<NodeJS.Timeout>();
+  const timeToBack = useRef<ReturnType<typeof setTimeout>>();
 
   const methods = useForm<ForgotPasswordFormType>({
     resolver: zodResolver(forgotPasswordValidationSchema),

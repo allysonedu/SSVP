@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
-import { StringDateToInput } from '../../shared/utils/formatDate';
+
 
 interface MovimentsView {
   id: number;

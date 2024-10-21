@@ -43,7 +43,7 @@ class DependentsRepository {
   }
 
   async deleteDependents(idDependents) {
-    return connection('dependents').del().where({ id: idDependents });
+    return connection('dependents').whereIn("id", idDependents).del();
   }
 
 }

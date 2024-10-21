@@ -1,25 +1,46 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { getAllPositions } from '../../api/positions';
 
-import { TextField, Grid, Button, Typography } from '@mui/material';
-import { users, getOneuser, updateUsers, deleteUsers } from '../../api/api';
+import {
+  TextField,
+  Grid,
+  Button,
+  Typography,
+} from '@mui/material';
+
+import {
+  users,
+  getOneuser,
+  updateUsers,
+  deleteUsers,
+} from '../../api/api';
 
 import { IUser } from '../../shared/dtos/IUser';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { useToast } from '../../shared/hooks/Toast';
+import PositionsSelect from '../../shared/components/form-components/PositionsSelect';
+import { IPosition } from '../../shared/dtos/IPosition';
+
+import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
+import { getAllConferences } from '../../api/conferences';
 
 export const Users: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { addToast } = useToast();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
+  const [error, setError] = useState<string | null>(null);
+  const [hasMandate, setHasMandate] = useState<boolean>(false);
+  const [positions, setPositions] = useState<IPosition[]>([])
+
+  const [conferences, setConferences] = useState([])
   const {
     control,
     handleSubmit,
     formState: { errors },
+    watch,
     reset,
   } = useForm<IUser>({
     defaultValues: {
@@ -28,28 +49,47 @@ export const Users: React.FC = () => {
       whatsapp: '',
       password: '',
       username: '',
+      position_id: null,
     },
   });
 
   useEffect(() => {
+   
+    const GetConferences = async () => {
+      setConferences(await getAllConferences())
+    };
+
+    GetConferences()
+  }, [])
+
+  useEffect(() => {
+
+    const GetPositions = async () => {
+      setPositions(await getAllPositions())
+    };
+
     const fetchData = async () => {
-      setLoading(true);
-      setError(null);
+
+
       try {
         const response = await getOneuser(Number(id));
         if (response?.data) {
+
+          response.data.mandateDate = response.data.mandateDate.split("T")[0]
           reset(response.data);
         }
       } catch (err) {
         setError('Erro ao carregar os dados.');
       } finally {
-        setLoading(false);
+
       }
     };
+
+    GetPositions()
     if (id) {
       fetchData();
     } else {
-      setLoading(false); // Se não há id, é um novo registro, não precisa carregar dados
+      // Se não há id, é um novo registro, não precisa carregar dados
     }
   }, [id, reset]);
 
@@ -73,16 +113,27 @@ export const Users: React.FC = () => {
     try {
       if (!id) {
         await users(data);
-        alert('Usúario salva com sucesso!');
+        alert('Usúario salvo com sucesso!');
       } else {
         await updateUsers(data);
-        alert('Usúario atualizada com sucesso!');
+        alert('Usúario atualizado com sucesso!');
       }
       navigate('/usersView');
     } catch (err) {
-      console.error('Erro ao salvar a conferência!', err);
+      console.error('Erro ao salvar o usúario !', err);
     }
   };
+
+  const positionValue = watch("position_id");
+
+
+  // Opcional: executa algo baseado no valor observado
+  useEffect(() => {
+    if (positionValue) {
+
+      setHasMandate(positions.find(x => x.id == positionValue)?.hasMandate || false)
+    }
+  }, [positionValue]);
 
   return (
     <Box
@@ -92,7 +143,7 @@ export const Users: React.FC = () => {
       style={{ marginTop: '10vh' }}
     >
       <Typography variant="h6" gutterBottom>
-        Cadastro Usúario
+        Cadastro Usúario {error}
       </Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
@@ -112,23 +163,7 @@ export const Users: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <Controller
-            name="state"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="estado"
-                fullWidth
-                error={!!errors.state}
-                helperText={errors.state ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid> */}
+
         <Grid item xs={12} sm={3}>
           <Controller
             name="username"
@@ -180,23 +215,7 @@ export const Users: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-        {/* <Grid item xs={12} sm={6}>
-          <Controller
-            name="city"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                variant="standard"
-                label="Cidade"
-                fullWidth
-                error={!!errors.city}
-                helperText={errors.city ? 'Campo obrigatório' : ''}
-              />
-            )}
-            rules={{ required: true }}
-          />
-        </Grid> */}
+
 
         <Grid item xs={12} sm={6}>
           <Controller
@@ -215,6 +234,49 @@ export const Users: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
+
+        <Grid item xs={12} sm={4}>
+
+          <PositionsSelect
+            control={control}
+            name='position_id'
+            positions={positions}
+            error={!!errors.position_id}
+            errorMessage={errors.position_id ? 'Campo obrigatório' : ''}
+          />
+
+        </Grid>
+
+        {hasMandate && <Grid item xs={12} sm={4}>
+
+          <Controller
+            name="mandateDate"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                fullWidth
+                {...field}
+                label="Data Final do Mandato"
+                type="date"
+                error={!!errors.mandateDate}
+                helperText={errors.mandateDate ? 'Verifique este campo' : ''}
+                InputLabelProps={{ shrink: true }}
+              />
+            )}
+
+          />
+        </Grid>}
+
+        <Grid item xs={12} sm={4}>
+          <ConferencesSelect
+            control={control}
+            name="conference_id"
+            conferences={conferences}
+            error={!!errors.conference_id} // Passa se há erro
+            errorMessage={errors.conference_id ? 'Campo obrigatório' : ''} // Mensagem de erro
+          />
+        </Grid>
+
       </Grid>
 
       <Box mt={3}>

@@ -106,7 +106,7 @@ class AssistedsController {
     const assistedUpdated = await updateAssisted.execute(payload);
 
 
-    if (dependents?.length > 0) {
+    if (dependents?.length > 0 || dependents) {
       const updateDependents = new UpdateDependentsService(dependentsRepository);
 
       //Como os dependentes precisam de um Id de assistido para serem salvos, passei o id do assistido recém salvo para a lista de dependentes

@@ -1,26 +1,21 @@
 import React from 'react';
 import { Controller, Control } from 'react-hook-form';
 import { FormControl, InputLabel, Select, MenuItem, FormHelperText } from '@mui/material';
-import { IConferences } from '../../dtos/IConferences';
-import { useAuth } from '../../hooks/auth';
+import { IPosition } from '../../dtos/IPosition';
 
 
 
 // Definindo a interface das props do componente
-interface ConferencesSelectProps {
+interface PositionsSelectProps {
   control: Control<any>; // O controle vindo do useForm
   name: string;          // Nome do campo
-  conferences: IConferences[]; // A lista de assistidos que será exibida no select
+  positions: IPosition[]; // A lista de assistidos que será exibida no select
   error?: boolean;       // Se existe erro no campo
-  errorMessage?: string; // Mensagem de erro personalizada
+  errorMessage?: string;
+  hasMandate?: Function; // Caso o cargo tenha mandato ou não
 }
 
-const ConferencesSelect: React.FC<ConferencesSelectProps> = ({ control, name, conferences, error, errorMessage }) => {
-  const { user } = useAuth();
-
-  const defaultConference = user.conference_id || ""
-
-
+const PositionsSelect: React.FC<PositionsSelectProps> = ({ control, name, positions, error, errorMessage, hasMandate }) => {
 
   return (
     <Controller
@@ -28,15 +23,16 @@ const ConferencesSelect: React.FC<ConferencesSelectProps> = ({ control, name, co
       control={control}
       render={({ field }) => (
         <FormControl fullWidth variant="outlined" error={error}>
-          <InputLabel>Conferências</InputLabel>
+          <InputLabel>Cargos</InputLabel>
           <Select
             {...field}
-            value={field.value || defaultConference}  // Garantindo que o valor inicial seja uma string vazia se não houver valor
-            label="Conferências"
+            value={field.value || ""}  // Garantindo que o valor inicial seja uma string vazia se não houver valor
+            label="Cargos"
+          
           >
-            {conferences.map((item) => (
+            {positions.map((item) => (
               <MenuItem key={item.id} value={item.id}>
-                {item.name}
+                {item.positionName}
               </MenuItem>
             ))}
           </Select>
@@ -48,4 +44,4 @@ const ConferencesSelect: React.FC<ConferencesSelectProps> = ({ control, name, co
   );
 };
 
-export default ConferencesSelect;
+export default PositionsSelect;

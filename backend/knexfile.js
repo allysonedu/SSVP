@@ -4,4 +4,5 @@ const knexConfig = require('./src/config/database');
 
 module.exports = {
   local: knexConfig.local,
+  production: knexConfig.production
 };

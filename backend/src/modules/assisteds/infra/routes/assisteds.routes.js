@@ -18,7 +18,7 @@ assistedsRoutes.post(
       address_number: Joi.string(),
       neighborhood: Joi.string(),
       zip_code: Joi.string(),
-      address_complement: Joi.string(),
+      address_complement: Joi.string().allow(null),
       city: Joi.string(),
       state: Joi.string(),
       country: Joi.string(),
