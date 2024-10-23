@@ -93,14 +93,14 @@ class AssistedsController {
 
     const payload = {
       id,
-      ...request.body,      
+      ...request.body,
     };
 
     const dependents = payload.dependents
 
     //trecho para retirar a propriedade de dependentes do objeto de assistidos
     delete payload.dependents
-  
+
     const updateAssisted = new UpdateAssistedService(assistedsRepository);
 
     const assistedUpdated = await updateAssisted.execute(payload);
@@ -139,8 +139,16 @@ class AssistedsController {
     const getAll = new GetAllAssistedsService(assistedsRepository);
 
     const assisteds = await getAll.execute();
+    const getAllDependentsAssisted = new GetAllDependentsService(dependentsRepository)
 
-    return response.json(assisteds);
+
+    const assisteds_dependents = await Promise.all(assisteds.map(async (element, index) => {
+      const dependents = await getAllDependentsAssisted.execute(element.id)
+      return { ...element, dependents }
+    }))
+
+
+    return response.json(assisteds_dependents);
   }
 
   async getOneAssisteds(request, response) {

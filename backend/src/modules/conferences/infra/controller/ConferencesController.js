@@ -18,7 +18,9 @@ const conferencesRepository = new ConferencesRepository();
 
 class ConferencesController {
   async createConferences(request, response) {
-    const { name, address,
+    const {
+      name,
+      address,
       address_number,
       neighborhood,
       zip_code,
@@ -26,7 +28,7 @@ class ConferencesController {
       city,
       state,
       country,
-      tel, 
+      tel,
       email } = request.body;
 
     const createConference = new CreateNewConferencesService(
@@ -39,6 +41,12 @@ class ConferencesController {
       state,
       tel,
       email,
+      address,
+      address_number,
+      neighborhood,
+      zip_code,
+      address_complement,
+      country
     });
 
     return response.json(conference[0]);

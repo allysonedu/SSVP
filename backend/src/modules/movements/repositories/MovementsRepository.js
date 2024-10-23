@@ -22,12 +22,15 @@ class MovementsRepository {
   }
 
   async getAllMovements() {
-    return connection('movements');
+    return connection('movements')
+    .join('assisteds', 'assisteds.id', '=', 'movements.assisted_id')
+    .join('conferences', 'conferences.id', '=', 'movements.conference_id')
+    .select('assisteds.name as assisted_name','conferences.name as conference_name', 'movements.*');;
   }
 
   async getOneMovements(idMovements) {
     return connection('movements')
-    .where('id', '=', `${idMovements}`).first();
+    .where('movements.id', '=', `${idMovements}`).first();
   }
 }
 

@@ -6,7 +6,7 @@ export interface IConferences {
     address_number: string
     neighborhood: string
     zip_code: string
-    address_complement: string
+    address_complement?: string | null 
     city: string
     state: string
     country: string

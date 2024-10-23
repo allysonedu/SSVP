@@ -41,7 +41,7 @@ export const AssistidsAddEdit: React.FC = () => {
   const { addToast } = useToast();
   const navigate = useNavigate();
 
- 
+
   // useForm para gerenciar o formulário
   const {
     control,
@@ -55,7 +55,7 @@ export const AssistidsAddEdit: React.FC = () => {
       name: '',
       address: "",
       neighborhood: "",
-      city:"",
+      city: "",
       state: "",
       country: "",
       address_complement: ""
@@ -63,7 +63,7 @@ export const AssistidsAddEdit: React.FC = () => {
     },
   });
 
-  const family_income : number = Number(watch("family_income")) 
+  const family_income: number = Number(watch("family_income"))
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'dependents',
@@ -115,6 +115,29 @@ export const AssistidsAddEdit: React.FC = () => {
     }
   };
 
+  function CalcRenda() {
+    const valorPerCapita = (family_income / fields.length)
+    let classeSocial = "", color = ""
+    if (valorPerCapita <= 667) {
+      classeSocial = " Pobreza"
+      color = "darkred"
+    }
+
+    if (valorPerCapita <= 218) {
+      classeSocial = " Pobreza Extrema"
+      color = "red"
+    }
+    return (
+      
+      <>
+        <Box>
+          {valorPerCapita.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+          <span style={{color:color}}>{classeSocial}</span>
+        </Box>
+      </>
+    )
+  }
+
   const onSubmit: SubmitHandler<IAssisteds> = async data => {
     try {
       if (!id) {
@@ -157,6 +180,7 @@ export const AssistidsAddEdit: React.FC = () => {
       <Typography variant="h6" gutterBottom>
         Cadastro de Assistido
       </Typography>
+
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <Controller
@@ -230,10 +254,10 @@ export const AssistidsAddEdit: React.FC = () => {
           />
         </Grid>
 
-        <AddressFields control={control} errors={errors} setValue={setValue}/>
+        <AddressFields control={control} errors={errors} setValue={setValue} />
 
         <Grid item xs={4}>
-        <ConferencesSelect
+          <ConferencesSelect
             control={control}
             name="conference_id"
             conferences={conferences}
@@ -308,7 +332,7 @@ export const AssistidsAddEdit: React.FC = () => {
                 variant="standard"
                 label="Renda Familiar"
                 type='number'
-                inputProps={{step: 0.1}}
+                inputProps={{ step: 0.1 }}
                 fullWidth
                 error={!!errors.family_income}
                 helperText={errors.family_income ? 'Campo obrigatório' : ''}
@@ -321,7 +345,7 @@ export const AssistidsAddEdit: React.FC = () => {
           <Typography>
             Classificação Social
           </Typography>
-          {(family_income / fields.length).toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
+          {CalcRenda()}
         </Grid>
 
         <Grid item xs={12} sm={12}>
@@ -344,7 +368,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  //rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -365,7 +389,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  //rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -384,7 +408,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }}
                     />
                   )}
-                  //rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -403,7 +427,7 @@ export const AssistidsAddEdit: React.FC = () => {
                       }}
                     />
                   )}
-                  //rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={12} sm={2}>
@@ -424,11 +448,11 @@ export const AssistidsAddEdit: React.FC = () => {
                       }
                     />
                   )}
-                  //rules={{ required: true }}
+                //rules={{ required: true }}
                 />
               </Grid>
               <Grid item xs={1} sm={1} alignSelf={"center"}>
-                  <Button type='button'   variant='contained' color='error' onClick={() => {remove(index)}}>X</Button>
+                <Button type='button' variant='contained' color='error' onClick={() => { remove(index) }}>X</Button>
               </Grid>
             </Grid>
           ))}
@@ -442,7 +466,7 @@ export const AssistidsAddEdit: React.FC = () => {
                   birth_date: null,
                   relationship: '',
                   assisted_id: Number(id),
-                  CPF:""
+                  CPF: ""
                 })
               }
             >

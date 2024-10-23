@@ -10,42 +10,61 @@ type AddressFieldsProps = {
 };
 
 const AddressFields: React.FC<AddressFieldsProps> = ({ control, errors, setValue }) => {
-    const zipCode = useWatch({
-        control,
-        name: 'zip_code', // Observe o campo de CEP
-      });
-    
-      useEffect(() => {
-        const fetchAddressFromZipCode = async (cep: string) => {
-          if (cep.length === 8) { // Validação simples para CEPs com 8 dígitos
-            try {
-              const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-              const data = response.data;
-    
-              if (!data.erro) {
-                // Preencher os campos com os dados retornados
-                setValue('address', data.logradouro);
-                setValue('neighborhood', data.bairro);
-                setValue('city', data.localidade);
-                setValue('state', data.uf);
-              } else {
-                console.error('CEP inválido');
-              }
-            } catch (error) {
-              console.error('Erro ao buscar o CEP:', error);
-            }
+  const zipCode = useWatch({
+    control,
+    name: 'zip_code', // Observe o campo de CEP
+  });
+
+  useEffect(() => {
+    const fetchAddressFromZipCode = async (cep: string) => {
+      if (cep.length === 8) { // Validação simples para CEPs com 8 dígitos
+        try {
+          const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+          const data = response.data;
+
+          if (!data.erro) {
+            // Preencher os campos com os dados retornados
+            setValue('address', data.logradouro);
+            setValue('neighborhood', data.bairro);
+            setValue('city', data.localidade);
+            setValue('state', data.uf);
+            document.getElementById('address_number')?.focus();
+
+          } else {
+            console.error('CEP inválido');
           }
-        };
-    
-        if (zipCode) {
-          fetchAddressFromZipCode(zipCode);
+        } catch (error) {
+
         }
-      }, [zipCode]);
-    
+      }
+    };
+
+    if (zipCode) {
+      fetchAddressFromZipCode(zipCode);
+    }
+  }, [zipCode]);
+
   return (
 
-    
+
     <>
+      <Grid item xs={12} sm={3}>
+        <Controller
+          name="zip_code"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              variant="standard"
+              label="CEP"
+              fullWidth
+              error={!!errors.zip_code}
+              helperText={errors.zip_code ? 'Campo obrigatório' : ''}
+            />
+          )}
+          rules={{ required: true }}
+        />
+      </Grid>
       <Grid item xs={12} sm={6}>
         <Controller
           name="address"
@@ -72,6 +91,7 @@ const AddressFields: React.FC<AddressFieldsProps> = ({ control, errors, setValue
             <TextField
               {...field}
               variant="standard"
+              id='address_number'
               label="Número"
               fullWidth
               error={!!errors.address_number}
@@ -100,23 +120,7 @@ const AddressFields: React.FC<AddressFieldsProps> = ({ control, errors, setValue
         />
       </Grid>
 
-      <Grid item xs={12} sm={3}>
-        <Controller
-          name="zip_code"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              variant="standard"
-              label="CEP"
-              fullWidth
-              error={!!errors.zip_code}
-              helperText={errors.zip_code ? 'Campo obrigatório' : ''}
-            />
-          )}
-          rules={{ required: true }}
-        />
-      </Grid>
+
 
       <Grid item xs={12} sm={3}>
         <Controller
@@ -178,6 +182,7 @@ const AddressFields: React.FC<AddressFieldsProps> = ({ control, errors, setValue
               {...field}
               variant="standard"
               label="País"
+
               fullWidth
               error={!!errors.country}
               helperText={errors.country ? 'Campo obrigatório' : ''}

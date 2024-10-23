@@ -26,6 +26,7 @@ export const LightTheme = createTheme({
     allVariants: {
       color: '#333',
     },
+    fontWeightRegular: 500
   },
   custom: {
     tab: {

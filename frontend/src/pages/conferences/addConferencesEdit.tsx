@@ -28,13 +28,13 @@ export const ConferencesAddEdit: React.FC = () => {
       state: '',
       email: '',
       city: '',
-      tel:'',
+      tel: '',
       address: '',
       address_number: '',
       neighborhood: '',
       zip_code: '',
-      address_complement: '',
-      country: '',
+
+      country: 'Brasil',
     },
   });
 
@@ -82,11 +82,11 @@ export const ConferencesAddEdit: React.FC = () => {
   }
 
   if (loading) {
-    
+
   }
 
   if (error) {
-    
+
   }
 
   const onSubmit: SubmitHandler<IConferences> = async (data: IConferences) => {
@@ -168,8 +168,8 @@ export const ConferencesAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
-          
-       <AddressFields control={control} errors={errors} setValue={setValue}/>
+
+        <AddressFields control={control} errors={errors} setValue={setValue} />
 
       </Grid>
 

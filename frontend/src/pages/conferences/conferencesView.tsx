@@ -10,14 +10,17 @@ import {
   InputAdornment,
   Paper,
   Button,
+  Container,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
+
 
 interface Cadastro {
   id: number;
   name: string;
   email: string;
+  tel: string;
   // city: string;
   // cep: string;
   // state: string;
@@ -107,14 +110,30 @@ export const ListConferences: React.FC<{ cadastros: Cadastro[] }> = ({
               >
                 <ListItemText
                   primary={
-                    <Typography variant="h6" color="primary.main">
-                      Conferêcia: {cadastro.name}
+                    <Typography>
+                      <Typography variant="h6" color="primary.main">
+                        Conferêcia: {cadastro.name}
+                      </Typography>
+
                     </Typography>
+
                   }
                   secondary={
-                    <Typography variant="subtitle1" color="primary.dark">
-                      Email: {cadastro.email}
-                    </Typography>
+
+                    <Grid container spacing={2}>
+
+                      <Grid item >
+                        <Typography variant="subtitle1" color="primary.dark" fontWeight="regular">
+                          Email: {cadastro.email}
+                        </Typography>
+                      </Grid>
+                      <Grid item >
+                        <Typography variant="subtitle1" color="secondary.main">
+                          Fone: {cadastro.tel}
+                        </Typography>
+                      </Grid>
+
+                    </Grid>
                   }
                 />
               </ListItem>
