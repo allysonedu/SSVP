@@ -76,11 +76,11 @@ export const Users: React.FC = () => {
         const response = await getOneuser(Number(id));
         if (response?.data) {
 
-          response.data.mandateDate = response.data.mandateDate.split("T")[0]
+          response.data.mandateDate = response.data.mandateDate?.split("T")[0]
           reset(response.data);
         }
       } catch (err) {
-        setError('Erro ao carregar os dados.');
+        showMessage('Erro ao carregar os dados.'+ err, {severity: "error"});
       } finally {
 
       }

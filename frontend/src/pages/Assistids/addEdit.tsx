@@ -112,8 +112,8 @@ export const AssistidsAddEdit: React.FC = () => {
   };
 
   function CalcRenda() {
-    const valorPerCapita = (family_income / fields.length)
-    let classeSocial = "", color = ""
+    const valorPerCapita = (family_income / (fields.length + 1))
+    let classeSocial = "Estável", color = "darkgreen"
     if (valorPerCapita <= 667) {
       classeSocial = " Pobreza"
       color = "darkred"
@@ -128,7 +128,7 @@ export const AssistidsAddEdit: React.FC = () => {
       <>
         <Box>
           {valorPerCapita.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
-          <span style={{ color: color }}>{classeSocial}</span>
+          <span style={{ color: color }}> - {classeSocial}</span>
         </Box>
       </>
     )
@@ -370,7 +370,7 @@ export const AssistidsAddEdit: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={4}>
           <Typography>
-            Classificação Social
+            Renda Per Capita
           </Typography>
           {CalcRenda()}
         </Grid>
