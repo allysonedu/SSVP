@@ -33,7 +33,7 @@ export const ConferencesAddEdit: React.FC = () => {
       address_number: '',
       neighborhood: '',
       zip_code: '',
-
+      
       country: 'Brasil',
     },
   });
@@ -73,14 +73,6 @@ export const ConferencesAddEdit: React.FC = () => {
       showMessage("Erro ao Deletar a Conferencia", { severity: 'error' });
     }
 
-
-  }
-
-  if (loading) {
-
-  }
-
-  if (error) {
 
   }
 

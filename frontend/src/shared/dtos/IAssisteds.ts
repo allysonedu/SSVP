@@ -8,7 +8,7 @@ export interface IAssisteds {
   address_number: string;
   neighborhood: string;
   zip_code: string;
-  address_complement: string;
+  address_complement?: string | undefined;
   city: string;
   state: string;
   country: string;
@@ -21,6 +21,7 @@ export interface IAssisteds {
   home: string;
   conference_id: number ;
   dependents: Array<IDependents>;
+  status: string
 }
 
 interface IDependents {

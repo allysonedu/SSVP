@@ -17,6 +17,8 @@ import {
   InputLabel,
   Select,
   FormHelperText,
+  InputAdornment,
+  IconButton,
 } from '@mui/material';
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
 import {
@@ -59,7 +61,6 @@ export const AssistidsAddEdit: React.FC = () => {
       state: "",
       country: "",
       address_complement: ""
-
     },
   });
 
@@ -101,11 +102,11 @@ export const AssistidsAddEdit: React.FC = () => {
   const handleDelete = (id: number) => {
     try {
       deleteAssisteds(id);
-      showMessage("Assistido deletado com sucesso!!", { severity:'success' });
-     
+      showMessage("Assistido deletado com sucesso!!", { severity: 'success' });
+
       navigate('/assisteds-page');
     } catch (error: any) {
-      showMessage("Erro ao Deletar o Assitido", { severity:'error' });
+      showMessage("Erro ao Deletar o Assitido", { severity: 'error' });
 
     }
   };
@@ -123,11 +124,11 @@ export const AssistidsAddEdit: React.FC = () => {
       color = "red"
     }
     return (
-      
+
       <>
         <Box>
-          {valorPerCapita.toLocaleString("pt-BR", {style: "currency", currency: "BRL"})}
-          <span style={{color:color}}>{classeSocial}</span>
+          {valorPerCapita.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
+          <span style={{ color: color }}>{classeSocial}</span>
         </Box>
       </>
     )
@@ -137,10 +138,10 @@ export const AssistidsAddEdit: React.FC = () => {
     try {
       if (!id) {
         await createAssisteds(data);
-        showMessage('Assistido salvo com sucesso!', {severity:'success' });
+        showMessage('Assistido salvo com sucesso!', { severity: 'success' });
       } else {
         await updateAssisteds(data);
-        showMessage('Assistido atualizado com sucesso!', {severity:'success' });
+        showMessage('Assistido atualizado com sucesso!', { severity: 'success' });
       }
       navigate('/assisteds-page');
     } catch (err) {
@@ -251,7 +252,7 @@ export const AssistidsAddEdit: React.FC = () => {
 
         <AddressFields control={control} errors={errors} setValue={setValue} />
 
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={3}>
           <ConferencesSelect
             control={control}
             name="conference_id"
@@ -261,14 +262,14 @@ export const AssistidsAddEdit: React.FC = () => {
           />
         </Grid>
 
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={3}>
           <Controller
             name="maritalStatus"
             control={control}
             render={({ field }) => (
               <FormControl
                 fullWidth
-                variant="standard"
+                variant="outlined"
                 error={!!errors.maritalStatus}
               >
                 <InputLabel>Estado Civil</InputLabel>
@@ -289,8 +290,37 @@ export const AssistidsAddEdit: React.FC = () => {
             rules={{ required: true }}
           />
         </Grid>
+        <Grid item xs={12} sm={3}>
+          <Controller
+            name="status"
+            control={control}
+            render={({ field }) => (
+              <FormControl
+                fullWidth
+                variant="outlined"
+                error={!!errors.status}
+              >
+                <InputLabel>Status</InputLabel>
+                <Select
+                  {...field}
+                  value={field.value || ''} // Assegura que o valor inicial seja uma string vazia caso não haja valor
+                  label="Status"
+                >
+                  <MenuItem value="confirmado">Confirmado</MenuItem>
+                  <MenuItem value="negado">Negado</MenuItem>
+                  <MenuItem value="aguardando sindicancia">Aguardando Sindicância</MenuItem>
+                  <MenuItem value="emergencial">Emergencial</MenuItem>
+                </Select>
+                <FormHelperText>
+                  {errors.status ? 'Campo obrigatório' : ''}
+                </FormHelperText>
+              </FormControl>
+            )}
+            rules={{ required: true }}
+          />
+        </Grid>
 
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={3}>
           <Controller
             name="home"
             control={control}
@@ -300,7 +330,7 @@ export const AssistidsAddEdit: React.FC = () => {
                 <Select
                   {...field}
                   value={field.value || ''}
-                  variant="standard"
+                  variant="outlined"
                   label="Casa"
                 >
                   <MenuItem value="propria">Própria</MenuItem>
@@ -331,6 +361,8 @@ export const AssistidsAddEdit: React.FC = () => {
                 fullWidth
                 error={!!errors.family_income}
                 helperText={errors.family_income ? 'Campo obrigatório' : ''}
+                InputProps={{ startAdornment: <InputAdornment position="start">R$</InputAdornment> }}
+                
               />
             )}
             rules={{ required: true }}

@@ -18,7 +18,7 @@ assistedsRoutes.post(
       address_number: Joi.string(),
       neighborhood: Joi.string(),
       zip_code: Joi.string(),
-      address_complement: Joi.string().allow(null),
+      address_complement: Joi.string().allow("").optional(),
       city: Joi.string(),
       state: Joi.string(),
       country: Joi.string(),
@@ -32,7 +32,8 @@ assistedsRoutes.post(
       home: Joi.string(),
       maritalStatus: Joi.string(),
       dependents: Joi.array().empty(),
-      conference_id: Joi.number()
+      conference_id: Joi.number(),
+      status: Joi.string().required('Status do assistido é obrigatório'),
       
     },
   }),

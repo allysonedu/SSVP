@@ -44,7 +44,8 @@ class AssistedsController {
       maritalStatus = false,
       home = false,
       dependents,
-      conference_id
+      conference_id,
+      status
     } = request.body; // Os valores que vieram do formulario são atribuidos para as variáveis acima
 
     //Como vou salvar dados em duas tabelas diferentes(assisteds e dependents) é preciso iniciar 2 serviços e 2 repositórios diferentes
@@ -72,7 +73,8 @@ class AssistedsController {
       Spouse,
       maritalStatus,
       home,
-      conference_id
+      conference_id,
+      status
     });
 
     if (dependents.length > 0) {
