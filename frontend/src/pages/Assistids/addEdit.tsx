@@ -27,9 +27,9 @@ import {
 } from '../../api/assisteds';
 import { getAllConferences } from '../../api/conferences';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useToast } from '../../shared/hooks/Toast';
 import AddressFields from '../../shared/components/form-components/AddressFields';
 import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
+import { useSnackbar } from '../../shared/hooks/SnackbarProvider';
 
 export const AssistidsAddEdit: React.FC = () => {
   const { id } = useParams();
@@ -38,7 +38,7 @@ export const AssistidsAddEdit: React.FC = () => {
 
   const [conferences, setConferences] = useState([]);
 
-  const { addToast } = useToast();
+  const { showMessage } = useSnackbar();
   const navigate = useNavigate();
 
 
@@ -101,17 +101,12 @@ export const AssistidsAddEdit: React.FC = () => {
   const handleDelete = (id: number) => {
     try {
       deleteAssisteds(id);
-      addToast({
-        type: 'success',
-        title: `Assistido deletado com sucesso!!`,
-      });
+      showMessage("Assistido deletado com sucesso!!", { severity:'success' });
+     
       navigate('/assisteds-page');
     } catch (error: any) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao Deletar o Assitido',
-        description: error?.message,
-      });
+      showMessage("Erro ao Deletar o Assitido", { severity:'error' });
+
     }
   };
 
@@ -142,10 +137,10 @@ export const AssistidsAddEdit: React.FC = () => {
     try {
       if (!id) {
         await createAssisteds(data);
-        alert('Assistido salvo com sucesso!');
+        showMessage('Assistido salvo com sucesso!', {severity:'success' });
       } else {
         await updateAssisteds(data);
-        alert('Assistido atualizado com sucesso!');
+        showMessage('Assistido atualizado com sucesso!', {severity:'success' });
       }
       navigate('/assisteds-page');
     } catch (err) {

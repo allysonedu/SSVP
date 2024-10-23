@@ -5,7 +5,7 @@ import { IMovements } from '../../shared/dtos/IMovements';
 import { createMovements, getOneMovements, deleteMovements, updateMovements } from '../../api/movements';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useToast } from '../../shared/hooks/Toast';
+
 import { getAllAssisteds } from "../,,/../../api/assisteds";
 import { getAllConferences } from "../,,/../../api/conferences";
 import { IAssisteds } from '../../shared/dtos/IAssisteds';
@@ -13,6 +13,7 @@ import ConferencesSelect from '../../shared/components/form-components/Conferenc
 import { DateToInput } from '../../shared/utils/formatDate';
 import UsersSelect from '../../shared/components/form-components/UsersSelect';
 import { getAllUsers } from '../../api/api';
+import { useSnackbar } from '../../shared/hooks/SnackbarProvider';
 
 
 
@@ -21,7 +22,8 @@ export const MovementsAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { addToast } = useToast()
+  const { showMessage } = useSnackbar()
+
   const navigate = useNavigate()
 
   const theme = useTheme();
@@ -99,17 +101,12 @@ export const MovementsAddEdit: React.FC = () => {
   const handleDelete = (id: number) => {
     try {
       deleteMovements(id)
-      addToast({
-        type: 'success',
-        title: `Conferência deletada com sucesso!!`,
-      })
+      showMessage("Conferência deletada com sucesso!!", { severity:'success' })
+      
       navigate('/movementsView')
     } catch (error: any) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao Deletar a Conferencia',
-        description: error?.message,
-      })
+      showMessage("Erro ao Deletar a Conferencia", { severity:'error' })
+     
     }
 
 
@@ -124,10 +121,10 @@ export const MovementsAddEdit: React.FC = () => {
     try {
       if (!id) {
         await createMovements(data);
-        alert('Movimentação salva com sucesso!');
+        showMessage('Movimentação salva com sucesso!', { severity:'success' });
       } else {
         await updateMovements(data)
-        alert('Movimentação atualizada com sucesso!');
+        showMessage('Movimentação atualizada com sucesso!', { severity:'success' });
       }
       navigate('/movementsView')
     } catch (err) {
@@ -260,7 +257,7 @@ export const MovementsAddEdit: React.FC = () => {
                         setProductDonate('');  // Limpa os campos após adicionar o item
                         setQuantityDonate('');
                       } else {
-                        alert("Preencha todos os campos antes de adicionar um item.");
+                        showMessage("Preencha todos os campos antes de adicionar um item.", { severity: 'warning' });
                       }
                     }}
                   >

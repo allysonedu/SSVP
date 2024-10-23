@@ -5,15 +5,15 @@ import { IConferences } from '../../shared/dtos/IConferences';
 import { createConferences, getOneConferences, deleteConferences, updateConferences } from '../../api/conferences';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useToast } from '../../shared/hooks/Toast';
 import AddressFields from '../../shared/components/form-components/AddressFields';
+import { useSnackbar } from '../../shared/hooks/SnackbarProvider';
 
 
 export const ConferencesAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { addToast } = useToast()
+  const { showMessage } = useSnackbar()
   const navigate = useNavigate()
 
   const {
@@ -62,20 +62,15 @@ export const ConferencesAddEdit: React.FC = () => {
     }
   }, [id, reset]);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     try {
-      deleteConferences(id)
-      addToast({
-        type: 'success',
-        title: `Conferência deletada com sucesso!!`,
-      })
-      navigate('/conferencesView')
+      await deleteConferences(id)
+
+      showMessage("Conferência deletada com sucesso!!", { severity: 'success' });
+
+      navigate('/conferencesPage')
     } catch (error: any) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao Deletar a Conferencia',
-        description: error?.message,
-      })
+      showMessage("Erro ao Deletar a Conferencia", { severity: 'error' });
     }
 
 
@@ -93,12 +88,12 @@ export const ConferencesAddEdit: React.FC = () => {
     try {
       if (!id) {
         await createConferences(data);
-        alert('Conferência salva com sucesso!');
+        showMessage('Conferência salva com sucesso!', {severity:"success"});
       } else {
         await updateConferences(data)
-        alert('Conferência atualizada com sucesso!');
+        showMessage('Conferência atualizada com sucesso!', {severity:"success"});
       }
-      navigate('/conferencesView')
+      navigate('/conferencesPage')
     } catch (err) {
       console.error('Erro ao salvar a conferência!', err);
     }
@@ -177,7 +172,7 @@ export const ConferencesAddEdit: React.FC = () => {
         <Button type="submit" variant="contained" color="primary">
           Cadastrar
         </Button>
-        <Button type="button" onClick={() => { navigate("/conferencesView") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
+        <Button type="button" onClick={() => { navigate("/conferencesPage") }} variant="contained" color="warning" sx={{ marginLeft: "10px" }}>
           Cancelar
         </Button>
         <Button type="button" variant="contained" color="error" onClick={() => { handleDelete(Number(id)) }} sx={{ marginLeft: "10px" }}>

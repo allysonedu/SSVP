@@ -19,17 +19,18 @@ import {
 import { IUser } from '../../shared/dtos/IUser';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { useToast } from '../../shared/hooks/Toast';
+
 import PositionsSelect from '../../shared/components/form-components/PositionsSelect';
 import { IPosition } from '../../shared/dtos/IPosition';
 
 import ConferencesSelect from '../../shared/components/form-components/ConferencesSelect';
 import { getAllConferences } from '../../api/conferences';
+import { useSnackbar } from '../../shared/hooks/SnackbarProvider';
 
 export const Users: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
-  const { addToast } = useToast();
+  const { showMessage } = useSnackbar();
 
   const [error, setError] = useState<string | null>(null);
   const [hasMandate, setHasMandate] = useState<boolean>(false);
@@ -54,7 +55,7 @@ export const Users: React.FC = () => {
   });
 
   useEffect(() => {
-   
+
     const GetConferences = async () => {
       setConferences(await getAllConferences())
     };
@@ -96,27 +97,21 @@ export const Users: React.FC = () => {
   const handleDelete = (id: number) => {
     try {
       deleteUsers(id);
-      addToast({
-        type: 'success',
-        title: `Usúario deletado com sucesso!!`,
-      });
+      showMessage('Usúario deletado com sucesso!', { severity: 'success' });
+
       navigate('/usersView');
     } catch (error: any) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao Deletar o Usúario',
-        description: error?.message,
-      });
+      showMessage('Erro ao Deletar o Usúario', { severity: 'error' });
     }
   };
   const onSubmit: SubmitHandler<IUser> = async (data: IUser) => {
     try {
       if (!id) {
         await users(data);
-        alert('Usúario salvo com sucesso!');
+        showMessage('Usúario salvo com sucesso!', {severity:'success' });
       } else {
         await updateUsers(data);
-        alert('Usúario atualizado com sucesso!');
+        showMessage('Usúario atualizado com sucesso!', {severity:'success' });
       }
       navigate('/usersView');
     } catch (err) {

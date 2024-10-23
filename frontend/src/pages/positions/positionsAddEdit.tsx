@@ -5,8 +5,9 @@ import { TextField, Grid, Box, Button, Typography, FormControl, InputLabel, Sele
 import { createPositions, getOnePositions, deletePositions, updatePositions } from '../../api/positions';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useToast } from '../../shared/hooks/Toast';
+
 import { IPosition } from '../../shared/dtos/IPosition';
+import { useSnackbar } from '../../shared/hooks/SnackbarProvider';
 
 
 
@@ -14,7 +15,7 @@ export const PositionAddEdit: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { addToast } = useToast()
+  const { showMessage } = useSnackbar()
   const navigate = useNavigate()
 
   const {
@@ -54,25 +55,20 @@ export const PositionAddEdit: React.FC = () => {
   }, [id, reset]);
 
   if (loading) {
-    
+
   }
   if (error) {
-    
+
   }
   const handleDelete = (id: number) => {
     try {
       deletePositions(id)
-      addToast({
-        type: 'success',
-        title: `Carto deletado com sucesso!!`,
-      })
+      showMessage("Carto deletado com sucesso!!", { severity: 'success' });
+
       navigate('/positionsView')
     } catch (error: any) {
-      addToast({
-        type: 'error',
-        title: 'Erro ao Deletar o cargo',
-        description: error?.message,
-      })
+      showMessage('Erro ao Deletar o cargo', { severity: 'error' });
+
     }
 
 
@@ -82,10 +78,10 @@ export const PositionAddEdit: React.FC = () => {
     try {
       if (!id) {
         await createPositions(data);
-        alert('Cargo salvo com sucesso!');
+        showMessage('Cargo salvo com sucesso!', { severity: 'success' });
       } else {
         await updatePositions(data)
-        alert('Cargo atualizado com sucesso!');
+        showMessage('Cargo atualizado com sucesso!', { severity: 'success' });
       }
       navigate('/positionsView')
     } catch (err) {
@@ -135,7 +131,7 @@ export const PositionAddEdit: React.FC = () => {
                 >
                   <MenuItem value="false" >Não</MenuItem>
                   <MenuItem value="true">Sim</MenuItem>
-               
+
                 </Select>
                 <FormHelperText>
                   {errors.hasMandate ? 'Campo obrigatório' : ''}

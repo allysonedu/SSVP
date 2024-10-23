@@ -17,7 +17,7 @@ export const menu = [
       {
         label: 'Listar Conferencias',
         icon: 'c',
-        path: '/conferencesView',
+        path: '/conferencesPage',
       },
       {
         label: 'Listar Cargos',

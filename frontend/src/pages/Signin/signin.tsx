@@ -23,7 +23,8 @@ import * as zod from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InputText } from '../../shared/components/hook-form/input-text';
 import { useAuth } from '../../shared/hooks/auth';
-import { useToast } from '../../shared/hooks/Toast';
+
+import { useSnackbar } from '../../shared/hooks/SnackbarProvider';
 
 const SignInFormValidationSchema = zod.object({
   email: zod.string().email('Digite um email válido'),
@@ -47,8 +48,8 @@ export const SignIn: React.FC = () => {
     },
   });
 
-  const { addToast } = useToast();
 
+  const { showMessage } = useSnackbar()
   const { handleSubmit, control } = methods;
 
   const handleSubmitLogin = useCallback(
@@ -62,12 +63,9 @@ export const SignIn: React.FC = () => {
         });
 
         navigate('/home');
-        console.log(result?.user);
+        showMessage("Login efetuado com sucesso!!", { severity: "success" })
       } catch (err: any) {
-        addToast({
-          type: 'error',
-          title: `Erro Ao logar`,
-        });
+        showMessage("Erro ao logar", { severity: "error" })
       } finally {
         setLoading(false);
       }
